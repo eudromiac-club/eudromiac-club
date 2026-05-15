@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { cookies } from "next/headers";
+import { AgeGateModal } from "@/components/public/age-gate-modal";
+import { AGE_GATE_COOKIE } from "@/lib/age-gate";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,14 +16,20 @@ export const metadata: Metadata = {
   description: "Club cannábico de socios — acceso por invitación.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const ageOk = cookieStore.has(AGE_GATE_COOKIE);
+
   return (
     <html lang="es" className={inter.variable}>
-      <body>{children}</body>
+      <body>
+        {!ageOk && <AgeGateModal />}
+        {children}
+      </body>
     </html>
   );
 }
