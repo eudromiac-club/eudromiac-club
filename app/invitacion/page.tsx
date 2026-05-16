@@ -1,8 +1,9 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export const metadata = {
-  title: "Canjear invitación · eudromiac club",
+  title: 'Canjear invitación · eudromiac club',
+  robots: { index: false, follow: false },
 };
 
 export default function InvitacionPage() {
@@ -12,12 +13,17 @@ export default function InvitacionPage() {
         Canjear invitación
       </h1>
       <p className="text-balance text-muted-foreground">
-        El canje de códigos llega en la próxima fase. Si tenés una
-        invitación, esperá unos días o escribí al contacto del club.
+        Necesitás un link de invitación enviado por el club. Si ya tenés cuenta, ingresá desde el
+        login.
       </p>
-      <Button asChild variant="outline">
-        <Link href="/">Volver</Link>
-      </Button>
+      <div className="flex gap-3">
+        <Button asChild variant="outline">
+          <Link href="/">Volver</Link>
+        </Button>
+        <Button asChild>
+          <Link href="/login">Ingresar</Link>
+        </Button>
+      </div>
     </main>
   );
 }
