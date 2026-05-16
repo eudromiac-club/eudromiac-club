@@ -18,80 +18,126 @@ const statusLabel: Record<string, string> = {
 export default async function CuentaPage() {
   const user = await requireUser();
   const isPending = user.status === 'pending_kyc';
+  const isAdmin = user.role === 'admin';
+  const displayName = user.name ?? user.email?.split('@')[0] ?? 'socio';
 
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-12">
       <header className="mb-10">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
           Tu cuenta
         </p>
-        <h1 className="mt-2 font-display text-4xl italic tracking-tight">
-          Hola, {user.name ?? user.email?.split('@')[0] ?? 'socio'}.
+        <h1 className="mt-3 font-display text-3xl font-medium uppercase tracking-[0.1em] sm:text-4xl">
+          Hola, <span className="text-brand">{displayName}</span>.
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {statusLabel[user.status] ?? user.status}
-          {user.role === 'admin' && ' · administrador'}
+          {isAdmin && ' · administrador'}
         </p>
       </header>
 
       {isPending && (
         <section
           aria-labelledby="kyc-title"
-          className="mb-10 rounded-xl border border-amber-300/70 bg-amber-50 p-6 dark:border-amber-900/60 dark:bg-amber-950/30"
+          className="relative mb-10 overflow-hidden border border-brand/30 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6 shadow-[0_0_60px_-20px_hsl(var(--brand)/0.4)]"
         >
-          <p className="font-mono text-xs uppercase tracking-[0.15em] text-amber-800 dark:text-amber-400">
-            Acción requerida
+          <div
+            className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full opacity-50"
+            style={{
+              background: 'radial-gradient(circle, hsl(32 70% 50% / 0.45), transparent 70%)',
+              filter: 'blur(40px)',
+            }}
+            aria-hidden
+          />
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+            ◆ Acción requerida
           </p>
-          <h2 id="kyc-title" className="mt-2 font-display text-2xl italic tracking-tight">
-            Falta validar tu permiso REPROCANN.
+          <h2
+            id="kyc-title"
+            className="mt-3 font-display text-2xl font-medium uppercase tracking-[0.1em]"
+          >
+            Falta validar tu permiso <span className="text-brand">REPROCANN</span>.
           </h2>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Para poder comprar necesitás cargar el número de tu permiso, el vencimiento y el
-            comprobante. El equipo del club revisa cada solicitud uno a uno.
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Para poder acceder al santuario y a la colección necesitás cargar el número de tu
+            permiso, el vencimiento y el comprobante. El equipo del club revisa cada solicitud
+            uno a uno.
           </p>
-          <Button asChild className="mt-5 rounded-full">
+          <Button
+            asChild
+            variant="outline"
+            className="mt-6 rounded-none border-brand/60 bg-transparent px-6 py-5 text-[11px] uppercase tracking-[0.25em] text-brand hover:border-brand hover:bg-brand/10 hover:text-brand"
+          >
             <Link href="/cuenta/reprocann">Cargar mi permiso</Link>
           </Button>
         </section>
       )}
 
-      <section className="grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-2">
+      <section className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2">
         <div className="bg-card p-6">
-          <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">Email</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            Email
+          </p>
           <p className="mt-2 text-sm">{user.email}</p>
         </div>
         <div className="bg-card p-6">
-          <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">Rol</p>
-          <p className="mt-2 text-sm">{user.role === 'admin' ? 'Administrador' : 'Socio'}</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            Rol
+          </p>
+          <p className="mt-2 text-sm">{isAdmin ? 'Administrador' : 'Socio'}</p>
         </div>
       </section>
 
       <section className="mt-10 grid gap-6 md:grid-cols-2">
         <Link
           href="/cuenta/reprocann"
-          className="group rounded-xl border bg-card p-6 transition-colors hover:border-foreground/30"
+          className="group relative overflow-hidden border border-border bg-card p-6 transition-colors hover:border-brand/60"
         >
-          <p className="font-mono text-xs uppercase tracking-[0.15em] text-brand">REPROCANN</p>
-          <h3 className="mt-3 font-display text-2xl italic tracking-tight">Mi permiso</h3>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">REPROCANN</p>
+          <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
+            Mi permiso
+          </h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Cargar o actualizar el comprobante de tu permiso vigente.
           </p>
-          <span className="mt-4 inline-block text-sm group-hover:underline">Ir →</span>
+          <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+            Ir →
+          </span>
         </Link>
 
-        <div className="rounded-xl border border-dashed bg-card/40 p-6 text-sm text-muted-foreground">
-          <p className="font-mono text-xs uppercase tracking-[0.15em]">Próximamente</p>
-          <p className="mt-3">Tus pedidos, direcciones de envío y cap mensual disponible.</p>
-        </div>
-      </section>
-
-      {user.role === 'admin' && (
-        <p className="mt-10 text-sm">
-          <Link href="/admin" className="text-muted-foreground underline hover:text-foreground">
-            Ir al panel de administración →
+        {isAdmin ? (
+          <Link
+            href="/admin"
+            className="group relative overflow-hidden border border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6 transition-colors hover:border-brand"
+          >
+            <div
+              className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-40 transition-opacity group-hover:opacity-70"
+              style={{
+                background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 70%)',
+                filter: 'blur(30px)',
+              }}
+              aria-hidden
+            />
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+              ◆ Panel privado
+            </p>
+            <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
+              Administración
+            </h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Gestionar invitaciones, socios y catálogo del club.
+            </p>
+            <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+              Ingresar →
+            </span>
           </Link>
-        </p>
-      )}
+        ) : (
+          <div className="border border-dashed border-border bg-card/40 p-6 text-sm text-muted-foreground">
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em]">Próximamente</p>
+            <p className="mt-3">Tus pedidos, direcciones de envío y cap mensual disponible.</p>
+          </div>
+        )}
+      </section>
     </main>
   );
 }

@@ -34,7 +34,7 @@ export default async function RootLayout({
   const ageOk = cookieStore.has(AGE_GATE_COOKIE);
 
   return (
-    <html lang="es" className={`${inter.variable} ${cinzel.variable}`}>
+    <html lang="es" className={`dark ${inter.variable} ${cinzel.variable}`}>
       <body>
         {!ageOk && <AgeGateModal />}
         <Topbar />
