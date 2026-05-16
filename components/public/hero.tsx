@@ -115,32 +115,94 @@ export function Hero() {
           }}
           aria-hidden
         />
-        {/* Sparkles SVG */}
+        {/* Cristales/tricomas: clusters de gotas doradas que simulan el
+            macro del moodboard. Mezcla tamaños, blur y opacidad. */}
         <svg
-          className="absolute inset-0 h-full w-full opacity-40"
+          className="absolute inset-0 h-full w-full"
           viewBox="0 0 1200 800"
           preserveAspectRatio="xMidYMid slice"
           aria-hidden
         >
           <defs>
-            <radialGradient id="spark">
-              <stop offset="0%" stopColor="hsl(32 80% 65%)" stopOpacity="1" />
-              <stop offset="100%" stopColor="hsl(32 80% 65%)" stopOpacity="0" />
+            <radialGradient id="cryst-bright" cx="0.35" cy="0.3" r="0.7">
+              <stop offset="0%" stopColor="hsl(48 95% 85%)" stopOpacity="1" />
+              <stop offset="40%" stopColor="hsl(38 90% 60%)" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="hsl(28 80% 30%)" stopOpacity="0" />
             </radialGradient>
+            <radialGradient id="cryst-warm" cx="0.4" cy="0.35" r="0.7">
+              <stop offset="0%" stopColor="hsl(40 85% 65%)" stopOpacity="0.9" />
+              <stop offset="60%" stopColor="hsl(32 70% 40%)" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="hsl(28 60% 20%)" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="spark">
+              <stop offset="0%" stopColor="hsl(48 95% 88%)" stopOpacity="1" />
+              <stop offset="100%" stopColor="hsl(48 95% 88%)" stopOpacity="0" />
+            </radialGradient>
+            <filter id="crystblur">
+              <feGaussianBlur stdDeviation="1.2" />
+            </filter>
           </defs>
+
+          {/* Cluster grande izquierda */}
+          <g opacity="0.85">
+            <circle cx="120" cy="180" r="55" fill="url(#cryst-warm)" filter="url(#crystblur)" />
+            <circle cx="80" cy="220" r="34" fill="url(#cryst-warm)" filter="url(#crystblur)" />
+            <circle cx="180" cy="240" r="42" fill="url(#cryst-bright)" filter="url(#crystblur)" />
+            <circle cx="140" cy="280" r="22" fill="url(#cryst-bright)" />
+            <circle cx="200" cy="180" r="18" fill="url(#cryst-bright)" />
+            <circle cx="60" cy="160" r="14" fill="url(#cryst-warm)" />
+          </g>
+
+          {/* Cluster centro alto */}
+          <g opacity="0.7">
+            <circle cx="600" cy="80" r="38" fill="url(#cryst-warm)" filter="url(#crystblur)" />
+            <circle cx="540" cy="110" r="20" fill="url(#cryst-bright)" />
+            <circle cx="660" cy="130" r="24" fill="url(#cryst-bright)" />
+            <circle cx="720" cy="60" r="14" fill="url(#cryst-warm)" />
+          </g>
+
+          {/* Cluster grande derecha */}
+          <g opacity="0.8">
+            <circle cx="1050" cy="250" r="58" fill="url(#cryst-warm)" filter="url(#crystblur)" />
+            <circle cx="1100" cy="200" r="30" fill="url(#cryst-bright)" filter="url(#crystblur)" />
+            <circle cx="980" cy="180" r="22" fill="url(#cryst-bright)" />
+            <circle cx="1120" cy="290" r="18" fill="url(#cryst-warm)" />
+            <circle cx="950" cy="260" r="14" fill="url(#cryst-bright)" />
+          </g>
+
+          {/* Cluster inferior izquierda */}
+          <g opacity="0.75">
+            <circle cx="180" cy="640" r="48" fill="url(#cryst-warm)" filter="url(#crystblur)" />
+            <circle cx="120" cy="700" r="26" fill="url(#cryst-bright)" />
+            <circle cx="240" cy="680" r="20" fill="url(#cryst-bright)" />
+            <circle cx="80" cy="640" r="14" fill="url(#cryst-warm)" />
+          </g>
+
+          {/* Cluster inferior derecha */}
+          <g opacity="0.8">
+            <circle cx="970" cy="680" r="52" fill="url(#cryst-warm)" filter="url(#crystblur)" />
+            <circle cx="1080" cy="640" r="28" fill="url(#cryst-bright)" filter="url(#crystblur)" />
+            <circle cx="900" cy="640" r="20" fill="url(#cryst-bright)" />
+            <circle cx="1040" cy="720" r="16" fill="url(#cryst-warm)" />
+          </g>
+
+          {/* Puntos pequeños dispersos */}
           {[
-            [120, 200, 4],
-            [320, 120, 2.5],
-            [520, 80, 3.5],
-            [780, 180, 2],
-            [980, 260, 3],
-            [1080, 520, 2.5],
-            [880, 680, 4],
-            [580, 720, 3],
-            [220, 640, 2],
-            [60, 460, 3],
-            [400, 560, 1.5],
-            [720, 460, 2],
+            [320, 380, 4],
+            [380, 420, 2.5],
+            [820, 340, 5],
+            [880, 400, 3],
+            [460, 540, 2],
+            [720, 580, 3.5],
+            [550, 360, 2],
+            [640, 480, 2.5],
+            [400, 240, 1.8],
+            [780, 200, 2],
+            [260, 480, 2.5],
+            [840, 540, 2],
+            [500, 660, 3],
+            [620, 700, 2],
+            [340, 720, 1.5],
           ].map(([x, y, r], i) => (
             <circle key={i} cx={x} cy={y} r={r} fill="url(#spark)" />
           ))}

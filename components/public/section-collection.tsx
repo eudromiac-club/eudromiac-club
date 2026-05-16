@@ -45,63 +45,153 @@ const ITEMS: Item[] = [
 // Art alternativa para placeholders premium sin foto real.
 function ArtAmber() {
   return (
-    <div className="relative h-full w-full overflow-hidden bg-gradient-to-b from-[hsl(30,15%,10%)] to-[hsl(28,20%,6%)]">
-      {/* Frasco silueta SVG ámbar */}
+    <div className="relative h-full w-full overflow-hidden bg-[radial-gradient(ellipse_at_50%_55%,hsl(32_30%_18%/0.7),hsl(28_20%_8%)_60%)]">
+      {/* Halo trasero */}
+      <div
+        className="absolute left-1/2 top-1/2 h-[60%] w-[60%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          background: 'radial-gradient(circle, hsl(40 80% 50% / 0.5), transparent 65%)',
+          filter: 'blur(40px)',
+        }}
+        aria-hidden
+      />
+      {/* Frasco silueta SVG ámbar con label ornamental */}
       <svg
-        viewBox="0 0 200 280"
-        className="absolute left-1/2 top-1/2 h-[78%] w-auto -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_40px_hsl(32_70%_50%/0.45)]"
+        viewBox="0 0 220 320"
+        className="absolute left-1/2 top-1/2 h-[88%] w-auto -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_50px_hsl(32_80%_50%/0.55)]"
         aria-hidden
       >
         <defs>
-          <linearGradient id="amberBody" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="hsl(32 70% 35%)" />
-            <stop offset="55%" stopColor="hsl(28 75% 22%)" />
-            <stop offset="100%" stopColor="hsl(20 80% 12%)" />
+          <linearGradient id="amberBody" x1="0.3" x2="0.7" y1="0" y2="1">
+            <stop offset="0%" stopColor="hsl(36 80% 45%)" />
+            <stop offset="30%" stopColor="hsl(30 80% 32%)" />
+            <stop offset="65%" stopColor="hsl(24 75% 22%)" />
+            <stop offset="100%" stopColor="hsl(20 75% 12%)" />
           </linearGradient>
-          <radialGradient id="amberGlow" cx="0.5" cy="0.6" r="0.5">
-            <stop offset="0%" stopColor="hsl(40 90% 60%)" stopOpacity="0.6" />
+          <radialGradient id="amberGlow" cx="0.5" cy="0.55" r="0.55">
+            <stop offset="0%" stopColor="hsl(44 95% 70%)" stopOpacity="0.55" />
             <stop offset="100%" stopColor="hsl(32 80% 40%)" stopOpacity="0" />
           </radialGradient>
+          <linearGradient id="capGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="hsl(32 35% 25%)" />
+            <stop offset="100%" stopColor="hsl(28 30% 14%)" />
+          </linearGradient>
         </defs>
+
+        {/* Tapón superior con anillos */}
+        <g>
+          <rect x="78" y="6" width="64" height="14" rx="2" fill="url(#capGrad)" />
+          <line x1="78" y1="10" x2="142" y2="10" stroke="hsl(32 55% 65%)" strokeOpacity="0.3" />
+          <line x1="78" y1="16" x2="142" y2="16" stroke="hsl(32 55% 65%)" strokeOpacity="0.2" />
+          <rect x="84" y="20" width="52" height="22" fill="url(#capGrad)" />
+          <line x1="84" y1="28" x2="136" y2="28" stroke="hsl(32 55% 65%)" strokeOpacity="0.25" />
+        </g>
+
         {/* Cuello */}
-        <rect x="80" y="22" width="40" height="40" fill="url(#amberBody)" />
+        <path d="M88 42 L 88 60 L 132 60 L 132 42 Z" fill="url(#amberBody)" />
+        <path d="M88 42 L 88 60 L 132 60 L 132 42" fill="none" stroke="hsl(32 80% 70%)" strokeOpacity="0.25" />
+
         {/* Cuerpo */}
         <path
-          d="M55 62 Q 55 56 65 56 L135 56 Q 145 56 145 62 L 145 240 Q 145 260 125 260 L 75 260 Q 55 260 55 240 Z"
+          d="M60 64 Q 60 60 66 60 L 154 60 Q 160 60 160 64 L 160 282 Q 160 304 138 304 L 82 304 Q 60 304 60 282 Z"
           fill="url(#amberBody)"
         />
         {/* Glow interno */}
-        <ellipse cx="100" cy="160" rx="50" ry="80" fill="url(#amberGlow)" />
-        {/* Label */}
-        <rect
-          x="68"
-          y="130"
-          width="64"
-          height="40"
-          fill="hsl(30 10% 8%)"
-          stroke="hsl(32 55% 60%)"
-          strokeOpacity="0.6"
-          strokeWidth="0.5"
-        />
-        <text
-          x="100"
-          y="155"
-          textAnchor="middle"
-          fontFamily="serif"
-          fontSize="9"
-          fill="hsl(32 55% 60%)"
-          letterSpacing="2"
-        >
-          EUDROMIA
-        </text>
-        {/* Highlight */}
+        <ellipse cx="110" cy="180" rx="58" ry="92" fill="url(#amberGlow)" />
+
+        {/* Highlight vertical izquierdo (reflejo de luz) */}
         <path
-          d="M65 70 Q 60 130 75 230"
-          stroke="hsl(40 90% 80%)"
-          strokeWidth="3"
+          d="M72 80 Q 64 180 80 280"
+          stroke="hsl(48 95% 85%)"
+          strokeWidth="4"
           strokeOpacity="0.35"
           fill="none"
+          strokeLinecap="round"
         />
+        {/* Highlight derecho más fino */}
+        <path
+          d="M148 100 Q 152 200 142 290"
+          stroke="hsl(48 95% 85%)"
+          strokeWidth="2"
+          strokeOpacity="0.2"
+          fill="none"
+        />
+
+        {/* Label rectangular ornamental */}
+        <g>
+          <rect
+            x="74"
+            y="150"
+            width="72"
+            height="90"
+            fill="hsl(36 25% 10%)"
+            stroke="hsl(32 55% 65%)"
+            strokeOpacity="0.7"
+            strokeWidth="0.6"
+          />
+          <rect
+            x="78"
+            y="154"
+            width="64"
+            height="82"
+            fill="none"
+            stroke="hsl(32 55% 65%)"
+            strokeOpacity="0.35"
+            strokeWidth="0.4"
+          />
+          {/* Ornamentos esquinas label */}
+          <g stroke="hsl(32 55% 65%)" strokeOpacity="0.7" strokeWidth="0.5" fill="none">
+            <path d="M76 152 L 80 152 L 80 156" />
+            <path d="M144 152 L 140 152 L 140 156" />
+            <path d="M76 238 L 80 238 L 80 234" />
+            <path d="M144 238 L 140 238 L 140 234" />
+          </g>
+          {/* Línea decorativa superior label */}
+          <line x1="86" y1="166" x2="134" y2="166" stroke="hsl(32 55% 65%)" strokeOpacity="0.4" strokeWidth="0.4" />
+          <line x1="100" y1="170" x2="120" y2="170" stroke="hsl(32 55% 65%)" strokeOpacity="0.7" strokeWidth="0.4" />
+          {/* Nombre EUDROMIA */}
+          <text
+            x="110"
+            y="190"
+            textAnchor="middle"
+            fontFamily="serif"
+            fontSize="11"
+            fill="hsl(32 60% 70%)"
+            letterSpacing="2.5"
+            fontWeight="500"
+          >
+            EUDROMIA
+          </text>
+          {/* CLUB */}
+          <text
+            x="110"
+            y="205"
+            textAnchor="middle"
+            fontFamily="serif"
+            fontSize="6"
+            fill="hsl(32 55% 60%)"
+            letterSpacing="3"
+          >
+            · CLUB ·
+          </text>
+          {/* Línea decorativa inferior */}
+          <line x1="100" y1="214" x2="120" y2="214" stroke="hsl(32 55% 65%)" strokeOpacity="0.7" strokeWidth="0.4" />
+          {/* Tipo de extracto */}
+          <text
+            x="110"
+            y="225"
+            textAnchor="middle"
+            fontFamily="serif"
+            fontSize="4.5"
+            fill="hsl(32 45% 55%)"
+            letterSpacing="2"
+          >
+            EXTRACTO PURO
+          </text>
+        </g>
+
+        {/* Sombra inferior */}
+        <ellipse cx="110" cy="310" rx="55" ry="3" fill="black" fillOpacity="0.6" />
       </svg>
     </div>
   );
@@ -109,71 +199,159 @@ function ArtAmber() {
 
 function ArtMortar() {
   return (
-    <div className="relative h-full w-full overflow-hidden bg-gradient-to-b from-[hsl(30,15%,9%)] to-[hsl(28,20%,5%)]">
+    <div className="relative h-full w-full overflow-hidden bg-[radial-gradient(ellipse_at_50%_60%,hsl(32_30%_15%/0.6),hsl(28_20%_7%)_65%)]">
+      {/* Halo trasero */}
+      <div
+        className="absolute left-1/2 top-[58%] h-[55%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          background: 'radial-gradient(circle, hsl(32 70% 45% / 0.45), transparent 65%)',
+          filter: 'blur(35px)',
+        }}
+        aria-hidden
+      />
       <svg
-        viewBox="0 0 240 240"
-        className="absolute left-1/2 top-1/2 h-[78%] w-auto -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_30px_hsl(32_70%_50%/0.35)]"
+        viewBox="0 0 260 320"
+        className="absolute left-1/2 top-1/2 h-[92%] w-auto -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_40px_hsl(32_70%_50%/0.4)]"
         aria-hidden
       >
         <defs>
-          <radialGradient id="bowlGlow" cx="0.5" cy="0.45" r="0.55">
-            <stop offset="0%" stopColor="hsl(32 70% 50%)" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="hsl(32 70% 50%)" stopOpacity="0" />
+          <linearGradient id="mortarBody" x1="0.3" x2="0.7" y1="0" y2="1">
+            <stop offset="0%" stopColor="hsl(32 50% 55%)" />
+            <stop offset="50%" stopColor="hsl(30 45% 35%)" />
+            <stop offset="100%" stopColor="hsl(26 40% 20%)" />
+          </linearGradient>
+          <radialGradient id="bowlInner" cx="0.5" cy="0.3" r="0.7">
+            <stop offset="0%" stopColor="hsl(28 30% 22%)" />
+            <stop offset="100%" stopColor="hsl(24 30% 8%)" />
           </radialGradient>
         </defs>
-        {/* Glow */}
-        <circle cx="120" cy="150" r="95" fill="url(#bowlGlow)" />
-        {/* Mortero */}
-        <ellipse
-          cx="120"
-          cy="160"
-          rx="85"
-          ry="22"
-          fill="none"
-          stroke="hsl(32 50% 55%)"
-          strokeWidth="1.5"
-          strokeOpacity="0.85"
-        />
-        <path
-          d="M40 160 Q 50 220 120 222 Q 190 220 200 160"
-          fill="none"
-          stroke="hsl(32 50% 55%)"
-          strokeWidth="1.5"
-          strokeOpacity="0.85"
-        />
-        <ellipse
-          cx="120"
-          cy="160"
-          rx="68"
-          ry="14"
-          fill="hsl(30 25% 18%)"
-          fillOpacity="0.7"
-        />
-        {/* Pestle */}
-        <line
-          x1="80"
-          y1="60"
-          x2="120"
-          y2="160"
-          stroke="hsl(32 50% 55%)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <circle cx="78" cy="58" r="8" fill="hsl(32 50% 55%)" />
-        {/* Hojas decorativas */}
-        <g stroke="hsl(32 55% 60%)" strokeWidth="1" fill="none" strokeOpacity="0.75">
-          <path d="M20 100 Q 30 80 45 95 Q 35 110 20 100 Z" />
-          <path d="M195 100 Q 210 80 220 100 Q 210 115 195 100 Z" />
-          <path d="M30 200 Q 45 195 50 210 Q 35 215 30 200 Z" />
-          <path d="M190 200 Q 205 195 210 210 Q 195 215 190 200 Z" />
+
+        {/* Mano del mortero (pestle) inclinada */}
+        <g>
+          {/* Cuerpo del mano */}
+          <line
+            x1="60"
+            y1="60"
+            x2="130"
+            y2="195"
+            stroke="url(#mortarBody)"
+            strokeWidth="9"
+            strokeLinecap="round"
+          />
+          {/* Highlight */}
+          <line
+            x1="58"
+            y1="64"
+            x2="128"
+            y2="198"
+            stroke="hsl(40 70% 70%)"
+            strokeWidth="2"
+            strokeOpacity="0.4"
+            strokeLinecap="round"
+          />
+          {/* Cabeza del pestle */}
+          <circle cx="56" cy="56" r="11" fill="url(#mortarBody)" />
+          <circle cx="54" cy="54" r="3" fill="hsl(40 70% 80%)" fillOpacity="0.5" />
         </g>
-        {/* Puntos botánicos */}
-        <g fill="hsl(32 60% 60%)" fillOpacity="0.8">
-          <circle cx="100" cy="155" r="1.5" />
-          <circle cx="130" cy="153" r="1.2" />
-          <circle cx="115" cy="158" r="1.5" />
-          <circle cx="142" cy="156" r="1" />
+
+        {/* Mortero (bowl) */}
+        <g>
+          {/* Borde superior */}
+          <ellipse
+            cx="135"
+            cy="200"
+            rx="105"
+            ry="22"
+            fill="hsl(28 30% 12%)"
+            stroke="hsl(32 50% 55%)"
+            strokeWidth="1.4"
+            strokeOpacity="0.9"
+          />
+          {/* Interior del bowl (oscuridad) */}
+          <ellipse
+            cx="135"
+            cy="200"
+            rx="92"
+            ry="14"
+            fill="url(#bowlInner)"
+          />
+          {/* Cuerpo del bowl */}
+          <path
+            d="M30 200 Q 40 295 135 297 Q 230 295 240 200"
+            fill="url(#mortarBody)"
+            stroke="hsl(32 55% 60%)"
+            strokeWidth="1.4"
+            strokeOpacity="0.85"
+          />
+          {/* Banda decorativa horizontal */}
+          <path
+            d="M40 230 Q 60 245 135 248 Q 210 245 230 230"
+            fill="none"
+            stroke="hsl(32 55% 65%)"
+            strokeWidth="0.8"
+            strokeOpacity="0.5"
+          />
+          {/* Decoración tipo etching alrededor */}
+          <g stroke="hsl(32 55% 60%)" strokeOpacity="0.35" strokeWidth="0.5" fill="none">
+            <path d="M50 250 Q 60 258 70 250" />
+            <path d="M75 258 Q 85 266 95 258" />
+            <path d="M100 264 Q 110 272 120 264" />
+            <path d="M150 264 Q 160 272 170 264" />
+            <path d="M175 258 Q 185 266 195 258" />
+            <path d="M200 250 Q 210 258 220 250" />
+          </g>
+          {/* Highlight izquierdo del bowl */}
+          <path
+            d="M40 220 Q 38 260 50 285"
+            stroke="hsl(40 70% 70%)"
+            strokeWidth="2.5"
+            strokeOpacity="0.35"
+            fill="none"
+          />
         </g>
+
+        {/* Polvo/hierbas dentro del bowl (puntos botánicos) */}
+        <g fill="hsl(32 65% 55%)" fillOpacity="0.85">
+          <circle cx="100" cy="200" r="1.8" />
+          <circle cx="118" cy="197" r="1.2" />
+          <circle cx="135" cy="199" r="2" />
+          <circle cx="152" cy="196" r="1.5" />
+          <circle cx="170" cy="201" r="1.2" />
+          <circle cx="80" cy="203" r="1" />
+          <circle cx="190" cy="203" r="1" />
+          <circle cx="143" cy="195" r="0.8" />
+          <circle cx="125" cy="203" r="0.8" />
+        </g>
+
+        {/* Hojas decorativas alrededor (más detalladas) */}
+        <g stroke="hsl(32 55% 60%)" fill="none" strokeOpacity="0.8" strokeWidth="0.9">
+          {/* Hoja superior izquierda */}
+          <g transform="translate(15 80)">
+            <path d="M0 0 Q 8 -15 24 -8 Q 22 8 6 12 Q 0 8 0 0 Z" />
+            <line x1="0" y1="0" x2="20" y2="-4" strokeOpacity="0.45" />
+            <line x1="6" y1="6" x2="20" y2="-2" strokeOpacity="0.35" />
+          </g>
+          {/* Hoja superior derecha */}
+          <g transform="translate(245 80) scale(-1 1)">
+            <path d="M0 0 Q 8 -15 24 -8 Q 22 8 6 12 Q 0 8 0 0 Z" />
+            <line x1="0" y1="0" x2="20" y2="-4" strokeOpacity="0.45" />
+            <line x1="6" y1="6" x2="20" y2="-2" strokeOpacity="0.35" />
+          </g>
+          {/* Ramas finas con bayas */}
+          <g transform="translate(20 130)">
+            <path d="M0 0 Q 10 10 22 8" />
+            <circle cx="18" cy="6" r="1.3" fill="hsl(32 65% 55%)" fillOpacity="0.7" stroke="none" />
+            <circle cx="22" cy="9" r="1" fill="hsl(32 65% 55%)" fillOpacity="0.7" stroke="none" />
+          </g>
+          <g transform="translate(240 130) scale(-1 1)">
+            <path d="M0 0 Q 10 10 22 8" />
+            <circle cx="18" cy="6" r="1.3" fill="hsl(32 65% 55%)" fillOpacity="0.7" stroke="none" />
+            <circle cx="22" cy="9" r="1" fill="hsl(32 65% 55%)" fillOpacity="0.7" stroke="none" />
+          </g>
+        </g>
+
+        {/* Sombra inferior */}
+        <ellipse cx="135" cy="305" rx="100" ry="3" fill="black" fillOpacity="0.5" />
       </svg>
     </div>
   );
