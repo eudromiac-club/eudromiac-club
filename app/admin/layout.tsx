@@ -23,8 +23,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin/invitations" className="text-muted-foreground hover:text-foreground">
             Invitaciones
           </Link>
+          <Link href="/admin/genetics" className="text-muted-foreground hover:text-foreground">
+            Genéticas
+          </Link>
           <span className="cursor-not-allowed text-muted-foreground/50">Socios</span>
-          <span className="cursor-not-allowed text-muted-foreground/50">Genéticas</span>
         </div>
       </nav>
       <main className="mx-auto max-w-6xl px-6 py-10">{children}</main>

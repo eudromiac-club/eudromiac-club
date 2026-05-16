@@ -1,0 +1,1 @@
+ALTER TABLE "genetics" ADD COLUMN "max_per_order_grams" numeric(5, 2);

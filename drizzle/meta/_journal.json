@@ -8,6 +8,13 @@
       "when": 1778895918642,
       "tag": "0000_dazzling_gauntlet",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778905597203,
+      "tag": "0001_shiny_mongu",
+      "breakpoints": true
     }
   ]
 }

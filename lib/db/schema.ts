@@ -139,6 +139,7 @@ export const genetics = pgTable('genetics', {
   cbdPercent: numeric('cbd_percent', { precision: 4, scale: 2 }),
   priceCents: integer('price_cents').notNull(),
   stock: integer('stock').notNull().default(0),
+  maxPerOrderGrams: numeric('max_per_order_grams', { precision: 5, scale: 2 }),
   images: text('images').array().notNull().default(sql`'{}'::text[]`),
   active: boolean('active').notNull().default(true),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
