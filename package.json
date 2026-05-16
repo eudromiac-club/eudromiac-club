@@ -12,7 +12,8 @@
     "db:check": "node --env-file=.env.local scripts/db-check.mjs",
     "db:studio": "drizzle-kit studio",
     "db:seed-admin": "node --env-file=.env.local scripts/seed-admin.mjs",
-    "db:seed-genetics": "node --env-file=.env.local scripts/seed-genetics.mjs"
+    "db:seed-genetics": "node --env-file=.env.local scripts/seed-genetics.mjs",
+    "db:seed-test-user": "node --env-file=.env.local scripts/seed-test-user.mjs"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.2",
