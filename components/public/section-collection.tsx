@@ -370,9 +370,11 @@ export function SectionCollection() {
         duration: 0.9,
         ease: 'power3.out',
         stagger: 0.1,
+        immediateRender: false,
         scrollTrigger: {
           trigger: '.col-title',
-          start: 'top 82%',
+          start: 'top 90%',
+          once: true,
         },
       });
 
@@ -381,9 +383,11 @@ export function SectionCollection() {
         y: 14,
         duration: 0.7,
         ease: 'power2.out',
+        immediateRender: false,
         scrollTrigger: {
           trigger: '.col-title',
-          start: 'top 80%',
+          start: 'top 90%',
+          once: true,
         },
       });
 
@@ -393,9 +397,11 @@ export function SectionCollection() {
         duration: 1.2,
         ease: 'power3.out',
         stagger: 0.22,
+        immediateRender: false,
         scrollTrigger: {
           trigger: '.col-grid',
-          start: 'top 75%',
+          start: 'top 90%',
+          once: true,
         },
       });
 
@@ -420,6 +426,9 @@ export function SectionCollection() {
           },
         );
       });
+
+      const timeout = setTimeout(() => ScrollTrigger.refresh(), 200);
+      return () => clearTimeout(timeout);
     },
     { scope: root },
   );

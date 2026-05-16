@@ -29,7 +29,8 @@ export function SectionAccess() {
         duration: 0.9,
         ease: 'power3.out',
         stagger: 0.1,
-        scrollTrigger: { trigger: '.acc-title', start: 'top 82%' },
+        immediateRender: false,
+        scrollTrigger: { trigger: '.acc-title', start: 'top 90%', once: true },
       });
       gsap.from('.acc-step', {
         opacity: 0,
@@ -37,14 +38,19 @@ export function SectionAccess() {
         duration: 0.9,
         ease: 'power3.out',
         stagger: 0.12,
-        scrollTrigger: { trigger: '.acc-steps', start: 'top 80%' },
+        immediateRender: false,
+        scrollTrigger: { trigger: '.acc-steps', start: 'top 90%', once: true },
       });
       gsap.from('.acc-cta', {
         opacity: 0,
         y: 14,
         duration: 0.7,
-        scrollTrigger: { trigger: '.acc-cta', start: 'top 90%' },
+        immediateRender: false,
+        scrollTrigger: { trigger: '.acc-cta', start: 'top 95%', once: true },
       });
+
+      const timeout = setTimeout(() => ScrollTrigger.refresh(), 200);
+      return () => clearTimeout(timeout);
     },
     { scope: root },
   );

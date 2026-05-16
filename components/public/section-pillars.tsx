@@ -43,9 +43,11 @@ export function SectionPillars() {
         duration: 0.9,
         ease: 'power3.out',
         stagger: 0.1,
+        immediateRender: false,
         scrollTrigger: {
           trigger: '.pillar-title',
-          start: 'top 82%',
+          start: 'top 90%',
+          once: true,
         },
       });
 
@@ -55,9 +57,11 @@ export function SectionPillars() {
         duration: 1.1,
         ease: 'power3.out',
         stagger: 0.22,
+        immediateRender: false,
         scrollTrigger: {
           trigger: '.pillar-grid',
-          start: 'top 78%',
+          start: 'top 90%',
+          once: true,
         },
       });
 
@@ -87,6 +91,11 @@ export function SectionPillars() {
         ease: 'sine.inOut',
         stagger: { each: 0.7, from: 'start' },
       });
+
+      // Refresh ScrollTrigger después de un tick para que recalcule con el
+      // layout final post-hidratación (fuentes, imágenes async).
+      const timeout = setTimeout(() => ScrollTrigger.refresh(), 200);
+      return () => clearTimeout(timeout);
     },
     { scope: root },
   );
