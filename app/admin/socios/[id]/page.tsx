@@ -11,7 +11,9 @@ import {
   formatPriceArs,
   formatDate,
 } from '@/lib/orders/labels';
-import { changeMemberStatusAction } from '../actions';
+import { getMonthlyConsumption } from '@/lib/users/consumption';
+import { Input } from '@/components/ui/input';
+import { changeMemberStatusAction, updateMonthlyLimitAction } from '../actions';
 
 export const metadata = {
   title: 'Socio · Admin · EUDROMIA CLUB',
@@ -67,6 +69,8 @@ export default async function AdminSocioDetailPage({
 
   if (!row) notFound();
   if (row.role === 'admin') notFound();
+
+  const consumption = await getMonthlyConsumption(id);
 
   const history = await db
     .select()
@@ -178,6 +182,85 @@ export default async function AdminSocioDetailPage({
           Este socio todavía no cargó su permiso REPROCANN.
         </section>
       )}
+
+      {p && (() => {
+        const capRaw = p.monthlyGramsLimit;
+        const cap = capRaw != null ? Number(capRaw) : null;
+        const grams = consumption.grams;
+        const remaining = cap != null ? Math.max(cap - grams, 0) : null;
+        const pct = cap != null && cap > 0 ? Math.min(100, Math.round((grams / cap) * 100)) : 0;
+        const exceeded = cap != null && grams > cap;
+        const barColor = exceeded ? 'bg-destructive' : pct >= 80 ? 'bg-yellow-500' : 'bg-brand';
+
+        return (
+          <section className="border border-brand/30 bg-card p-6">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+                  ◆ Consumo mensual
+                </h2>
+                <p className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  {consumption.monthLabel}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Consumido / Cap
+                </p>
+                <p className="mt-1 font-mono text-2xl text-brand">
+                  {grams}g
+                  <span className="ml-1 text-base text-muted-foreground">
+                    / {cap != null ? `${cap}g` : 'sin cap'}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className={`h-full transition-all ${barColor}`}
+                style={{ width: `${cap != null ? pct : 0}%` }}
+              />
+            </div>
+
+            <p className="mt-3 text-xs text-muted-foreground">
+              {cap == null ? (
+                <>Este socio no tiene cap mensual configurado. Mientras no haya cap, no se valida el consumo en cada pedido.</>
+              ) : exceeded ? (
+                <>Superó el cap por <span className="text-destructive">{grams - cap}g</span> este mes.</>
+              ) : (
+                <>Le quedan <span className="text-foreground">{remaining}g</span> disponibles este mes.</>
+              )}
+            </p>
+
+            <form action={updateMonthlyLimitAction} className="mt-6 flex flex-wrap items-end gap-3 border-t border-border/60 pt-5">
+              <input type="hidden" name="userId" value={row.id} />
+              <div className="flex-1 min-w-[200px]">
+                <label htmlFor="monthlyGramsLimit" className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  Editar cap mensual (g)
+                </label>
+                <Input
+                  id="monthlyGramsLimit"
+                  name="monthlyGramsLimit"
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  max="9999.99"
+                  defaultValue={cap ?? ''}
+                  placeholder="vacío = sin cap"
+                />
+              </div>
+              <Button
+                type="submit"
+                variant="outline"
+                className="rounded-none px-5 py-3 text-[11px] uppercase tracking-[0.25em]"
+              >
+                Guardar
+              </Button>
+            </form>
+          </section>
+        );
+      })()}
 
       <section className="border border-border bg-card">
         <h2 className="border-b border-border p-5 font-mono text-[10px] uppercase tracking-[0.25em] text-brand">

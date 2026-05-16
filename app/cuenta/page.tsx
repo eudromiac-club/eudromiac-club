@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { requireUser } from '@/lib/auth/dal';
 import { Button } from '@/components/ui/button';
+import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 
 export const metadata: Metadata = {
   title: 'Mi cuenta · EUDROMIA CLUB',
@@ -22,8 +23,13 @@ export default async function CuentaPage() {
   const isPending = user.status === 'pending_kyc';
   const isUnderReview = user.status === 'under_review';
   const isRejected = user.status === 'rejected';
+  const isActive = user.status === 'active';
   const isAdmin = user.role === 'admin';
   const displayName = user.name ?? user.email?.split('@')[0] ?? 'socio';
+
+  // Solo para socios activos: mostramos consumo del mes vs cap autorizado.
+  const consumption = isActive && !isAdmin ? await getMonthlyConsumption(user.id) : null;
+  const monthlyCap = isActive && !isAdmin ? await getMonthlyCap(user.id) : null;
 
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-12">
@@ -125,6 +131,56 @@ export default async function CuentaPage() {
           </Button>
         </section>
       )}
+
+      {consumption && (() => {
+        const grams = consumption.grams;
+        const cap = monthlyCap;
+        const remaining = cap != null ? Math.max(cap - grams, 0) : null;
+        const pct = cap != null && cap > 0 ? Math.min(100, Math.round((grams / cap) * 100)) : 0;
+        const exceeded = cap != null && grams > cap;
+        const barColor = exceeded ? 'bg-destructive' : pct >= 80 ? 'bg-yellow-500' : 'bg-brand';
+
+        return (
+          <section className="mb-10 border border-brand/30 bg-card p-6">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+                  ◆ Consumo mensual
+                </p>
+                <p className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+                  {consumption.monthLabel}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Consumido / Cap
+                </p>
+                <p className="mt-1 font-mono text-2xl text-brand">
+                  {grams}g
+                  <span className="ml-1 text-base text-muted-foreground">
+                    / {cap != null ? `${cap}g` : 'sin cap'}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div className="mt-5 h-2 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className={`h-full transition-all ${barColor}`}
+                style={{ width: `${cap != null ? pct : 0}%` }}
+              />
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              {cap == null ? (
+                <>El cap mensual se configura desde el panel del club según tu REPROCANN.</>
+              ) : exceeded ? (
+                <>Superaste el cap por <span className="text-destructive">{grams - cap}g</span> este mes.</>
+              ) : (
+                <>Te quedan <span className="text-foreground">{remaining}g</span> disponibles este mes.</>
+              )}
+            </p>
+          </section>
+        );
+      })()}
 
       <section className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2">
         <div className="bg-card p-6">

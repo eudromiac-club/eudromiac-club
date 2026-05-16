@@ -8,6 +8,7 @@ import { genetics } from '@/lib/db/schema';
 import { Button } from '@/components/ui/button';
 import { OrnateFrame } from '@/components/brand/ornate-frame';
 import { AddToCartForm } from '@/components/cart/add-to-cart-form';
+import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 
 const HARD_CAP = 10;
 
@@ -78,6 +79,17 @@ export default async function DispensarioPage() {
     .where(eq(genetics.active, true))
     .orderBy(desc(genetics.createdAt));
 
+  // Si el socio tiene cap mensual configurado, calculamos cuánto le queda
+  // para mostrar un badge sutil al header. Admins quedan sin badge.
+  let monthlyHint: { cap: number; consumed: number; remaining: number } | null = null;
+  if (isActive && user.role !== 'admin') {
+    const cap = await getMonthlyCap(user.id);
+    if (cap != null) {
+      const consumed = (await getMonthlyConsumption(user.id)).grams;
+      monthlyHint = { cap, consumed, remaining: Math.max(cap - consumed, 0) };
+    }
+  }
+
   return (
     <main className="relative mx-auto w-full max-w-6xl px-6 py-16">
       <header className="mx-auto max-w-3xl text-center">
@@ -92,6 +104,11 @@ export default async function DispensarioPage() {
         <p className="mt-6 text-sm leading-relaxed text-muted-foreground sm:text-base">
           Genéticas curadas, disponibles exclusivamente para socios con permiso REPROCANN vigente.
         </p>
+        {monthlyHint && (
+          <p className="mt-5 inline-block border border-brand/40 bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-brand">
+            Cap del mes · te quedan {monthlyHint.remaining}g de {monthlyHint.cap}g
+          </p>
+        )}
       </header>
 
       {isLocked && (

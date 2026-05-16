@@ -8,6 +8,7 @@ import { db } from '@/lib/db';
 import { orders, orderItems } from '@/lib/db/schema';
 import { requireUser } from '@/lib/auth/dal';
 import { getCartSnapshot } from '@/lib/cart/server';
+import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 import { mpConfigured, mpPreference } from '@/lib/mp/client';
 
 export async function startCheckoutAction(): Promise<void> {
@@ -19,6 +20,19 @@ export async function startCheckoutAction(): Promise<void> {
   const cart = await getCartSnapshot(user.id);
   if (cart.items.length === 0) {
     throw new Error('Tu carrito está vacío.');
+  }
+
+  // Re-validar cap mensual del REPROCANN antes de crear el order.
+  if (user.role !== 'admin') {
+    const monthlyCap = await getMonthlyCap(user.id);
+    if (monthlyCap != null) {
+      const consumed = (await getMonthlyConsumption(user.id)).grams;
+      if (consumed + cart.totalGrams > monthlyCap) {
+        throw new Error(
+          `Este pedido supera tu cap mensual de ${monthlyCap}g (consumido ${consumed}g + carrito ${cart.totalGrams}g).`,
+        );
+      }
+    }
   }
 
   // Crear order en DB con snapshot de precios actuales (status pending).

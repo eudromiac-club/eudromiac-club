@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { carts, cartItems, genetics } from '@/lib/db/schema';
 import { requireUser } from '@/lib/auth/dal';
+import { getMonthlyCap, getMonthlyConsumption, getCartGramsTotal } from '@/lib/users/consumption';
 
 const HARD_CAP_PER_GENETIC = 10; // gramos por genética cap absoluto del flow
 
@@ -74,6 +75,29 @@ export async function addToCartAction(
   const cap = Math.min(HARD_CAP_PER_GENETIC, g.cap ? Math.floor(Number(g.cap)) : HARD_CAP_PER_GENETIC, g.stock);
   if (cap <= 0) {
     return { ok: false, error: 'Sin stock disponible.' };
+  }
+
+  // Cap mensual del REPROCANN. Solo aplica si el patient_profile lo tiene
+  // seteado. Los admins no tienen cap (siempre pueden agregar).
+  const monthlyCap = user.role === 'admin' ? null : await getMonthlyCap(user.id);
+  if (monthlyCap != null) {
+    const consumed = (await getMonthlyConsumption(user.id)).grams;
+    const inCart = await getCartGramsTotal(user.id);
+    const remaining = monthlyCap - consumed - inCart;
+    if (remaining <= 0) {
+      return {
+        ok: false,
+        error: `Llegaste al cap mensual de ${monthlyCap}g (consumido ${consumed}g + carrito ${inCart}g).`,
+      };
+    }
+    // Si la cantidad pedida supera lo que le queda, no le sumamos a la fuerza:
+    // mejor avisarle y que ajuste.
+    if (quantity > remaining) {
+      return {
+        ok: false,
+        error: `Te quedan ${remaining}g del cap mensual. Pediste ${quantity}g.`,
+      };
+    }
   }
 
   const cartId = await ensureCart(user.id);

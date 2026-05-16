@@ -5,7 +5,7 @@ import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { db } from '@/lib/db';
-import { users, patientStatusHistory } from '@/lib/db/schema';
+import { users, patientStatusHistory, patientProfiles } from '@/lib/db/schema';
 import { requireAdmin } from '@/lib/auth/dal';
 
 // Acciones que el admin puede aplicar manualmente desde el panel de socios.
@@ -64,4 +64,37 @@ export async function changeMemberStatusAction(formData: FormData): Promise<void
   revalidatePath('/admin/socios');
   revalidatePath('/admin/socios/' + userId);
   revalidatePath('/admin');
+}
+
+const MonthlyLimitSchema = z.object({
+  userId: z.string().uuid(),
+  monthlyGramsLimit: z
+    .union([
+      z.coerce.number().min(0).max(9999.99),
+      z.literal('').transform(() => null),
+    ])
+    .nullable()
+    .optional(),
+});
+
+export async function updateMonthlyLimitAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const parsed = MonthlyLimitSchema.safeParse({
+    userId: formData.get('userId'),
+    monthlyGramsLimit: formData.get('monthlyGramsLimit'),
+  });
+  if (!parsed.success) return;
+
+  const { userId, monthlyGramsLimit } = parsed.data;
+  const value = monthlyGramsLimit != null ? String(monthlyGramsLimit) : null;
+
+  // Solo updateamos si ya existe el patient_profile. Si no existe, no
+  // tiene sentido setearle un cap a un usuario sin REPROCANN cargado.
+  await db
+    .update(patientProfiles)
+    .set({ monthlyGramsLimit: value, updatedAt: sql`now()` })
+    .where(eq(patientProfiles.userId, userId));
+
+  revalidatePath('/admin/socios/' + userId);
 }
