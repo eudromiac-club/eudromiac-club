@@ -60,7 +60,7 @@ export async function Topbar() {
               variant="outline"
               className="rounded-none border-brand/60 px-5 text-[11px] uppercase tracking-[0.2em] text-brand hover:bg-brand/10 hover:text-brand"
             >
-              <Link href="/login">Solicitar acceso</Link>
+              <Link href="/login">Miembros</Link>
             </Button>
           ) : (
             <>

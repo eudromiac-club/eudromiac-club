@@ -264,7 +264,7 @@ export function Hero() {
             variant="outline"
             className="rounded-none border-brand/60 bg-transparent px-8 py-6 text-[11px] uppercase tracking-[0.3em] text-brand hover:border-brand hover:bg-brand/10 hover:text-brand"
           >
-            <Link href="/login">Solicitar acceso</Link>
+            <Link href="/login">Miembros</Link>
           </Button>
         </div>
       </div>
