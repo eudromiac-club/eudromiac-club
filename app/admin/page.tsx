@@ -115,7 +115,7 @@ export default async function AdminIndexPage() {
         </section>
       )}
 
-      <section className="grid gap-6 md:grid-cols-3">
+      <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Link
           href="/admin/invitations"
           className="group border border-border bg-card p-6 transition-colors hover:border-brand/60"
@@ -133,6 +133,38 @@ export default async function AdminIndexPage() {
         </Link>
 
         <Link
+          href="/admin/solicitudes"
+          className="group border border-border bg-card p-6 transition-colors hover:border-brand/60"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">Verificaciones</p>
+          <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
+            Solicitudes
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Revisar permisos REPROCANN enviados por socios.
+          </p>
+          <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+            Ir →
+          </span>
+        </Link>
+
+        <Link
+          href="/admin/pedidos"
+          className="group border border-border bg-card p-6 transition-colors hover:border-brand/60"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">Operación</p>
+          <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
+            Pedidos
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Pagos confirmados, despachos pendientes, entregas.
+          </p>
+          <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+            Ir →
+          </span>
+        </Link>
+
+        <Link
           href="/admin/genetics"
           className="group border border-border bg-card p-6 transition-colors hover:border-brand/60"
         >
@@ -142,22 +174,6 @@ export default async function AdminIndexPage() {
           </h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Cargar, editar y publicar las genéticas del dispensario.
-          </p>
-          <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
-            Ir →
-          </span>
-        </Link>
-
-        <Link
-          href="/admin/solicitudes"
-          className="group border border-border bg-card p-6 transition-colors hover:border-brand/60"
-        >
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">Verificaciones</p>
-          <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
-            Solicitudes
-          </h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Revisar permisos REPROCANN enviados por socios pendientes.
           </p>
           <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
             Ir →

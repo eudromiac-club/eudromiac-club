@@ -2,9 +2,11 @@ import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth/dal';
 import { logoutAction } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
+import { getCartCount } from '@/lib/cart/server';
 
 export async function Topbar() {
   const user = await getCurrentUser();
+  const cartCount = user && user.status === 'active' ? await getCartCount(user.id) : 0;
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/40 bg-background/70 backdrop-blur-md">
@@ -76,6 +78,37 @@ export async function Topbar() {
                 <span className="hidden text-[10px] uppercase tracking-[0.18em] text-destructive sm:inline">
                   Rechazada
                 </span>
+              )}
+              {user.status === 'active' && (
+                <Link
+                  href="/carrito"
+                  aria-label={`Carrito${cartCount > 0 ? ` (${cartCount}g)` : ''}`}
+                  className="relative inline-flex items-center gap-2 border border-transparent px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:border-brand/40 hover:text-foreground"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4"
+                    aria-hidden
+                  >
+                    <path d="M3 5h2l2.5 11h11l2-8H6.5" />
+                    <circle cx="9" cy="20" r="1.3" />
+                    <circle cx="17" cy="20" r="1.3" />
+                  </svg>
+                  <span className="hidden sm:inline">Carrito</span>
+                  {cartCount > 0 && (
+                    <span
+                      className="ml-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand px-1.5 font-mono text-[10px] text-brand-foreground"
+                      style={{ boxShadow: '0 0 12px hsl(var(--brand) / 0.6)' }}
+                    >
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
               )}
               <form action={logoutAction}>
                 <Button

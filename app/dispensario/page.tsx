@@ -7,6 +7,9 @@ import { db } from '@/lib/db';
 import { genetics } from '@/lib/db/schema';
 import { Button } from '@/components/ui/button';
 import { OrnateFrame } from '@/components/brand/ornate-frame';
+import { AddToCartForm } from '@/components/cart/add-to-cart-form';
+
+const HARD_CAP = 10;
 
 export const metadata: Metadata = {
   title: 'Dispensario · EUDROMIA CLUB',
@@ -202,6 +205,22 @@ export default async function DispensarioPage() {
                     {g.thcPercent && <span>THC {g.thcPercent}%</span>}
                     {g.cbdPercent && <span>CBD {g.cbdPercent}%</span>}
                   </div>
+
+                  {!isLocked && g.stock > 0 && (
+                    <AddToCartForm
+                      geneticId={g.id}
+                      cap={Math.min(
+                        HARD_CAP,
+                        g.maxPerOrderGrams ? Math.floor(Number(g.maxPerOrderGrams)) : HARD_CAP,
+                        g.stock,
+                      )}
+                    />
+                  )}
+                  {!isLocked && g.stock === 0 && (
+                    <p className="text-center text-[11px] uppercase tracking-[0.2em] text-destructive">
+                      Sin stock
+                    </p>
+                  )}
                 </div>
               </OrnateFrame>
             </li>

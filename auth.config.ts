@@ -1,7 +1,7 @@
 // Edge-safe config (sin DB, sin bcrypt). La usa el middleware.
 import type { NextAuthConfig } from 'next-auth';
 
-const PROTECTED_PREFIXES = ['/admin', '/cuenta', '/catalogo', '/dispensario', '/checkout'];
+const PROTECTED_PREFIXES = ['/admin', '/cuenta', '/catalogo', '/dispensario', '/carrito', '/checkout'];
 const ADMIN_PREFIXES = ['/admin'];
 const AUTH_ROUTES = ['/login'];
 

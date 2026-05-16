@@ -158,10 +158,28 @@ export default async function CuentaPage() {
           </span>
         </Link>
 
-        {isAdmin ? (
+        <Link
+          href="/cuenta/pedidos"
+          className="group relative overflow-hidden border border-border bg-card p-6 transition-colors hover:border-brand/60"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">Historial</p>
+          <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
+            Mis pedidos
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Estado de cada pedido: aprobado, en tránsito, entregado.
+          </p>
+          <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+            Ver →
+          </span>
+        </Link>
+      </section>
+
+      {isAdmin && (
+        <section className="mt-6">
           <Link
             href="/admin"
-            className="group relative overflow-hidden border border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6 transition-colors hover:border-brand"
+            className="group relative block overflow-hidden border border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6 transition-colors hover:border-brand"
           >
             <div
               className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-40 transition-opacity group-hover:opacity-70"
@@ -178,19 +196,14 @@ export default async function CuentaPage() {
               Administración
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Gestionar invitaciones, socios y catálogo del club.
+              Gestionar invitaciones, solicitudes, genéticas y pedidos del club.
             </p>
             <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
               Ingresar →
             </span>
           </Link>
-        ) : (
-          <div className="border border-dashed border-border bg-card/40 p-6 text-sm text-muted-foreground">
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em]">Próximamente</p>
-            <p className="mt-3">Tus pedidos, direcciones de envío y cap mensual disponible.</p>
-          </div>
-        )}
-      </section>
+        </section>
+      )}
     </main>
   );
 }
