@@ -4,7 +4,7 @@ import { requireUser } from '@/lib/auth/dal';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Cargar permiso REPROCANN · eudromiac club',
+  title: 'Mi permiso REPROCANN · eudromiac club',
   robots: { index: false, follow: false },
 };
 
@@ -13,16 +13,20 @@ export default async function ReprocannPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl px-6 py-12">
-      <Link href="/cuenta" className="text-sm text-muted-foreground hover:text-foreground">
-        ← Volver
+      <Link
+        href="/cuenta"
+        className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground"
+      >
+        ← Volver a mi cuenta
       </Link>
-      <h1 className="mt-4 mb-2 text-3xl font-semibold tracking-tight">Cargar permiso REPROCANN</h1>
-      <p className="mb-8 text-sm text-muted-foreground">
-        El formulario completo (número, vencimiento, médico, comprobante) llega en la próxima fase.
-        Por ahora escribinos por el canal del club si tu cuenta sigue en revisión.
+      <h1 className="mt-6 font-display text-4xl italic tracking-tight">Mi permiso REPROCANN.</h1>
+      <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+        El formulario completo (número, vencimiento, médico tratante, comprobante en PDF/imagen) se
+        habilita en la próxima entrega. Por ahora, si tu cuenta sigue en revisión escribinos por el
+        canal del club y te ayudamos manualmente.
       </p>
-      <Button asChild variant="outline">
-        <Link href="/cuenta">Volver a tu cuenta</Link>
+      <Button asChild variant="outline" className="mt-8 rounded-full">
+        <Link href="/cuenta">Volver</Link>
       </Button>
     </main>
   );

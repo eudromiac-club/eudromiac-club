@@ -17,7 +17,7 @@ const reasonMessage: Record<Reason, string> = {
   not_found: 'Este link no corresponde a ninguna invitación.',
   redeemed: 'Esta invitación ya fue canjeada. Si la cuenta es tuya, ingresá desde /login.',
   revoked: 'Esta invitación fue revocada por el club.',
-  expired: 'Esta invitación expiró. Pedí una nueva al club.',
+  expired: 'Esta invitación expiró. Pedile una nueva al socio que te invitó.',
 };
 
 async function loadInvitation(code: string) {
@@ -41,10 +41,15 @@ export default async function RedeemInvitationPage({
 
   if (!result.ok) {
     return (
-      <main className="mx-auto flex min-h-dvh max-w-md flex-col items-start justify-center gap-6 px-6 py-16">
-        <h1 className="text-balance text-3xl font-semibold tracking-tight">Invitación no válida</h1>
-        <p className="text-balance text-muted-foreground">{reasonMessage[result.reason]}</p>
-        <Button asChild variant="outline">
+      <main className="mx-auto flex min-h-[calc(100dvh-3.5rem)] w-full max-w-md flex-col justify-center px-6 py-16">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-destructive">
+          Invitación no válida
+        </p>
+        <h1 className="mt-3 font-display text-4xl italic leading-tight tracking-tight">
+          No podemos abrir este link.
+        </h1>
+        <p className="mt-4 text-sm text-muted-foreground">{reasonMessage[result.reason]}</p>
+        <Button asChild variant="outline" className="mt-8 w-fit rounded-full px-5">
           <Link href="/">Volver al inicio</Link>
         </Button>
       </main>
@@ -52,18 +57,20 @@ export default async function RedeemInvitationPage({
   }
 
   return (
-    <main className="mx-auto w-full max-w-md px-6 py-12">
-      <div className="mb-8">
-        <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
-          ← Volver
-        </Link>
-      </div>
-      <h1 className="mb-2 text-3xl font-semibold tracking-tight">Crear tu cuenta</h1>
-      <p className="mb-8 text-sm text-muted-foreground">
-        Bienvenido al club. Completá estos datos y después validamos tu permiso REPROCANN desde tu
-        panel.
+    <main className="mx-auto w-full max-w-md px-6 py-16">
+      <p className="font-mono text-xs uppercase tracking-[0.2em] text-brand">
+        Invitación válida
       </p>
-      <RedeemForm code={code} suggestedEmail={result.invitation.email ?? ''} />
+      <h1 className="mt-3 font-display text-5xl italic leading-tight tracking-tight">
+        Crear tu cuenta.
+      </h1>
+      <p className="mt-4 text-sm text-muted-foreground">
+        Bienvenido al club. Completá estos datos y desde tu panel cargás el permiso REPROCANN para
+        validar.
+      </p>
+      <div className="mt-10">
+        <RedeemForm code={code} suggestedEmail={result.invitation.email ?? ''} />
+      </div>
     </main>
   );
 }

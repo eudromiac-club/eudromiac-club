@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { count, eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { users, invitations, genetics } from '@/lib/db/schema';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 async function getCounts() {
   const [[active], [pendingKyc], [pendingInv], [activeGenetics]] = await Promise.all([
@@ -20,51 +19,63 @@ async function getCounts() {
   };
 }
 
+const STATS: Array<{ key: keyof Awaited<ReturnType<typeof getCounts>>; label: string; hint: string }> = [
+  { key: 'activeMembers', label: 'Socios activos', hint: 'con REPROCANN validado' },
+  { key: 'pendingKyc', label: 'Pendientes KYC', hint: 'esperando validación' },
+  { key: 'pendingInvitations', label: 'Invitaciones abiertas', hint: 'sin canjear todavía' },
+  { key: 'activeGenetics', label: 'Genéticas activas', hint: 'disponibles para socios' },
+];
+
 export default async function AdminIndexPage() {
   const c = await getCounts();
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Panel</h1>
-        <p className="text-sm text-muted-foreground">Resumen del club.</p>
-      </div>
+    <div className="space-y-12">
+      <header>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Panel</p>
+        <h1 className="mt-2 font-display text-4xl italic tracking-tight">Resumen del club.</h1>
+      </header>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">Socios activos</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-semibold">{c.activeMembers}</CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">Pendientes KYC</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-semibold">{c.pendingKyc}</CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">Invitaciones abiertas</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-semibold">{c.pendingInvitations}</CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">Genéticas activas</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-semibold">{c.activeGenetics}</CardContent>
-        </Card>
-      </div>
+      <section aria-labelledby="stats-title">
+        <h2 id="stats-title" className="sr-only">
+          Estadísticas
+        </h2>
+        <ul className="grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
+          {STATS.map((s) => (
+            <li
+              key={s.key}
+              className="flex flex-col gap-3 bg-background p-6 transition-colors hover:bg-muted/40"
+            >
+              <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                {s.label}
+              </span>
+              <span className="font-mono text-4xl tabular-nums">{c[s.key]}</span>
+              <span className="text-xs text-muted-foreground">{s.hint}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      <div className="flex gap-3">
+      <section className="grid gap-6 md:grid-cols-2">
         <Link
           href="/admin/invitations"
-          className="rounded-md border bg-card px-4 py-2 text-sm font-medium hover:bg-accent"
+          className="group rounded-xl border bg-card p-6 transition-colors hover:border-foreground/30"
         >
-          Gestionar invitaciones →
+          <p className="font-mono text-xs uppercase tracking-[0.15em] text-brand">Invitaciones</p>
+          <h3 className="mt-3 font-display text-2xl italic tracking-tight">Generar nuevo acceso</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Crear un código de invitación y compartir el link con un socio nuevo.
+          </p>
+          <span className="mt-4 inline-block text-sm group-hover:underline">Ir →</span>
         </Link>
-      </div>
+
+        <div className="rounded-xl border border-dashed bg-card/40 p-6 text-sm text-muted-foreground">
+          <p className="font-mono text-xs uppercase tracking-[0.15em]">Próximamente</p>
+          <p className="mt-3">
+            Gestión de socios (REPROCANN), catálogo de genéticas, pedidos y reportes.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

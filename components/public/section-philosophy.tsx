@@ -1,32 +1,28 @@
-"use client";
+'use client';
 
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { prefersReducedMotion } from "@/lib/animations";
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import { prefersReducedMotion } from '@/lib/animations';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const VALUES = [
   {
-    title: "Comunidad pequeña",
-    body: "El número de socios se mantiene acotado a propósito. Conocemos a quienes integran el club.",
+    n: '01',
+    title: 'Comunidad pequeña',
+    body: 'El número de socios se mantiene acotado a propósito. Conocemos a quienes integran el club.',
   },
   {
-    title: "Curaduría",
-    body: "Cinco genéticas, no cien. Cada una tiene un porqué y se mantiene mientras tenga sentido.",
+    n: '02',
+    title: 'Curaduría',
+    body: 'Cinco genéticas, no cien. Cada una tiene un porqué y se mantiene mientras tenga sentido.',
   },
   {
-    title: "Cuidado del proceso",
-    body: "Atención al cultivo, al espacio y a la relación con cada socio. Sin prisa, sin promesas vacías.",
+    n: '03',
+    title: 'Cuidado del proceso',
+    body: 'Atención al cultivo, al espacio y a la relación con cada socio. Sin prisa, sin promesas vacías.',
   },
 ];
 
@@ -36,27 +32,21 @@ export function SectionPhilosophy() {
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
-      const heading = root.current?.querySelector(".reveal-heading");
-      const cards = root.current?.querySelectorAll(".reveal-card");
+      const heading = root.current?.querySelector('.reveal-heading');
+      const cards = root.current?.querySelectorAll('.reveal-card');
 
       const tl = gsap.timeline({
-        defaults: { ease: "power2.out" },
+        defaults: { ease: 'power3.out' },
         scrollTrigger: {
           trigger: root.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
+          start: 'top 78%',
+          toggleActions: 'play none none none',
         },
       });
 
-      if (heading) {
-        tl.from(heading, { y: 24, opacity: 0, duration: 0.7 });
-      }
+      if (heading) tl.from(heading, { y: 24, opacity: 0, duration: 0.7 });
       if (cards && cards.length > 0) {
-        tl.from(
-          cards,
-          { y: 16, opacity: 0, duration: 0.5, stagger: 0.1 },
-          "-=0.3",
-        );
+        tl.from(cards, { y: 24, opacity: 0, duration: 0.6, stagger: 0.12 }, '-=0.4');
       }
     },
     { scope: root },
@@ -65,29 +55,31 @@ export function SectionPhilosophy() {
   return (
     <section
       ref={root}
-      className="bg-muted/30 py-20 sm:py-28"
+      id="filosofia"
+      className="relative grain bg-brand-muted/40 py-24 sm:py-32"
       aria-labelledby="philosophy-title"
     >
-      <div className="mx-auto max-w-5xl px-6">
-        <h2
-          id="philosophy-title"
-          className="reveal-heading text-balance text-3xl font-semibold tracking-tight sm:text-4xl"
-        >
-          Cómo trabajamos
-        </h2>
-        <div className="mt-10 grid gap-4 sm:grid-cols-3">
-          {VALUES.map((value) => (
-            <Card key={value.title} className="reveal-card">
-              <CardHeader>
-                <CardTitle className="text-lg">{value.title}</CardTitle>
-                <CardDescription className="text-balance leading-relaxed">
-                  {value.body}
-                </CardDescription>
-              </CardHeader>
-              <CardContent />
-            </Card>
-          ))}
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="reveal-heading max-w-2xl">
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            02 · Filosofía
+          </span>
+          <h2
+            id="philosophy-title"
+            className="mt-4 font-display text-4xl italic leading-tight tracking-tight sm:text-5xl"
+          >
+            Cómo trabajamos.
+          </h2>
         </div>
+        <ul className="mt-14 grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-3">
+          {VALUES.map((v) => (
+            <li key={v.n} className="reveal-card flex h-full flex-col bg-background p-6 sm:p-8">
+              <span className="font-mono text-xs text-brand">{v.n}</span>
+              <h3 className="mt-4 text-lg font-semibold tracking-tight">{v.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{v.body}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

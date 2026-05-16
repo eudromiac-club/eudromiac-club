@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Fraunces } from "next/font/google";
 import { cookies } from "next/headers";
 import { AgeGateModal } from "@/components/public/age-gate-modal";
+import { Topbar } from "@/components/layout/topbar";
 import { AGE_GATE_COOKIE } from "@/lib/age-gate";
 import "./globals.css";
 
@@ -9,6 +10,13 @@ const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
+});
+
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+  axes: ["opsz", "SOFT"],
 });
 
 export const metadata: Metadata = {
@@ -25,9 +33,10 @@ export default async function RootLayout({
   const ageOk = cookieStore.has(AGE_GATE_COOKIE);
 
   return (
-    <html lang="es" className={inter.variable}>
+    <html lang="es" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
         {!ageOk && <AgeGateModal />}
+        <Topbar />
         {children}
       </body>
     </html>
