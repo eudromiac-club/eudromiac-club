@@ -1,0 +1,33 @@
+// Edge-safe config (sin DB, sin bcrypt). La usa el middleware.
+import type { NextAuthConfig } from 'next-auth';
+
+const PROTECTED_PREFIXES = ['/admin', '/cuenta', '/catalogo', '/checkout'];
+const ADMIN_PREFIXES = ['/admin'];
+const AUTH_ROUTES = ['/login'];
+
+export const authConfig = {
+  pages: { signIn: '/login' },
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const role = auth?.user?.role;
+      const pathname = nextUrl.pathname;
+
+      if (ADMIN_PREFIXES.some((p) => pathname.startsWith(p))) {
+        if (!isLoggedIn) return false;
+        return role === 'admin';
+      }
+
+      if (PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))) {
+        return isLoggedIn;
+      }
+
+      if (AUTH_ROUTES.some((p) => pathname.startsWith(p)) && isLoggedIn) {
+        return Response.redirect(new URL('/cuenta', nextUrl));
+      }
+
+      return true;
+    },
+  },
+  providers: [],
+} satisfies NextAuthConfig;
