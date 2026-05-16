@@ -10,7 +10,20 @@ function labelClass() {
   return 'mb-1.5 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground';
 }
 
-export function ReprocannForm() {
+export type ReprocannDefaults = {
+  fullName?: string | null;
+  dni?: string | null;
+  birthDate?: string | null;
+  phone?: string | null;
+  reprocannNumber?: string | null;
+  reprocannExpiresAt?: string | null;
+  doctorName?: string | null;
+  doctorLicense?: string | null;
+  doctorProvince?: string | null;
+  notes?: string | null;
+};
+
+export function ReprocannForm({ defaults }: { defaults?: ReprocannDefaults }) {
   const router = useRouter();
   const [state, action, isPending] = useActionState<SubmitReprocannState, FormData>(
     submitReprocannAction,
@@ -18,6 +31,7 @@ export function ReprocannForm() {
   );
   const errors = state && !state.ok ? state.errors : undefined;
   const formError = state && !state.ok ? state.form : undefined;
+  const d = defaults ?? {};
 
   useEffect(() => {
     if (state?.ok) {
@@ -37,28 +51,54 @@ export function ReprocannForm() {
             <label htmlFor="fullName" className={labelClass()}>
               Nombre completo
             </label>
-            <Input id="fullName" name="fullName" required maxLength={120} />
+            <Input
+              id="fullName"
+              name="fullName"
+              required
+              maxLength={120}
+              defaultValue={d.fullName ?? ''}
+            />
             {errors?.fullName && <p className="mt-1 text-xs text-destructive">{errors.fullName[0]}</p>}
           </div>
           <div>
             <label htmlFor="dni" className={labelClass()}>
               DNI
             </label>
-            <Input id="dni" name="dni" inputMode="numeric" required maxLength={10} placeholder="solo números" />
+            <Input
+              id="dni"
+              name="dni"
+              inputMode="numeric"
+              required
+              maxLength={10}
+              placeholder="solo números"
+              defaultValue={d.dni ?? ''}
+            />
             {errors?.dni && <p className="mt-1 text-xs text-destructive">{errors.dni[0]}</p>}
           </div>
           <div>
             <label htmlFor="birthDate" className={labelClass()}>
               Fecha de nacimiento
             </label>
-            <Input id="birthDate" name="birthDate" type="date" required />
+            <Input
+              id="birthDate"
+              name="birthDate"
+              type="date"
+              required
+              defaultValue={d.birthDate ?? ''}
+            />
             {errors?.birthDate && <p className="mt-1 text-xs text-destructive">{errors.birthDate[0]}</p>}
           </div>
           <div>
             <label htmlFor="phone" className={labelClass()}>
               Teléfono (opcional)
             </label>
-            <Input id="phone" name="phone" inputMode="tel" maxLength={40} />
+            <Input
+              id="phone"
+              name="phone"
+              inputMode="tel"
+              maxLength={40}
+              defaultValue={d.phone ?? ''}
+            />
           </div>
         </div>
       </section>
@@ -72,7 +112,13 @@ export function ReprocannForm() {
             <label htmlFor="reprocannNumber" className={labelClass()}>
               Número de permiso
             </label>
-            <Input id="reprocannNumber" name="reprocannNumber" required maxLength={60} />
+            <Input
+              id="reprocannNumber"
+              name="reprocannNumber"
+              required
+              maxLength={60}
+              defaultValue={d.reprocannNumber ?? ''}
+            />
             {errors?.reprocannNumber && (
               <p className="mt-1 text-xs text-destructive">{errors.reprocannNumber[0]}</p>
             )}
@@ -81,7 +127,13 @@ export function ReprocannForm() {
             <label htmlFor="reprocannExpiresAt" className={labelClass()}>
               Fecha de vencimiento
             </label>
-            <Input id="reprocannExpiresAt" name="reprocannExpiresAt" type="date" required />
+            <Input
+              id="reprocannExpiresAt"
+              name="reprocannExpiresAt"
+              type="date"
+              required
+              defaultValue={d.reprocannExpiresAt ?? ''}
+            />
             {errors?.reprocannExpiresAt && (
               <p className="mt-1 text-xs text-destructive">{errors.reprocannExpiresAt[0]}</p>
             )}
@@ -98,7 +150,13 @@ export function ReprocannForm() {
             <label htmlFor="doctorName" className={labelClass()}>
               Nombre del médico
             </label>
-            <Input id="doctorName" name="doctorName" required maxLength={120} />
+            <Input
+              id="doctorName"
+              name="doctorName"
+              required
+              maxLength={120}
+              defaultValue={d.doctorName ?? ''}
+            />
             {errors?.doctorName && (
               <p className="mt-1 text-xs text-destructive">{errors.doctorName[0]}</p>
             )}
@@ -107,13 +165,23 @@ export function ReprocannForm() {
             <label htmlFor="doctorLicense" className={labelClass()}>
               Matrícula (opcional)
             </label>
-            <Input id="doctorLicense" name="doctorLicense" maxLength={60} />
+            <Input
+              id="doctorLicense"
+              name="doctorLicense"
+              maxLength={60}
+              defaultValue={d.doctorLicense ?? ''}
+            />
           </div>
           <div className="sm:col-span-2">
             <label htmlFor="doctorProvince" className={labelClass()}>
               Provincia (opcional)
             </label>
-            <Input id="doctorProvince" name="doctorProvince" maxLength={60} />
+            <Input
+              id="doctorProvince"
+              name="doctorProvince"
+              maxLength={60}
+              defaultValue={d.doctorProvince ?? ''}
+            />
           </div>
         </div>
       </section>
@@ -145,6 +213,7 @@ export function ReprocannForm() {
             name="notes"
             rows={3}
             maxLength={2000}
+            defaultValue={d.notes ?? ''}
             className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           />
         </div>

@@ -173,7 +173,24 @@ export default async function ReprocannPage() {
       )}
 
       <div className="mt-10">
-        <ReprocannForm />
+        <ReprocannForm
+          defaults={
+            profile
+              ? {
+                  fullName: profile.fullName,
+                  dni: profile.dni,
+                  birthDate: profile.birthDate,
+                  phone: profile.phone,
+                  reprocannNumber: profile.reprocannNumber,
+                  reprocannExpiresAt: profile.reprocannExpiresAt,
+                  doctorName: profile.doctorName,
+                  doctorLicense: profile.doctorLicense,
+                  doctorProvince: profile.doctorProvince,
+                  notes: profile.notes,
+                }
+              : undefined
+          }
+        />
       </div>
     </main>
   );

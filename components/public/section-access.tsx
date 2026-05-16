@@ -11,9 +11,9 @@ import { prefersReducedMotion } from '@/lib/animations';
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const STEPS = [
-  { n: 'I', title: 'Recibís la invitación', body: 'Un miembro activo te comparte un link nominal de un solo uso.' },
-  { n: 'II', title: 'Creás tu cuenta', body: 'Email, contraseña y nombre. Acceso inmediato al santuario privado.' },
-  { n: 'III', title: 'Validamos tu permiso', body: 'Cargás el comprobante y el equipo lo revisa uno a uno.' },
+  { n: 'I', title: 'Creás tu cuenta', body: 'Tus datos personales y tu número de trámite REPROCANN. Lleva un minuto.' },
+  { n: 'II', title: 'Subís el comprobante', body: 'Desde tu panel cargás el PDF o foto del permiso vigente.' },
+  { n: 'III', title: 'Validamos tu permiso', body: 'El equipo revisa cada solicitud uno a uno y te confirmamos.' },
   { n: 'IV', title: 'Ingresás al club', body: 'Acceso a la colección curada y a la guía personalizada.' },
 ];
 
@@ -79,9 +79,9 @@ export function SectionAccess() {
           <span className="acc-title-line block text-brand">al santuario.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-balance text-sm leading-relaxed text-muted-foreground sm:text-base">
-          El acceso es por invitación nominal de un miembro activo. No
-          aceptamos solicitudes abiertas. Si te invitaron, seguís estos cuatro
-          pasos.
+          El ingreso requiere REPROCANN vigente. Creás tu cuenta, subís el
+          comprobante y el equipo valida tu permiso antes de habilitarte el
+          dispensario.
         </p>
 
         <ol className="acc-steps mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
@@ -95,7 +95,13 @@ export function SectionAccess() {
           ))}
         </ol>
 
-        <div className="acc-cta mt-16">
+        <div className="acc-cta mt-16 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-5">
+          <Button
+            asChild
+            className="rounded-none px-8 py-6 text-[11px] uppercase tracking-[0.3em]"
+          >
+            <Link href="/registro">Crear cuenta</Link>
+          </Button>
           <Button
             asChild
             variant="outline"

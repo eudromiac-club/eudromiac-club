@@ -258,7 +258,13 @@ export function Hero() {
           </p>
         </div>
 
-        <div className="hero-cta">
+        <div className="hero-cta flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+          <Button
+            asChild
+            className="rounded-none px-8 py-6 text-[11px] uppercase tracking-[0.3em]"
+          >
+            <Link href="/registro">Crear cuenta</Link>
+          </Button>
           <Button
             asChild
             variant="outline"

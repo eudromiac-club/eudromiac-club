@@ -21,13 +21,20 @@ export default function LoginPage() {
       <div className="mt-10">
         <LoginForm />
       </div>
-      <p className="mt-8 text-center text-xs text-muted-foreground">
-        ¿Tenés invitación pendiente?{' '}
-        <Link href="/invitacion" className="underline hover:text-foreground">
-          Canjeala acá
-        </Link>
-        .
-      </p>
+      <div className="mt-8 space-y-2 text-center text-xs text-muted-foreground">
+        <p>
+          ¿No tenés cuenta?{' '}
+          <Link href="/registro" className="text-brand underline hover:text-foreground">
+            Crear cuenta
+          </Link>
+        </p>
+        <p>
+          ¿Tenés invitación pendiente?{' '}
+          <Link href="/invitacion" className="underline hover:text-foreground">
+            Canjeala acá
+          </Link>
+        </p>
+      </div>
     </main>
   );
 }
