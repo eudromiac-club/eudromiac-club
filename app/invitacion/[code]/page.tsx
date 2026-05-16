@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { RedeemForm } from './redeem-form';
 
 export const metadata: Metadata = {
-  title: 'Canjear invitación · eudromiac club',
+  title: 'Canjear invitación · EUDROMIA CLUB',
   robots: { index: false, follow: false },
 };
 

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { requireAdmin } from '@/lib/auth/dal';
 
 export const metadata: Metadata = {
-  title: 'Admin · eudromiac club',
+  title: 'Admin · EUDROMIA CLUB',
   robots: { index: false, follow: false },
 };
 

@@ -11,26 +11,10 @@ import { prefersReducedMotion } from '@/lib/animations';
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const STEPS = [
-  {
-    n: '01',
-    title: 'Recibís una invitación',
-    body: 'Un socio activo te comparte un link de un solo uso.',
-  },
-  {
-    n: '02',
-    title: 'Creás tu cuenta',
-    body: 'Email, contraseña y nombre. Pocos minutos.',
-  },
-  {
-    n: '03',
-    title: 'Cargás tu REPROCANN',
-    body: 'Subís el comprobante y el equipo lo valida.',
-  },
-  {
-    n: '04',
-    title: 'Accedés al catálogo',
-    body: 'Cinco genéticas, pedido por mes hasta tu cap autorizado.',
-  },
+  { n: 'I', title: 'Recibís la invitación', body: 'Un miembro activo te comparte un link nominal de un solo uso.' },
+  { n: 'II', title: 'Creás tu cuenta', body: 'Email, contraseña y nombre. Acceso inmediato al santuario privado.' },
+  { n: 'III', title: 'Validamos tu permiso', body: 'Cargás el comprobante y el equipo lo revisa uno a uno.' },
+  { n: 'IV', title: 'Ingresás al club', body: 'Acceso a la colección curada y a la guía personalizada.' },
 ];
 
 export function SectionAccess() {
@@ -39,20 +23,27 @@ export function SectionAccess() {
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
-      const reveals = root.current?.querySelectorAll('.reveal');
-      if (!reveals || reveals.length === 0) return;
-
-      gsap.from(reveals, {
-        y: 28,
+      gsap.from('.acc-title-line', {
+        y: 30,
         opacity: 0,
-        duration: 0.7,
+        duration: 0.9,
         ease: 'power3.out',
         stagger: 0.1,
-        scrollTrigger: {
-          trigger: root.current,
-          start: 'top 78%',
-          toggleActions: 'play none none none',
-        },
+        scrollTrigger: { trigger: '.acc-title', start: 'top 82%' },
+      });
+      gsap.from('.acc-step', {
+        opacity: 0,
+        y: 30,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.12,
+        scrollTrigger: { trigger: '.acc-steps', start: 'top 80%' },
+      });
+      gsap.from('.acc-cta', {
+        opacity: 0,
+        y: 14,
+        duration: 0.7,
+        scrollTrigger: { trigger: '.acc-cta', start: 'top 90%' },
       });
     },
     { scope: root },
@@ -62,44 +53,50 @@ export function SectionAccess() {
     <section
       ref={root}
       id="acceso"
-      className="border-t border-border/60"
+      className="relative isolate overflow-hidden py-24 sm:py-32"
       aria-labelledby="access-title"
     >
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
-        <div className="reveal max-w-2xl">
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            03 · Acceso
-          </span>
-          <h2
-            id="access-title"
-            className="mt-4 font-display text-4xl italic leading-tight tracking-tight sm:text-5xl"
-          >
-            Cómo se entra al club.
-          </h2>
-          <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
-            El ingreso es por invitación nominal de un socio activo. No
-            aceptamos solicitudes abiertas. Si te invitaron, seguís estos
-            pasos.
-          </p>
-        </div>
+      <div
+        className="pointer-events-none absolute right-0 top-0 -z-10 h-[60vmin] w-[60vmin] rounded-full opacity-30"
+        style={{
+          background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 60%)',
+          filter: 'blur(100px)',
+        }}
+        aria-hidden
+      />
+      <div className="mx-auto max-w-5xl px-6 text-center">
+        <h2
+          id="access-title"
+          className="acc-title font-display text-[clamp(1.5rem,3.6vw,2.5rem)] font-medium uppercase tracking-[0.18em]"
+        >
+          <span className="acc-title-line block">Cómo se ingresa</span>
+          <span className="acc-title-line block text-brand">al santuario.</span>
+        </h2>
+        <p className="mx-auto mt-6 max-w-2xl text-balance text-sm leading-relaxed text-muted-foreground sm:text-base">
+          El acceso es por invitación nominal de un miembro activo. No
+          aceptamos solicitudes abiertas. Si te invitaron, seguís estos cuatro
+          pasos.
+        </p>
 
-        <ol className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <ol className="acc-steps mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((s) => (
-            <li key={s.n} className="reveal relative border-l-2 border-brand/60 pl-5">
-              <span className="font-mono text-xs text-brand">{s.n}</span>
-              <h3 className="mt-2 text-base font-semibold tracking-tight">{s.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+            <li key={s.n} className="acc-step flex flex-col items-center text-center">
+              <span className="font-display text-2xl italic text-brand">{s.n}</span>
+              <div className="my-3 h-px w-8 bg-brand/60" />
+              <h3 className="text-[11px] font-medium uppercase tracking-[0.25em]">{s.title}</h3>
+              <p className="mt-2 max-w-[20ch] text-xs leading-relaxed text-muted-foreground">{s.body}</p>
             </li>
           ))}
         </ol>
 
-        <div className="reveal mt-16 flex flex-wrap items-center gap-3">
-          <Button asChild className="rounded-full px-6">
-            <Link href="/login">Ya soy socio</Link>
+        <div className="acc-cta mt-16">
+          <Button
+            asChild
+            variant="outline"
+            className="rounded-none border-brand/60 bg-transparent px-8 py-6 text-[11px] uppercase tracking-[0.3em] text-brand hover:border-brand hover:bg-brand/10 hover:text-brand"
+          >
+            <Link href="/login">Solicitar acceso</Link>
           </Button>
-          <span className="text-sm text-muted-foreground">
-            ¿Tenés un link de invitación? Abrilo directamente.
-          </span>
         </div>
       </div>
     </section>

@@ -4,7 +4,7 @@ import { requireUser } from '@/lib/auth/dal';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'Mi permiso REPROCANN · eudromiac club',
+  title: 'Mi permiso REPROCANN · EUDROMIA CLUB',
   robots: { index: false, follow: false },
 };
 

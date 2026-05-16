@@ -1,18 +1,21 @@
+import { LogoLockup } from '@/components/brand/logo';
+
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="border-t border-border/60">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-12 text-sm sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="font-display text-2xl italic leading-none">eudromiac</p>
-          <p className="mt-2 max-w-sm text-muted-foreground">
-            Asociación civil de socios pacientes. Acceso por invitación. Ley
-            27.350 · REPROCANN.
+    <footer className="relative border-t border-border/40">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-6 py-16">
+        <LogoLockup size="md" />
+        <p className="max-w-md text-center text-sm leading-relaxed text-muted-foreground">
+          Curaduría botánica y guía privada para el viaje hacia el equilibrio.
+          Acceso restringido para socios pacientes.
+        </p>
+        <div className="mt-2 flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground/70">
+          <p>© {year} · EUDROMIA CLUB</p>
+          <p className="max-w-md text-center leading-relaxed">
+            Asociación civil sin fines de lucro · Marco legal: Ley 27.350
           </p>
         </div>
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          © {year} · eudromiac club
-        </p>
       </div>
     </footer>
   );

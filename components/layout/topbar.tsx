@@ -7,21 +7,27 @@ export async function Topbar() {
   const user = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/75 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-        <Link href="/" aria-label="eudromiac club — inicio" className="group flex items-center gap-2">
-          <span className="font-display text-lg italic leading-none">eudromiac</span>
-          <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">club</span>
+    <header className="sticky top-0 z-30 border-b border-border/40 bg-background/70 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <Link
+          href="/"
+          aria-label="EUDROMIA CLUB — inicio"
+          className="font-display text-base font-medium tracking-[0.3em] text-foreground"
+        >
+          EUDROMIA <span className="text-brand">CLUB</span>
         </Link>
 
-        <nav className="hidden items-center gap-8 text-sm md:flex" aria-label="Navegación principal">
+        <nav
+          className="hidden items-center gap-10 text-[11px] font-medium uppercase tracking-[0.2em] md:flex"
+          aria-label="Navegación principal"
+        >
           {!user ? (
             <>
-              <a href="/#club" className="text-muted-foreground transition-colors hover:text-foreground">
-                El club
+              <a href="/#pilares" className="text-muted-foreground transition-colors hover:text-foreground">
+                Pilares
               </a>
-              <a href="/#filosofia" className="text-muted-foreground transition-colors hover:text-foreground">
-                Filosofía
+              <a href="/#coleccion" className="text-muted-foreground transition-colors hover:text-foreground">
+                Colección
               </a>
               <a href="/#acceso" className="text-muted-foreground transition-colors hover:text-foreground">
                 Acceso
@@ -36,10 +42,7 @@ export async function Topbar() {
                 Mi cuenta
               </Link>
               {user.role === 'admin' && (
-                <Link
-                  href="/admin"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
+                <Link href="/admin" className="text-muted-foreground transition-colors hover:text-foreground">
                   Admin
                 </Link>
               )}
@@ -49,18 +52,28 @@ export async function Topbar() {
 
         <div className="flex items-center gap-3">
           {!user ? (
-            <Button asChild size="sm" variant="outline" className="rounded-full px-4">
-              <Link href="/login">Socios</Link>
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="rounded-none border-brand/60 px-5 text-[11px] uppercase tracking-[0.2em] text-brand hover:bg-brand/10 hover:text-brand"
+            >
+              <Link href="/login">Solicitar acceso</Link>
             </Button>
           ) : (
             <>
               {user.status === 'pending_kyc' && (
-                <span className="hidden text-xs text-amber-700 dark:text-amber-400 sm:inline">
-                  · KYC pendiente
+                <span className="hidden text-[10px] uppercase tracking-[0.18em] text-brand sm:inline">
+                  KYC pendiente
                 </span>
               )}
               <form action={logoutAction}>
-                <Button type="submit" size="sm" variant="ghost" className="rounded-full">
+                <Button
+                  type="submit"
+                  size="sm"
+                  variant="ghost"
+                  className="text-[11px] uppercase tracking-[0.2em]"
+                >
                   Salir
                 </Button>
               </form>

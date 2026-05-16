@@ -4,74 +4,58 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
-    --brand: 142 38% 30%;
-    --brand-foreground: 0 0% 98%;
-    --brand-muted: 142 22% 92%;
+    /* Dark-first como en el moodboard: el sitio arranca en oscuro. */
+    --background: 30 7% 6%;
+    --foreground: 36 25% 92%;
+    --card: 30 7% 8%;
+    --card-foreground: 36 25% 92%;
+    --popover: 30 7% 8%;
+    --popover-foreground: 36 25% 92%;
+    --primary: 36 25% 92%;
+    --primary-foreground: 30 7% 6%;
+    --secondary: 30 6% 14%;
+    --secondary-foreground: 36 25% 92%;
+    --muted: 30 6% 14%;
+    --muted-foreground: 32 12% 62%;
+    --accent: 30 6% 14%;
+    --accent-foreground: 36 25% 92%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 36 25% 96%;
+    --border: 30 6% 18%;
+    --input: 30 6% 18%;
+    --ring: 32 55% 60%;
+    --radius: 0.25rem;
+
+    /* Cobre/dorado: acento de marca. */
+    --brand: 32 55% 60%;
+    --brand-foreground: 30 7% 6%;
+    --brand-muted: 32 25% 18%;
   }
 
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --brand: 142 32% 62%;
-    --brand-foreground: 240 10% 3.9%;
-    --brand-muted: 142 18% 18%;
-  }
-}
-
-@layer utilities {
-  .grain {
-    position: relative;
-  }
-  .grain::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-    background-size: 160px 160px;
-    mix-blend-mode: multiply;
-    opacity: 0.5;
-  }
-  .dark .grain::after {
-    mix-blend-mode: screen;
-    opacity: 0.4;
+  /* Mantengo .light por si después se suma toggle de tema. */
+  .light {
+    --background: 36 30% 96%;
+    --foreground: 30 10% 12%;
+    --card: 36 30% 98%;
+    --card-foreground: 30 10% 12%;
+    --popover: 36 30% 98%;
+    --popover-foreground: 30 10% 12%;
+    --primary: 30 10% 12%;
+    --primary-foreground: 36 30% 96%;
+    --secondary: 30 10% 90%;
+    --secondary-foreground: 30 10% 12%;
+    --muted: 30 10% 90%;
+    --muted-foreground: 30 8% 40%;
+    --accent: 30 10% 90%;
+    --accent-foreground: 30 10% 12%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 36 30% 96%;
+    --border: 30 10% 84%;
+    --input: 30 10% 84%;
+    --ring: 32 55% 40%;
+    --brand: 32 55% 40%;
+    --brand-foreground: 36 30% 96%;
+    --brand-muted: 32 35% 88%;
   }
 }
 
@@ -81,5 +65,24 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .tracking-display {
+    letter-spacing: 0.28em;
+  }
+  .grain {
+    position: relative;
+  }
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 160px 160px;
+    mix-blend-mode: overlay;
+    opacity: 0.5;
   }
 }

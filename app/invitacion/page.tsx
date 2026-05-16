@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 export const metadata = {
-  title: 'Canjear invitación · eudromiac club',
+  title: 'Canjear invitación · EUDROMIA CLUB',
   robots: { index: false, follow: false },
 };
 

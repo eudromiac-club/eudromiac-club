@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Cinzel } from "next/font/google";
 import { cookies } from "next/headers";
 import { AgeGateModal } from "@/components/public/age-gate-modal";
 import { Topbar } from "@/components/layout/topbar";
@@ -12,16 +12,17 @@ const inter = Inter({
   display: "swap",
 });
 
-const fraunces = Fraunces({
+const cinzel = Cinzel({
   variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
-  axes: ["opsz", "SOFT"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "eudromiac club",
-  description: "Club cannábico de socios — acceso por invitación.",
+  title: "EUDROMIA CLUB · La alquimia del bienestar",
+  description:
+    "Curaduría botánica y guía privada para el viaje hacia el equilibrio. Acceso restringido por invitación.",
 };
 
 export default async function RootLayout({
@@ -33,7 +34,7 @@ export default async function RootLayout({
   const ageOk = cookieStore.has(AGE_GATE_COOKIE);
 
   return (
-    <html lang="es" className={`${inter.variable} ${fraunces.variable}`}>
+    <html lang="es" className={`${inter.variable} ${cinzel.variable}`}>
       <body>
         {!ageOk && <AgeGateModal />}
         <Topbar />

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { LoginForm } from './login-form';
 
 export const metadata: Metadata = {
-  title: 'Ingresar · eudromiac club',
+  title: 'Ingresar · EUDROMIA CLUB',
   robots: { index: false, follow: false },
 };
 

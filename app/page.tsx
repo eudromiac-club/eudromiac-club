@@ -1,6 +1,6 @@
 import { Hero } from '@/components/public/hero';
-import { SectionWhat } from '@/components/public/section-what';
-import { SectionPhilosophy } from '@/components/public/section-philosophy';
+import { SectionPillars } from '@/components/public/section-pillars';
+import { SectionCollection } from '@/components/public/section-collection';
 import { SectionAccess } from '@/components/public/section-access';
 import { Footer } from '@/components/public/footer';
 
@@ -9,8 +9,8 @@ export default function Home() {
     <>
       <main>
         <Hero />
-        <SectionWhat />
-        <SectionPhilosophy />
+        <SectionPillars />
+        <SectionCollection />
         <SectionAccess />
       </main>
       <Footer />
