@@ -210,15 +210,37 @@ export function SectionCollection() {
       });
 
       gsap.from('.col-item', {
-        y: 60,
+        y: 80,
         opacity: 0,
-        duration: 1.1,
+        duration: 1.2,
         ease: 'power3.out',
-        stagger: 0.18,
+        stagger: 0.22,
         scrollTrigger: {
           trigger: '.col-grid',
           start: 'top 75%',
         },
+      });
+
+      // Parallax interno por card: la imagen/art se desplaza a velocidad
+      // ligeramente distinta del marco al hacer scroll → profundidad sin
+      // perder la cuadrícula.
+      gsap.utils.toArray<HTMLElement>('.col-item').forEach((item, i) => {
+        const content = item.querySelector<HTMLElement>('.col-photo');
+        if (!content) return;
+        gsap.fromTo(
+          content,
+          { yPercent: -3 },
+          {
+            yPercent: 3 + i * 1.5,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: item,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.5,
+            },
+          },
+        );
       });
     },
     { scope: root },
@@ -251,7 +273,7 @@ export function SectionCollection() {
           {ITEMS.map((item) => (
             <li key={item.id} className="col-item">
               <OrnateFrame className="group">
-                <div className="relative aspect-[3/4] overflow-hidden">
+                <div className="col-photo relative aspect-[3/4] overflow-hidden">
                   {item.kind === 'image' && item.image && item.alt ? (
                     <Image
                       src={item.image}

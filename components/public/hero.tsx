@@ -192,8 +192,7 @@ export function Hero() {
             <span className="hero-headline-line block text-brand">del bienestar.</span>
           </h1>
           <p className="hero-lede mx-auto mt-7 max-w-xl text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Curaduría botánica y guía privada para elevar tu equilibrio. Acceso
-            restringido para socios.
+            Curaduría botánica y guía privada para el viaje hacia el equilibrio.
           </p>
         </div>
 

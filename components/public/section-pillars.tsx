@@ -50,15 +50,32 @@ export function SectionPillars() {
       });
 
       gsap.from('.pillar-item', {
-        y: 40,
+        y: 60,
         opacity: 0,
-        duration: 1,
+        duration: 1.1,
         ease: 'power3.out',
-        stagger: 0.18,
+        stagger: 0.22,
         scrollTrigger: {
           trigger: '.pillar-grid',
           start: 'top 78%',
         },
+      });
+
+      // Parallax: cada icono se mueve a una velocidad ligeramente distinta
+      // mientras la sección está en viewport. Da profundidad cinematográfica.
+      gsap.utils.toArray<HTMLElement>('.pillar-item').forEach((item, i) => {
+        const icon = item.querySelector('.pillar-icon');
+        if (!icon) return;
+        gsap.to(icon, {
+          y: -40 - i * 10,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2,
+          },
+        });
       });
 
       // Glow lento del icono dentro del arco
