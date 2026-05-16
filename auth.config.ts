@@ -7,7 +7,22 @@ const AUTH_ROUTES = ['/login'];
 
 export const authConfig = {
   pages: { signIn: '/login' },
+  session: { strategy: 'jwt' },
   callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+        token.status = user.status;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      if (token.sub) session.user.id = token.sub;
+      session.user.role = (token.role as 'member' | 'admin') ?? 'member';
+      session.user.status =
+        (token.status as 'pending_kyc' | 'active' | 'suspended' | 'inactive') ?? 'pending_kyc';
+      return session;
+    },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const role = auth?.user?.role;

@@ -15,7 +15,6 @@ const LoginSchema = z.object({
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
-  session: { strategy: 'jwt' },
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -64,21 +63,4 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    ...authConfig.callbacks,
-    jwt({ token, user }) {
-      if (user) {
-        token.role = user.role;
-        token.status = user.status;
-      }
-      return token;
-    },
-    session({ session, token }) {
-      if (token.sub) session.user.id = token.sub;
-      session.user.role = (token.role as 'member' | 'admin') ?? 'member';
-      session.user.status =
-        (token.status as 'pending_kyc' | 'active' | 'suspended' | 'inactive') ?? 'pending_kyc';
-      return session;
-    },
-  },
 });
