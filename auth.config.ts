@@ -20,7 +20,13 @@ export const authConfig = {
       if (token.sub) session.user.id = token.sub;
       session.user.role = (token.role as 'member' | 'admin') ?? 'member';
       session.user.status =
-        (token.status as 'pending_kyc' | 'active' | 'suspended' | 'inactive') ?? 'pending_kyc';
+        (token.status as
+          | 'pending_kyc'
+          | 'under_review'
+          | 'active'
+          | 'rejected'
+          | 'suspended'
+          | 'inactive') ?? 'pending_kyc';
       return session;
     },
     authorized({ auth, request: { nextUrl } }) {

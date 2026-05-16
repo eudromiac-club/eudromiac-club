@@ -1,7 +1,13 @@
 import type { DefaultSession } from 'next-auth';
 
 type UserRole = 'member' | 'admin';
-type UserStatus = 'pending_kyc' | 'active' | 'suspended' | 'inactive';
+type UserStatus =
+  | 'pending_kyc'
+  | 'under_review'
+  | 'active'
+  | 'rejected'
+  | 'suspended'
+  | 'inactive';
 
 declare module 'next-auth' {
   interface User {

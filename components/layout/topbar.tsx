@@ -67,6 +67,16 @@ export async function Topbar() {
                   KYC pendiente
                 </span>
               )}
+              {user.status === 'under_review' && (
+                <span className="hidden text-[10px] uppercase tracking-[0.18em] text-brand sm:inline">
+                  En revisión
+                </span>
+              )}
+              {user.status === 'rejected' && (
+                <span className="hidden text-[10px] uppercase tracking-[0.18em] text-destructive sm:inline">
+                  Rechazada
+                </span>
+              )}
               <form action={logoutAction}>
                 <Button
                   type="submit"

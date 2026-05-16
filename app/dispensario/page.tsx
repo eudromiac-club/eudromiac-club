@@ -30,7 +30,45 @@ function formatPriceArs(cents: number): string {
 
 export default async function DispensarioPage() {
   const user = await requireUser();
-  const isPending = user.status === 'pending_kyc';
+  const isActive = user.status === 'active' || user.role === 'admin';
+  const isLocked = !isActive;
+  const lockMsg =
+    user.status === 'pending_kyc'
+      ? {
+          eyebrow: '◆ Acceso bloqueado',
+          title: 'Validá tu permiso REPROCANN.',
+          body: 'Para ver el detalle y reservar genéticas necesitás cargar tu permiso vigente. El equipo revisa cada solicitud uno a uno.',
+          cta: 'Cargar mi permiso',
+          href: '/cuenta/reprocann',
+          variant: 'brand' as const,
+        }
+      : user.status === 'under_review'
+        ? {
+            eyebrow: '◆ En revisión',
+            title: 'Tu solicitud está siendo revisada.',
+            body: 'Ya tenemos tu documentación. El acceso al dispensario se desbloquea cuando el equipo apruebe tu solicitud.',
+            cta: 'Ver mi solicitud',
+            href: '/cuenta/reprocann',
+            variant: 'brand' as const,
+          }
+        : user.status === 'rejected'
+          ? {
+              eyebrow: '◆ Solicitud rechazada',
+              title: 'No podés acceder al dispensario.',
+              body: 'Tu solicitud fue rechazada. Contactá al club para entender el motivo y reenviar la documentación.',
+              cta: 'Volver a enviar',
+              href: '/cuenta/reprocann',
+              variant: 'destructive' as const,
+            }
+          : {
+              eyebrow: '◆ Acceso bloqueado',
+              title: 'Tu cuenta no puede operar.',
+              body: 'Contactá al club para más información.',
+              cta: 'Volver a mi cuenta',
+              href: '/cuenta',
+              variant: 'destructive' as const,
+            };
+
   const rows = await db
     .select()
     .from(genetics)
@@ -53,38 +91,51 @@ export default async function DispensarioPage() {
         </p>
       </header>
 
-      {isPending && (
+      {isLocked && (
         <section
-          aria-labelledby="kyc-block"
-          className="relative mx-auto mt-12 max-w-2xl overflow-hidden border border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-8 text-center shadow-[0_0_80px_-20px_hsl(var(--brand)/0.5)]"
+          aria-labelledby="lock-block"
+          className={`relative mx-auto mt-12 max-w-2xl overflow-hidden border p-8 text-center ${
+            lockMsg.variant === 'brand'
+              ? 'border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] shadow-[0_0_80px_-20px_hsl(var(--brand)/0.5)]'
+              : 'border-destructive/40 bg-destructive/10'
+          }`}
         >
-          <div
-            className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full opacity-50"
-            style={{
-              background: 'radial-gradient(circle, hsl(32 70% 50% / 0.55), transparent 70%)',
-              filter: 'blur(50px)',
-            }}
-            aria-hidden
-          />
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
-            ◆ Acceso bloqueado
+          {lockMsg.variant === 'brand' && (
+            <div
+              className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full opacity-50"
+              style={{
+                background: 'radial-gradient(circle, hsl(32 70% 50% / 0.55), transparent 70%)',
+                filter: 'blur(50px)',
+              }}
+              aria-hidden
+            />
+          )}
+          <p
+            className={`font-mono text-[10px] uppercase tracking-[0.25em] ${
+              lockMsg.variant === 'brand' ? 'text-brand' : 'text-destructive'
+            }`}
+          >
+            {lockMsg.eyebrow}
           </p>
           <h2
-            id="kyc-block"
+            id="lock-block"
             className="mt-3 font-display text-2xl font-medium uppercase tracking-[0.1em]"
           >
-            Validá tu permiso <span className="text-brand">REPROCANN</span>.
+            {lockMsg.title}
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-            Para poder ver el detalle y reservar genéticas necesitás cargar tu permiso vigente. El
-            equipo revisa cada solicitud uno a uno.
+            {lockMsg.body}
           </p>
           <Button
             asChild
             variant="outline"
-            className="mt-6 rounded-none border-brand/60 bg-transparent px-6 py-5 text-[11px] uppercase tracking-[0.25em] text-brand hover:border-brand hover:bg-brand/10 hover:text-brand"
+            className={`mt-6 rounded-none bg-transparent px-6 py-5 text-[11px] uppercase tracking-[0.25em] ${
+              lockMsg.variant === 'brand'
+                ? 'border-brand/60 text-brand hover:bg-brand/10 hover:text-brand'
+                : 'border-destructive/60 text-destructive hover:bg-destructive/10'
+            }`}
           >
-            <Link href="/cuenta/reprocann">Cargar mi permiso</Link>
+            <Link href={lockMsg.href}>{lockMsg.cta}</Link>
           </Button>
         </section>
       )}
@@ -94,7 +145,7 @@ export default async function DispensarioPage() {
           Todavía no hay genéticas disponibles. Volvé pronto.
         </p>
       ) : (
-        <ul className={`mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 ${isPending ? 'pointer-events-none opacity-40' : ''}`}>
+        <ul className={`mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 ${isLocked ? 'pointer-events-none opacity-40' : ''}`}>
           {rows.map((g) => (
             <li key={g.id}>
               <OrnateFrame className="group h-full">

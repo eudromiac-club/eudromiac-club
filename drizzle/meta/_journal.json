@@ -15,6 +15,13 @@
       "when": 1778905597203,
       "tag": "0001_shiny_mongu",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778906457552,
+      "tag": "0002_unknown_doorman",
+      "breakpoints": true
     }
   ]
 }

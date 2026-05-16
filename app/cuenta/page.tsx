@@ -10,7 +10,9 @@ export const metadata: Metadata = {
 
 const statusLabel: Record<string, string> = {
   pending_kyc: 'Pendiente de verificación',
+  under_review: 'En revisión',
   active: 'Socio activo',
+  rejected: 'Solicitud rechazada',
   suspended: 'Suspendida',
   inactive: 'Inactiva',
 };
@@ -18,6 +20,8 @@ const statusLabel: Record<string, string> = {
 export default async function CuentaPage() {
   const user = await requireUser();
   const isPending = user.status === 'pending_kyc';
+  const isUnderReview = user.status === 'under_review';
+  const isRejected = user.status === 'rejected';
   const isAdmin = user.role === 'admin';
   const displayName = user.name ?? user.email?.split('@')[0] ?? 'socio';
 
@@ -69,6 +73,55 @@ export default async function CuentaPage() {
             className="mt-6 rounded-none border-brand/60 bg-transparent px-6 py-5 text-[11px] uppercase tracking-[0.25em] text-brand hover:border-brand hover:bg-brand/10 hover:text-brand"
           >
             <Link href="/cuenta/reprocann">Cargar mi permiso</Link>
+          </Button>
+        </section>
+      )}
+
+      {isUnderReview && (
+        <section
+          aria-labelledby="kyc-review-title"
+          className="relative mb-10 overflow-hidden border border-brand/30 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+            ◆ En revisión
+          </p>
+          <h2 id="kyc-review-title" className="mt-3 font-display text-2xl font-medium uppercase tracking-[0.1em]">
+            Tu solicitud está siendo <span className="text-brand">revisada</span>.
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Ya tenemos tu documentación. El equipo revisa cada solicitud uno a uno y te avisamos
+            cuando esté lista.
+          </p>
+          <Button
+            asChild
+            variant="outline"
+            className="mt-5 rounded-none border-brand/60 bg-transparent px-6 py-5 text-[11px] uppercase tracking-[0.25em] text-brand hover:bg-brand/10 hover:text-brand"
+          >
+            <Link href="/cuenta/reprocann">Ver mi solicitud</Link>
+          </Button>
+        </section>
+      )}
+
+      {isRejected && (
+        <section
+          aria-labelledby="kyc-rejected-title"
+          className="relative mb-10 overflow-hidden border border-destructive/40 bg-destructive/10 p-6"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-destructive">
+            ◆ Solicitud rechazada
+          </p>
+          <h2 id="kyc-rejected-title" className="mt-3 font-display text-2xl font-medium uppercase tracking-[0.1em]">
+            Tu solicitud fue <span className="text-destructive">rechazada</span>.
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Podés contactar al club para entender el motivo y reenviar tu documentación corregida.
+          </p>
+          <Button
+            asChild
+            variant="outline"
+            className="mt-5 rounded-none border-destructive/60 bg-transparent px-6 py-5 text-[11px] uppercase tracking-[0.25em] text-destructive hover:bg-destructive/10"
+          >
+            <Link href="/cuenta/reprocann">Volver a enviar</Link>
           </Button>
         </section>
       )}

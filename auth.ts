@@ -44,7 +44,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             return null;
           }
 
-          if (user.role !== 'admin' && (user.status === 'suspended' || user.status === 'inactive')) {
+          const blocked: typeof user.status[] = ['suspended', 'inactive', 'rejected'];
+          if (user.role !== 'admin' && blocked.includes(user.status)) {
             console.warn('[auth] cuenta bloqueada:', email, user.status);
             return null;
           }

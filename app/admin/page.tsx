@@ -4,77 +4,165 @@ import { db } from '@/lib/db';
 import { users, invitations, genetics } from '@/lib/db/schema';
 
 async function getCounts() {
-  const [[active], [pendingKyc], [pendingInv], [activeGenetics]] = await Promise.all([
+  const [[active], [underReview], [pendingInv], [activeGenetics]] = await Promise.all([
     db.select({ n: count() }).from(users).where(eq(users.status, 'active')),
-    db.select({ n: count() }).from(users).where(eq(users.status, 'pending_kyc')),
+    db.select({ n: count() }).from(users).where(eq(users.status, 'under_review')),
     db.select({ n: count() }).from(invitations).where(eq(invitations.status, 'pending')),
     db.select({ n: count() }).from(genetics).where(eq(genetics.active, true)),
   ]);
 
   return {
     activeMembers: active?.n ?? 0,
-    pendingKyc: pendingKyc?.n ?? 0,
+    underReview: underReview?.n ?? 0,
     pendingInvitations: pendingInv?.n ?? 0,
     activeGenetics: activeGenetics?.n ?? 0,
   };
 }
 
-const STATS: Array<{ key: keyof Awaited<ReturnType<typeof getCounts>>; label: string; hint: string }> = [
+const STATS: Array<{
+  key: keyof Awaited<ReturnType<typeof getCounts>>;
+  label: string;
+  hint: string;
+  href?: string;
+}> = [
   { key: 'activeMembers', label: 'Socios activos', hint: 'con REPROCANN validado' },
-  { key: 'pendingKyc', label: 'Pendientes KYC', hint: 'esperando validación' },
-  { key: 'pendingInvitations', label: 'Invitaciones abiertas', hint: 'sin canjear todavía' },
-  { key: 'activeGenetics', label: 'Genéticas activas', hint: 'disponibles para socios' },
+  { key: 'underReview', label: 'En revisión', hint: 'esperando aprobación admin', href: '/admin/solicitudes' },
+  { key: 'pendingInvitations', label: 'Invitaciones abiertas', hint: 'sin canjear todavía', href: '/admin/invitations' },
+  { key: 'activeGenetics', label: 'Genéticas activas', hint: 'disponibles para socios', href: '/admin/genetics' },
 ];
 
 export default async function AdminIndexPage() {
   const c = await getCounts();
+  const hasPending = c.underReview > 0;
 
   return (
     <div className="space-y-12">
       <header>
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">Panel</p>
-        <h1 className="mt-2 font-display text-4xl italic tracking-tight">Resumen del club.</h1>
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+          Panel
+        </p>
+        <h1 className="mt-2 font-display text-3xl font-medium uppercase tracking-[0.1em] sm:text-4xl">
+          Resumen del <span className="text-brand">club</span>.
+        </h1>
       </header>
 
       <section aria-labelledby="stats-title">
         <h2 id="stats-title" className="sr-only">
           Estadísticas
         </h2>
-        <ul className="grid gap-px overflow-hidden rounded-xl border bg-border sm:grid-cols-2 lg:grid-cols-4">
-          {STATS.map((s) => (
-            <li
-              key={s.key}
-              className="flex flex-col gap-3 bg-background p-6 transition-colors hover:bg-muted/40"
-            >
-              <span className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
-                {s.label}
-              </span>
-              <span className="font-mono text-4xl tabular-nums">{c[s.key]}</span>
-              <span className="text-xs text-muted-foreground">{s.hint}</span>
-            </li>
-          ))}
+        <ul className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+          {STATS.map((s) => {
+            const value = c[s.key];
+            const isAlert = s.key === 'underReview' && value > 0;
+            const Inner = (
+              <div
+                className={`flex h-full flex-col gap-3 bg-card p-6 transition-colors ${s.href ? 'hover:bg-muted/40' : ''} ${
+                  isAlert ? 'relative' : ''
+                }`}
+              >
+                {isAlert && (
+                  <span
+                    className="absolute -right-2 -top-2 inline-flex h-3 w-3 rounded-full bg-brand"
+                    style={{ boxShadow: '0 0 14px hsl(var(--brand))' }}
+                    aria-hidden
+                  />
+                )}
+                <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                  {s.label}
+                </span>
+                <span className={`font-mono text-4xl tabular-nums ${isAlert ? 'text-brand' : ''}`}>
+                  {value}
+                </span>
+                <span className="text-xs text-muted-foreground">{s.hint}</span>
+              </div>
+            );
+            return (
+              <li key={s.key}>
+                {s.href ? <Link href={s.href}>{Inner}</Link> : Inner}
+              </li>
+            );
+          })}
         </ul>
       </section>
 
-      <section className="grid gap-6 md:grid-cols-2">
+      {hasPending && (
+        <section
+          className="relative overflow-hidden border border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6 shadow-[0_0_60px_-20px_hsl(var(--brand)/0.45)]"
+        >
+          <div
+            className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-50"
+            style={{
+              background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 70%)',
+              filter: 'blur(40px)',
+            }}
+            aria-hidden
+          />
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+            ◆ Solicitudes pendientes
+          </p>
+          <h3 className="mt-2 font-display text-xl font-medium uppercase tracking-[0.12em]">
+            Hay {c.underReview} {c.underReview === 1 ? 'socio esperando' : 'socios esperando'} revisión.
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Revisá los datos y el comprobante REPROCANN, después aprobá o rechazá.
+          </p>
+          <Link
+            href="/admin/solicitudes"
+            className="mt-5 inline-block border border-brand/60 bg-transparent px-6 py-3 text-[11px] uppercase tracking-[0.25em] text-brand transition-colors hover:bg-brand/10"
+          >
+            Ver solicitudes →
+          </Link>
+        </section>
+      )}
+
+      <section className="grid gap-6 md:grid-cols-3">
         <Link
           href="/admin/invitations"
-          className="group rounded-xl border bg-card p-6 transition-colors hover:border-foreground/30"
+          className="group border border-border bg-card p-6 transition-colors hover:border-brand/60"
         >
-          <p className="font-mono text-xs uppercase tracking-[0.15em] text-brand">Invitaciones</p>
-          <h3 className="mt-3 font-display text-2xl italic tracking-tight">Generar nuevo acceso</h3>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">Invitaciones</p>
+          <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
+            Generar acceso
+          </h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            Crear un código de invitación y compartir el link con un socio nuevo.
+            Código nominal de un solo uso para socios nuevos.
           </p>
-          <span className="mt-4 inline-block text-sm group-hover:underline">Ir →</span>
+          <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+            Ir →
+          </span>
         </Link>
 
-        <div className="rounded-xl border border-dashed bg-card/40 p-6 text-sm text-muted-foreground">
-          <p className="font-mono text-xs uppercase tracking-[0.15em]">Próximamente</p>
-          <p className="mt-3">
-            Gestión de socios (REPROCANN), catálogo de genéticas, pedidos y reportes.
+        <Link
+          href="/admin/genetics"
+          className="group border border-border bg-card p-6 transition-colors hover:border-brand/60"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">Catálogo</p>
+          <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
+            Genéticas
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Cargar, editar y publicar las genéticas del dispensario.
           </p>
-        </div>
+          <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+            Ir →
+          </span>
+        </Link>
+
+        <Link
+          href="/admin/solicitudes"
+          className="group border border-border bg-card p-6 transition-colors hover:border-brand/60"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">Verificaciones</p>
+          <h3 className="mt-3 font-display text-xl font-medium uppercase tracking-[0.12em]">
+            Solicitudes
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Revisar permisos REPROCANN enviados por socios pendientes.
+          </p>
+          <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+            Ir →
+          </span>
+        </Link>
       </section>
     </div>
   );

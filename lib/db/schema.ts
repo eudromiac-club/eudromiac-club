@@ -22,7 +22,14 @@ const citext = customType<{ data: string }>({
 });
 
 export const userRole = pgEnum('user_role', ['member', 'admin']);
-export const userStatus = pgEnum('user_status', ['pending_kyc', 'active', 'suspended', 'inactive']);
+export const userStatus = pgEnum('user_status', [
+  'pending_kyc',
+  'under_review',
+  'active',
+  'rejected',
+  'suspended',
+  'inactive',
+]);
 export const invitationStatus = pgEnum('invitation_status', ['pending', 'redeemed', 'expired', 'revoked']);
 export const reprocannStatus = pgEnum('reprocann_status', ['pending_review', 'active', 'expired', 'rejected']);
 export const geneticType = pgEnum('genetic_type', ['sativa', 'indica', 'hybrid', 'cbd']);
