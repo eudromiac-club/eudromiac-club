@@ -5,7 +5,7 @@ import { getCurrentUser } from '@/lib/auth/dal';
 import { RegisterForm } from './register-form';
 
 export const metadata: Metadata = {
-  title: 'Crear cuenta · EUDROMIA CLUB',
+  title: 'Asociarse · EUDROMIA CLUB',
   robots: { index: false, follow: false },
 };
 
@@ -25,7 +25,7 @@ export default async function RegisterPage() {
         Solicitud de ingreso
       </p>
       <h1 className="mt-3 font-display text-4xl font-medium uppercase tracking-[0.08em] sm:text-5xl">
-        Crear <span className="text-brand">cuenta</span>.
+        <span className="text-brand">Asociarse</span>.
       </h1>
       <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
         Cargá tus datos y tu número de trámite REPROCANN. Después subís el comprobante desde tu

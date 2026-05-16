@@ -63,7 +63,7 @@ export function RedeemForm({ code, suggestedEmail }: { code: string; suggestedEm
       )}
 
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? 'Creando tu cuenta…' : 'Crear cuenta'}
+        {isPending ? 'Procesando…' : 'Asociarme'}
       </Button>
     </form>
   );

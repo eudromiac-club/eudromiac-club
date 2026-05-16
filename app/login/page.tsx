@@ -25,7 +25,7 @@ export default function LoginPage() {
         <p>
           ¿No tenés cuenta?{' '}
           <Link href="/registro" className="text-brand underline hover:text-foreground">
-            Crear cuenta
+            Asociarse
           </Link>
         </p>
         <p>

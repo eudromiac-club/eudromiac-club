@@ -61,7 +61,7 @@ export async function Topbar() {
                 variant="ghost"
                 className="hidden rounded-none px-3 text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground sm:inline-flex"
               >
-                <Link href="/registro">Crear cuenta</Link>
+                <Link href="/registro">Asociarse</Link>
               </Button>
               <Button
                 asChild

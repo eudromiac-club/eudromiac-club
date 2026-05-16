@@ -263,7 +263,7 @@ export function Hero() {
             asChild
             className="rounded-none px-8 py-6 text-[11px] uppercase tracking-[0.3em]"
           >
-            <Link href="/registro">Crear cuenta</Link>
+            <Link href="/registro">Asociarse</Link>
           </Button>
           <Button
             asChild

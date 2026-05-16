@@ -164,7 +164,7 @@ export function RegisterForm() {
           disabled={isPending}
           className="rounded-none px-6 py-5 text-[11px] uppercase tracking-[0.25em]"
         >
-          {isPending ? 'Creando cuenta…' : 'Crear cuenta'}
+          {isPending ? 'Procesando…' : 'Asociarme'}
         </Button>
         <p className="text-xs text-muted-foreground">
           Después de registrarte vas a poder subir el comprobante y esperar la validación del
