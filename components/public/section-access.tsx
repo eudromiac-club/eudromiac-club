@@ -79,9 +79,9 @@ export function SectionAccess() {
           <span className="acc-title-line block text-brand">al santuario.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-balance text-sm leading-relaxed text-muted-foreground sm:text-base">
-          El ingreso requiere REPROCANN vigente. Creás tu cuenta, subís el
-          comprobante y el equipo valida tu permiso antes de habilitarte el
-          dispensario.
+          El ingreso requiere REPROCANN vigente. De no contar con uno, nosotros te lo
+          tramitamos con nuestro equipo especialista. Creás tu cuenta, subís el
+          comprobante y el equipo valida tu permiso antes de habilitarte el dispensario.
         </p>
 
         <ol className="acc-steps mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
