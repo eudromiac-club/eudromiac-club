@@ -86,6 +86,7 @@ export const patientProfiles = pgTable('patient_profiles', {
   phone: text('phone'),
   reprocannNumber: text('reprocann_number').unique(),
   reprocannStatus: reprocannStatus('reprocann_status').notNull().default('pending_review'),
+  needsReprocannContact: boolean('needs_reprocann_contact').notNull().default(false),
   reprocannExpiresAt: date('reprocann_expires_at'),
   reprocannDocUrl: text('reprocann_doc_url'),
   monthlyGramsLimit: numeric('monthly_grams_limit', { precision: 5, scale: 2 }),

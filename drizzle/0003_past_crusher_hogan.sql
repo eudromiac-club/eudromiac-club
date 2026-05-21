@@ -1,0 +1,1 @@
+ALTER TABLE "patient_profiles" ADD COLUMN "needs_reprocann_contact" boolean DEFAULT false NOT NULL;

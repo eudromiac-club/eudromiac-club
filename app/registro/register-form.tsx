@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useId, useState } from 'react';
 import { registerAction, type RegisterState } from '@/app/actions/register';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,8 @@ export function RegisterForm() {
     undefined,
   );
   const errors = state && !state.ok ? state.errors : undefined;
+  const [noReprocann, setNoReprocann] = useState(false);
+  const noReprocannId = useId();
 
   return (
     <form action={action} className="space-y-8">
@@ -142,13 +144,46 @@ export function RegisterForm() {
           <label htmlFor="reprocannNumber" className={labelClass()}>
             Número de trámite
           </label>
-          <Input id="reprocannNumber" name="reprocannNumber" required maxLength={60} />
+          <Input
+            id="reprocannNumber"
+            name="reprocannNumber"
+            required={!noReprocann}
+            disabled={noReprocann}
+            maxLength={60}
+            aria-disabled={noReprocann}
+            className={noReprocann ? 'opacity-50' : undefined}
+          />
           <p className="mt-1 text-xs text-muted-foreground">
-            El comprobante (PDF/imagen) lo vas a subir desde tu cuenta una vez creada.
+            {noReprocann
+              ? 'No es requerido: un médico del equipo se va a contactar con vos.'
+              : 'El comprobante (PDF/imagen) lo vas a subir desde tu cuenta una vez creada.'}
           </p>
           {errors?.reprocannNumber && (
             <p className="mt-1 text-xs text-destructive">{errors.reprocannNumber[0]}</p>
           )}
+
+          <label
+            htmlFor={noReprocannId}
+            className="mt-5 flex cursor-pointer items-start gap-3 rounded-sm border border-border/60 bg-card/40 p-4 transition hover:border-brand/60"
+          >
+            <input
+              id={noReprocannId}
+              name="noReprocann"
+              type="checkbox"
+              checked={noReprocann}
+              onChange={(e) => setNoReprocann(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-brand"
+            />
+            <span className="flex flex-col gap-1">
+              <span className="text-sm leading-snug text-foreground">
+                No tengo REPROCANN / Quiero tramitarlo — los contactamos con nuestro médico
+              </span>
+              <span className="text-xs leading-relaxed text-muted-foreground">
+                Si no tenés tu REPROCANN, registrate igual. Un médico del equipo se va a poner en
+                contacto con vos para orientarte en el trámite.
+              </span>
+            </span>
+          </label>
         </div>
       </section>
 
