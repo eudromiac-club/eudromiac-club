@@ -15,9 +15,8 @@ export default function LoginPage() {
       </p>
       <h1 className="mt-3 font-display text-5xl italic leading-tight tracking-tight">Ingresar.</h1>
       <p className="mt-3 text-sm text-muted-foreground">
-        Para socios con cuenta activa. El acceso al catálogo y al pedido mensual está sujeto a tu
-        permiso REPROCANN vigente. De no contar con uno, nosotros te lo tramitamos con nuestro
-        equipo especialista.
+        Para socios con cuenta activa. El acceso al catálogo está sujeto a tu permiso REPROCANN
+        vigente. Si todavía no lo tenés, nuestro equipo médico lo gestiona con vos.
       </p>
       <div className="mt-10">
         <LoginForm />

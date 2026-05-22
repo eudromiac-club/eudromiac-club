@@ -41,7 +41,7 @@ export default async function DispensarioPage() {
       ? {
           eyebrow: '◆ Acceso bloqueado',
           title: 'Validá tu permiso REPROCANN.',
-          body: 'Para ver el detalle y reservar genéticas necesitás cargar tu permiso vigente. De no contar con uno, nosotros te lo tramitamos con nuestro equipo especialista. El equipo revisa cada solicitud uno a uno.',
+          body: 'Para ver el detalle y reservar genéticas necesitás cargar tu permiso vigente. Si todavía no lo tenés, nuestro equipo médico lo gestiona con vos. Revisamos cada solicitud uno a uno.',
           cta: 'Cargar mi permiso',
           href: '/cuenta/reprocann',
           variant: 'brand' as const,
@@ -102,8 +102,8 @@ export default async function DispensarioPage() {
         </h1>
         <div className="mx-auto mt-6 h-px w-32 bg-gradient-to-r from-transparent via-brand to-transparent" />
         <p className="mt-6 text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Genéticas curadas, disponibles exclusivamente para socios con permiso REPROCANN vigente.
-          De no contar con uno, nosotros te lo tramitamos con nuestro equipo especialista.
+          Genéticas curadas, exclusivas para socios con permiso REPROCANN vigente. Si todavía no
+          lo tenés, nuestro equipo médico lo gestiona con vos.
         </p>
         {monthlyHint && (
           <p className="mt-5 inline-block border border-brand/40 bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-brand">

@@ -28,9 +28,9 @@ export default async function RegisterPage() {
         <span className="text-brand">Asociarse</span>.
       </h1>
       <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-        Cargá tus datos y tu número de trámite REPROCANN. De no contar con uno, nosotros te lo
-        tramitamos con nuestro equipo especialista. Después subís el comprobante desde tu cuenta y
-        el equipo valida tu ingreso. El acceso al dispensario se habilita una vez verificado.
+        Cargá tus datos y tu número de trámite REPROCANN. Si todavía no lo tenés, nuestro equipo
+        médico lo gestiona con vos. Después subís el comprobante desde tu cuenta y validamos tu
+        acceso al dispensario.
       </p>
 
       <div className="mt-10">
