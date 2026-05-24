@@ -185,10 +185,14 @@ export const cartItems = pgTable(
 
 export const orders = pgTable('orders', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  orderNumber: text('order_number').unique(),
   userId: uuid('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'restrict' }),
   status: orderStatus('status').notNull().default('pending'),
+  subtotalCents: integer('subtotal_cents').notNull().default(0),
+  discountCents: integer('discount_cents').notNull().default(0),
+  couponCode: text('coupon_code'),
   totalCents: integer('total_cents').notNull(),
   mpPreferenceId: text('mp_preference_id'),
   mpPaymentId: text('mp_payment_id'),
