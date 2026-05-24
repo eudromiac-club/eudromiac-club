@@ -192,14 +192,25 @@ export default async function DispensarioPage() {
 
                 <div className="space-y-4 px-4 pb-5 pt-6">
                   <div>
-                    <h3 className="font-display text-lg font-medium uppercase tracking-[0.16em]">
-                      {g.name}
-                    </h3>
+                    <Link
+                      href={`/dispensario/${g.slug}`}
+                      className="block transition-colors hover:text-brand"
+                    >
+                      <h3 className="font-display text-lg font-medium uppercase tracking-[0.16em]">
+                        {g.name}
+                      </h3>
+                    </Link>
                     {g.description && (
                       <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
-                        {g.description}
+                        {g.description.split('\n---\n')[0]}
                       </p>
                     )}
+                    <Link
+                      href={`/dispensario/${g.slug}`}
+                      className="mt-2 inline-block font-mono text-[10px] uppercase tracking-widest text-brand transition-opacity hover:opacity-70"
+                    >
+                      Ver detalle →
+                    </Link>
                   </div>
 
                   <div className="flex items-end justify-between border-t border-border/60 pt-4">
