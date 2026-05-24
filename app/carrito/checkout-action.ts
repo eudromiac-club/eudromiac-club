@@ -2,14 +2,16 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { db } from '@/lib/db';
-import { orders, orderItems } from '@/lib/db/schema';
+import { orders, orderItems, carts, cartItems } from '@/lib/db/schema';
 import { requireUser } from '@/lib/auth/dal';
 import { getCartSnapshot } from '@/lib/cart/server';
 import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 import { mpConfigured, mpPreference } from '@/lib/mp/client';
+import { getAppliedCoupon, clearAppliedCoupon, calcDiscount } from '@/lib/coupons';
+import { generateUniqueOrderNumber } from '@/lib/orders/number';
 
 export async function startCheckoutAction(): Promise<void> {
   const user = await requireUser();
@@ -22,7 +24,6 @@ export async function startCheckoutAction(): Promise<void> {
     throw new Error('Tu carrito está vacío.');
   }
 
-  // Re-validar cap mensual del REPROCANN antes de crear el order.
   if (user.role !== 'admin') {
     const monthlyCap = await getMonthlyCap(user.id);
     if (monthlyCap != null) {
@@ -35,13 +36,22 @@ export async function startCheckoutAction(): Promise<void> {
     }
   }
 
-  // Crear order en DB con snapshot de precios actuales (status pending).
+  const coupon = await getAppliedCoupon();
+  const subtotalCents = cart.totalCents;
+  const discountCents = calcDiscount(subtotalCents, coupon);
+  const totalCents = subtotalCents - discountCents;
+  const orderNumber = await generateUniqueOrderNumber();
+
   const [order] = await db
     .insert(orders)
     .values({
+      orderNumber,
       userId: user.id,
-      status: 'pending',
-      totalCents: cart.totalCents,
+      status: totalCents === 0 ? 'paid' : 'pending',
+      subtotalCents,
+      discountCents,
+      couponCode: coupon?.code ?? null,
+      totalCents,
     })
     .returning({ id: orders.id });
 
@@ -55,9 +65,25 @@ export async function startCheckoutAction(): Promise<void> {
     })),
   );
 
+  // Total = 0 (cupón 100%) → orden paid directa, vaciar carrito y cupón
+  if (totalCents === 0) {
+    const [cartRow] = await db
+      .select({ id: carts.id })
+      .from(carts)
+      .where(eq(carts.userId, user.id))
+      .limit(1);
+    if (cartRow) {
+      await db.delete(cartItems).where(eq(cartItems.cartId, cartRow.id));
+    }
+    await clearAppliedCoupon();
+    revalidatePath('/carrito');
+    revalidatePath('/cuenta/pedidos');
+    revalidatePath('/admin', 'layout');
+    revalidatePath('/', 'layout');
+    redirect(`/checkout/success?orderId=${order.id}`);
+  }
+
   if (!mpConfigured()) {
-    // Sin MP configurado todavía: dejamos el order creado, redirect a una
-    // página explicativa. El admin puede ver el pedido en /admin/pedidos.
     redirect(`/checkout/pending?orderId=${order.id}&reason=mp_not_configured`);
   }
 

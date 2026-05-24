@@ -27,8 +27,10 @@ export default async function AdminPedidosPage({
   const rows = await db
     .select({
       id: orders.id,
+      orderNumber: orders.orderNumber,
       status: orders.status,
       totalCents: orders.totalCents,
+      couponCode: orders.couponCode,
       createdAt: orders.createdAt,
       userEmail: users.email,
       userName: users.name,
@@ -98,8 +100,20 @@ export default async function AdminPedidosPage({
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm">{r.userName ?? r.userEmail}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{r.userEmail}</p>
+                  <p className="text-sm">
+                    <span className="mr-2 font-mono text-xs tracking-widest text-brand">
+                      {r.orderNumber ?? `#${r.id.slice(0, 8)}`}
+                    </span>
+                    {r.userName ?? r.userEmail}
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {r.userEmail}
+                    {r.couponCode && (
+                      <span className="ml-2 font-mono text-[10px] uppercase tracking-widest text-brand">
+                        · {r.couponCode}
+                      </span>
+                    )}
+                  </p>
                 </div>
 
                 <div className="text-xs">

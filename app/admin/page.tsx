@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import { count, eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
-import { users, invitations, genetics } from '@/lib/db/schema';
+import { users, invitations, genetics, orders } from '@/lib/db/schema';
 
 async function getCounts() {
-  const [[active], [underReview], [pendingInv], [activeGenetics]] = await Promise.all([
+  const [[active], [underReview], [pendingInv], [activeGenetics], [paidOrders]] = await Promise.all([
     db.select({ n: count() }).from(users).where(eq(users.status, 'active')),
     db.select({ n: count() }).from(users).where(eq(users.status, 'under_review')),
     db.select({ n: count() }).from(invitations).where(eq(invitations.status, 'pending')),
     db.select({ n: count() }).from(genetics).where(eq(genetics.active, true)),
+    db.select({ n: count() }).from(orders).where(eq(orders.status, 'paid')),
   ]);
 
   return {
@@ -16,6 +17,7 @@ async function getCounts() {
     underReview: underReview?.n ?? 0,
     pendingInvitations: pendingInv?.n ?? 0,
     activeGenetics: activeGenetics?.n ?? 0,
+    paidOrders: paidOrders?.n ?? 0,
   };
 }
 
@@ -27,6 +29,7 @@ const STATS: Array<{
 }> = [
   { key: 'activeMembers', label: 'Socios activos', hint: 'con REPROCANN validado' },
   { key: 'underReview', label: 'En revisión', hint: 'esperando aprobación admin', href: '/admin/solicitudes' },
+  { key: 'paidOrders', label: 'Pedidos por despachar', hint: 'pagados, esperando preparación', href: '/admin/pedidos?status=paid' },
   { key: 'pendingInvitations', label: 'Invitaciones abiertas', hint: 'sin canjear todavía', href: '/admin/invitations' },
   { key: 'activeGenetics', label: 'Genéticas activas', hint: 'disponibles para socios', href: '/admin/genetics' },
 ];
@@ -34,6 +37,7 @@ const STATS: Array<{
 export default async function AdminIndexPage() {
   const c = await getCounts();
   const hasPending = c.underReview > 0;
+  const hasPaidOrders = c.paidOrders > 0;
 
   return (
     <div className="space-y-12">
@@ -50,10 +54,11 @@ export default async function AdminIndexPage() {
         <h2 id="stats-title" className="sr-only">
           Estadísticas
         </h2>
-        <ul className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {STATS.map((s) => {
             const value = c[s.key];
-            const isAlert = s.key === 'underReview' && value > 0;
+            const isAlert =
+              (s.key === 'underReview' || s.key === 'paidOrders') && value > 0;
             const Inner = (
               <div
                 className={`flex h-full flex-col gap-3 bg-card p-6 transition-colors ${s.href ? 'hover:bg-muted/40' : ''} ${
@@ -85,34 +90,66 @@ export default async function AdminIndexPage() {
         </ul>
       </section>
 
-      {hasPending && (
-        <section
-          className="relative overflow-hidden border border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6 shadow-[0_0_60px_-20px_hsl(var(--brand)/0.45)]"
-        >
-          <div
-            className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-50"
-            style={{
-              background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 70%)',
-              filter: 'blur(40px)',
-            }}
-            aria-hidden
-          />
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
-            ◆ Solicitudes pendientes
-          </p>
-          <h3 className="mt-2 font-display text-xl font-medium uppercase tracking-[0.12em]">
-            Hay {c.underReview} {c.underReview === 1 ? 'socio esperando' : 'socios esperando'} revisión.
-          </h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Revisá los datos y el comprobante REPROCANN, después aprobá o rechazá.
-          </p>
-          <Link
-            href="/admin/solicitudes"
-            className="mt-5 inline-block border border-brand/60 bg-transparent px-6 py-3 text-[11px] uppercase tracking-[0.25em] text-brand transition-colors hover:bg-brand/10"
-          >
-            Ver solicitudes →
-          </Link>
-        </section>
+      {(hasPending || hasPaidOrders) && (
+        <div className="grid gap-6 md:grid-cols-2">
+          {hasPending && (
+            <section className="relative overflow-hidden border border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6 shadow-[0_0_60px_-20px_hsl(var(--brand)/0.45)]">
+              <div
+                className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-50"
+                style={{
+                  background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 70%)',
+                  filter: 'blur(40px)',
+                }}
+                aria-hidden
+              />
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+                ◆ Solicitudes pendientes
+              </p>
+              <h3 className="mt-2 font-display text-xl font-medium uppercase tracking-[0.12em]">
+                Hay {c.underReview}{' '}
+                {c.underReview === 1 ? 'socio esperando' : 'socios esperando'} revisión.
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Revisá los datos y el comprobante REPROCANN, después aprobá o rechazá.
+              </p>
+              <Link
+                href="/admin/solicitudes"
+                className="mt-5 inline-block border border-brand/60 bg-transparent px-6 py-3 text-[11px] uppercase tracking-[0.25em] text-brand transition-colors hover:bg-brand/10"
+              >
+                Ver solicitudes →
+              </Link>
+            </section>
+          )}
+
+          {hasPaidOrders && (
+            <section className="relative overflow-hidden border border-brand/40 bg-gradient-to-br from-[hsl(32_25%_10%)] via-card to-[hsl(28_20%_8%)] p-6 shadow-[0_0_60px_-20px_hsl(var(--brand)/0.45)]">
+              <div
+                className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-50"
+                style={{
+                  background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 70%)',
+                  filter: 'blur(40px)',
+                }}
+                aria-hidden
+              />
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+                ◆ Pedidos por despachar
+              </p>
+              <h3 className="mt-2 font-display text-xl font-medium uppercase tracking-[0.12em]">
+                {c.paidOrders} {c.paidOrders === 1 ? 'pedido pagado' : 'pedidos pagados'} esperando
+                preparación.
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Revisá items y datos del socio, prepará el pedido y marcalo "En tránsito".
+              </p>
+              <Link
+                href="/admin/pedidos?status=paid"
+                className="mt-5 inline-block border border-brand/60 bg-transparent px-6 py-3 text-[11px] uppercase tracking-[0.25em] text-brand transition-colors hover:bg-brand/10"
+              >
+                Ver pedidos →
+              </Link>
+            </section>
+          )}
+        </div>
       )}
 
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">

@@ -48,7 +48,11 @@ export default async function AdminPedidoDetailPage({
   const [row] = await db
     .select({
       id: orders.id,
+      orderNumber: orders.orderNumber,
       status: orders.status,
+      subtotalCents: orders.subtotalCents,
+      discountCents: orders.discountCents,
+      couponCode: orders.couponCode,
       totalCents: orders.totalCents,
       createdAt: orders.createdAt,
       updatedAt: orders.updatedAt,
@@ -88,7 +92,8 @@ export default async function AdminPedidoDetailPage({
             ← Volver a pedidos
           </Link>
           <h1 className="mt-4 font-display text-2xl font-medium uppercase tracking-[0.1em] sm:text-3xl">
-            Pedido <span className="text-brand">#{row.id.slice(0, 8)}</span>
+            Pedido{' '}
+            <span className="text-brand">{row.orderNumber ?? `#${row.id.slice(0, 8)}`}</span>
           </h1>
           <p className="mt-2 text-xs text-muted-foreground">
             {formatDate(row.createdAt)} · actualizado {formatDate(row.updatedAt)}
@@ -188,13 +193,31 @@ export default async function AdminPedidoDetailPage({
             </li>
           ))}
         </ul>
-        <div className="flex items-center justify-between border-t border-border p-5">
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-            Total
-          </span>
-          <span className="font-display text-2xl tabular-nums text-brand">
-            {formatPriceArs(row.totalCents)}
-          </span>
+        <div className="space-y-2 border-t border-border p-5">
+          {row.discountCents > 0 && (
+            <>
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Subtotal
+                </span>
+                <span className="font-mono">{formatPriceArs(row.subtotalCents)}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm text-brand">
+                <span className="font-mono text-[10px] uppercase tracking-widest">
+                  Descuento {row.couponCode ? `(${row.couponCode})` : ''}
+                </span>
+                <span className="font-mono">− {formatPriceArs(row.discountCents)}</span>
+              </div>
+            </>
+          )}
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              Total
+            </span>
+            <span className="font-display text-2xl tabular-nums text-brand">
+              {formatPriceArs(row.totalCents)}
+            </span>
+          </div>
         </div>
       </section>
 

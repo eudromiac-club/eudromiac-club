@@ -23,6 +23,7 @@ export default async function MisPedidosPage() {
   const rows = await db
     .select({
       id: orders.id,
+      orderNumber: orders.orderNumber,
       status: orders.status,
       totalCents: orders.totalCents,
       createdAt: orders.createdAt,
@@ -72,7 +73,7 @@ export default async function MisPedidosPage() {
 
                 <div className="min-w-0 flex-1">
                   <p className="font-display text-sm font-medium uppercase tracking-[0.12em]">
-                    Pedido #{r.id.slice(0, 8)}
+                    Pedido <span className="text-brand">{r.orderNumber ?? `#${r.id.slice(0, 8)}`}</span>
                   </p>
                   <p className="mt-0.5 text-xs text-muted-foreground">{formatDate(r.createdAt)}</p>
                 </div>

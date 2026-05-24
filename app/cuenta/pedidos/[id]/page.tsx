@@ -44,7 +44,7 @@ export default async function MiPedidoDetailPage({
         </Link>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <h1 className="font-display text-2xl font-medium uppercase tracking-[0.1em] sm:text-3xl">
-            Pedido <span className="text-brand">#{row.id.slice(0, 8)}</span>
+            Pedido <span className="text-brand">{row.orderNumber ?? `#${row.id.slice(0, 8)}`}</span>
           </h1>
           <span
             className={`inline-flex rounded-full border px-4 py-1 text-[11px] uppercase tracking-[0.25em] ${
@@ -76,13 +76,31 @@ export default async function MiPedidoDetailPage({
             </li>
           ))}
         </ul>
-        <div className="flex items-center justify-between border-t border-border p-5">
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-            Total
-          </span>
-          <span className="font-display text-2xl tabular-nums text-brand">
-            {formatPriceArs(row.totalCents)}
-          </span>
+        <div className="space-y-2 border-t border-border p-5">
+          {row.discountCents > 0 && (
+            <>
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Subtotal
+                </span>
+                <span className="font-mono">{formatPriceArs(row.subtotalCents)}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm text-brand">
+                <span className="font-mono text-[10px] uppercase tracking-widest">
+                  Descuento {row.couponCode ? `(${row.couponCode})` : ''}
+                </span>
+                <span className="font-mono">− {formatPriceArs(row.discountCents)}</span>
+              </div>
+            </>
+          )}
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              Total
+            </span>
+            <span className="font-display text-2xl tabular-nums text-brand">
+              {formatPriceArs(row.totalCents)}
+            </span>
+          </div>
         </div>
       </section>
     </main>
