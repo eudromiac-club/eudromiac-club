@@ -14,12 +14,12 @@ type Item = {
   id: string;
   label: string;
   body: string;
-  kind: 'image' | 'art-amber' | 'art-mortar';
+  // 'art-flower' = etiqueta brand book con la foto adentro (matchea estilo
+  // crema/serif de las ilustraciones de Extractos y Fórmulas).
+  // 'image' = imagen full-bleed object-contain con el bg crema.
+  kind: 'image' | 'art-flower' | 'art-amber' | 'art-mortar';
   image?: string;
   alt?: string;
-  // Posición vertical para el object-cover. Default 'center'; usar valor
-  // específico cuando el contenido principal está descentrado en la imagen.
-  objectPosition?: string;
 };
 
 const ITEMS: Item[] = [
@@ -27,9 +27,9 @@ const ITEMS: Item[] = [
     id: 'flores',
     label: 'Flores de Autor',
     body: 'Selección curada de cepas florales, cultivadas con primor para una experiencia sensorial completa.',
-    kind: 'image',
+    kind: 'art-flower',
     image: '/landing/flower-cannabis.jpg',
-    alt: 'Macro de flor de cannabis con tricomas',
+    alt: 'Flor de cannabis premium EUDROMIA',
   },
   {
     id: 'extractos',
@@ -46,9 +46,105 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/home/3.png',
     alt: 'Fórmula magistral EUDROMIA — aceite medicinal',
-    objectPosition: 'center 62%',
   },
 ];
+
+// "Etiqueta brand book" para Flores: matchea el estilo crema y la composición
+// vertical de las ilustraciones de Extractos y Fórmulas. La foto va adentro de
+// un frame circular ornamental, no full-bleed, así no rompe con la coherencia
+// del set.
+function ArtFlower({ image, alt }: { image: string; alt: string }) {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-between bg-[#f4ede1] px-[9%] py-[8%] text-[#1c1812]">
+      {/* Header: marca */}
+      <div className="w-full text-center">
+        <p
+          className="font-display text-[clamp(0.7rem,1.7vw,1rem)] font-medium tracking-[0.4em]"
+          style={{ letterSpacing: '0.4em' }}
+        >
+          EUDROMIA <span className="text-[#a8743a]">CLUB</span>
+        </p>
+        <div className="mx-auto mt-3 h-px w-10 bg-[#a8743a]/40" />
+      </div>
+
+      {/* Centro: foto en frame circular con tags laterales */}
+      <div className="relative my-4 flex w-full flex-1 items-center justify-center">
+        {/* Tag izquierdo */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 text-left">
+          <div className="mb-1 h-px w-6 bg-[#a8743a]/40" />
+          <p
+            className="font-mono text-[clamp(0.4rem,0.85vw,0.55rem)]"
+            style={{ letterSpacing: '0.2em' }}
+          >
+            CRYSTALLINE
+          </p>
+          <p
+            className="font-mono text-[clamp(0.4rem,0.85vw,0.55rem)] opacity-60"
+            style={{ letterSpacing: '0.2em' }}
+          >
+            TRICHOMES
+          </p>
+        </div>
+
+        {/* Tag derecho */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-right">
+          <div className="mb-1 ml-auto h-px w-6 bg-[#a8743a]/40" />
+          <p
+            className="font-mono text-[clamp(0.4rem,0.85vw,0.55rem)]"
+            style={{ letterSpacing: '0.2em' }}
+          >
+            TERPENES
+          </p>
+          <p
+            className="font-mono text-[clamp(0.4rem,0.85vw,0.55rem)] opacity-60"
+            style={{ letterSpacing: '0.2em' }}
+          >
+            PROFILE
+          </p>
+        </div>
+
+        {/* Foto circular con borde cobre */}
+        <div className="relative aspect-square w-[62%]">
+          <div className="absolute inset-0 rounded-full border border-[#a8743a]/40" />
+          <div className="absolute inset-[6%] overflow-hidden rounded-full border border-[#a8743a]/60">
+            <Image
+              src={image}
+              alt={alt}
+              fill
+              sizes="(min-width: 1024px) 420px, (min-width: 768px) 22vw, 60vw"
+              className="object-cover"
+            />
+            {/* Tinte sutil que integra la foto a la paleta cobre */}
+            <div className="pointer-events-none absolute inset-0 bg-[#a8743a]/10 mix-blend-multiply" />
+          </div>
+        </div>
+      </div>
+
+      {/* Footer: título principal */}
+      <div className="w-full text-center">
+        <h3
+          className="font-display text-[clamp(1.1rem,2.6vw,1.75rem)] font-medium"
+          style={{ letterSpacing: '0.2em' }}
+        >
+          FLORES
+        </h3>
+        <p
+          className="mt-1 font-display text-[clamp(0.55rem,1.1vw,0.75rem)] font-medium text-[#a8743a]"
+          style={{ letterSpacing: '0.45em' }}
+        >
+          DE AUTOR
+        </p>
+        <div className="mx-auto mt-3 h-px w-8 bg-[#a8743a]/40" />
+        <p
+          className="mt-3 font-mono text-[clamp(0.45rem,0.9vw,0.6rem)] opacity-70"
+          style={{ letterSpacing: '0.18em' }}
+        >
+          BOTANICAL · CANNABIS · PREMIUM
+        </p>
+      </div>
+    </div>
+  );
+}
 
 // Art alternativa para placeholders premium sin foto real.
 function ArtAmber() {
@@ -468,16 +564,17 @@ export function SectionCollection() {
           {ITEMS.map((item) => (
             <li key={item.id} className="col-item">
               <OrnateFrame className="group">
-                <div className="col-photo relative aspect-[686/992] overflow-hidden bg-[hsl(28_20%_6%)]">
+                <div className="col-photo relative aspect-[686/992] overflow-hidden bg-[#f4ede1]">
                   {item.kind === 'image' && item.image && item.alt ? (
                     <Image
                       src={item.image}
                       alt={item.alt}
                       fill
                       sizes="(min-width: 1024px) 686px, (min-width: 768px) 33vw, 100vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      style={{ objectPosition: item.objectPosition ?? 'center' }}
+                      className="object-contain transition-transform duration-700 group-hover:scale-[1.03]"
                     />
+                  ) : item.kind === 'art-flower' && item.image && item.alt ? (
+                    <ArtFlower image={item.image} alt={item.alt} />
                   ) : item.kind === 'art-amber' ? (
                     <ArtAmber />
                   ) : (
