@@ -17,6 +17,9 @@ type Item = {
   kind: 'image' | 'art-amber' | 'art-mortar';
   image?: string;
   alt?: string;
+  // Las ilustraciones de marca no deben recortarse; las fotos sí pueden llenar
+  // el card. El default 'cover' mantiene el comportamiento previo.
+  fit?: 'cover' | 'contain';
 };
 
 const ITEMS: Item[] = [
@@ -27,6 +30,7 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/landing/flower-cannabis.jpg',
     alt: 'Macro de flor de cannabis con tricomas',
+    fit: 'cover',
   },
   {
     id: 'extractos',
@@ -35,6 +39,7 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/home/4.png',
     alt: 'Extracto de autor EUDROMIA — composición botánica',
+    fit: 'contain',
   },
   {
     id: 'formulas',
@@ -43,6 +48,7 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/home/3.png',
     alt: 'Fórmula magistral EUDROMIA — aceite medicinal',
+    fit: 'contain',
   },
 ];
 
@@ -464,22 +470,36 @@ export function SectionCollection() {
           {ITEMS.map((item) => (
             <li key={item.id} className="col-item">
               <OrnateFrame className="group">
-                <div className="col-photo relative aspect-[3/4] overflow-hidden">
+                <div className="col-photo relative aspect-[710/941] overflow-hidden bg-[hsl(28_20%_7%)]">
                   {item.kind === 'image' && item.image && item.alt ? (
-                    <Image
-                      src={item.image}
-                      alt={item.alt}
-                      fill
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                      className="object-cover grayscale-[15%] transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
-                    />
+                    item.fit === 'contain' ? (
+                      <Image
+                        src={item.image}
+                        alt={item.alt}
+                        fill
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                        className="object-contain transition-transform duration-700 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <Image
+                        src={item.image}
+                        alt={item.alt}
+                        fill
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                        className="object-cover grayscale-[15%] transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
+                      />
+                    )
                   ) : item.kind === 'art-amber' ? (
                     <ArtAmber />
                   ) : (
                     <ArtMortar />
                   )}
-                  {/* Vignette en imagen */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                  {/* Vignette solo cuando la imagen llena el frame (object-cover),
+                      para no oscurecer las ilustraciones que ya tienen su propia
+                      composición. */}
+                  {item.fit !== 'contain' && (
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                  )}
                 </div>
 
                 <div className="px-4 pb-4 pt-6 text-center">
