@@ -17,6 +17,9 @@ type Item = {
   kind: 'image' | 'art-amber' | 'art-mortar';
   image?: string;
   alt?: string;
+  // Posición vertical para el object-cover. Default 'center'; usar valor
+  // específico cuando el contenido principal está descentrado en la imagen.
+  objectPosition?: string;
 };
 
 const ITEMS: Item[] = [
@@ -43,6 +46,7 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/home/3.png',
     alt: 'Fórmula magistral EUDROMIA — aceite medicinal',
+    objectPosition: 'center 75%',
   },
 ];
 
@@ -471,7 +475,8 @@ export function SectionCollection() {
                       alt={item.alt}
                       fill
                       sizes="(min-width: 1024px) 686px, (min-width: 768px) 33vw, 100vw"
-                      className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      style={{ objectPosition: item.objectPosition ?? 'center' }}
                     />
                   ) : item.kind === 'art-amber' ? (
                     <ArtAmber />
