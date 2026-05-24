@@ -9,6 +9,8 @@ import { genetics } from '@/lib/db/schema';
 import { parseGeneticDescription } from '@/lib/genetics/meta';
 import { OrnateFrame } from '@/components/brand/ornate-frame';
 import { AddToCartForm } from '@/components/cart/add-to-cart-form';
+import { CartStickyCta } from '@/components/cart/cart-sticky-cta';
+import { getCartSnapshot } from '@/lib/cart/server';
 import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 
 const HARD_CAP = 10;
@@ -58,6 +60,10 @@ export default async function GeneticDetailPage({
   if (!g || !g.active) notFound();
 
   const meta = parseGeneticDescription(g.description);
+
+  const cartSnap = isActive
+    ? await getCartSnapshot(user.id)
+    : { itemCount: 0, totalCents: 0, totalGrams: 0, items: [] };
 
   let remaining: number | null = null;
   if (isActive && user.role !== 'admin') {
@@ -194,6 +200,8 @@ export default async function GeneticDetailPage({
           </div>
         </article>
       </div>
+
+      <CartStickyCta itemCount={cartSnap.itemCount} totalCents={cartSnap.totalCents} />
     </main>
   );
 }

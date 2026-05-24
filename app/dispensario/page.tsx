@@ -8,6 +8,8 @@ import { genetics } from '@/lib/db/schema';
 import { Button } from '@/components/ui/button';
 import { OrnateFrame } from '@/components/brand/ornate-frame';
 import { AddToCartForm } from '@/components/cart/add-to-cart-form';
+import { CartStickyCta } from '@/components/cart/cart-sticky-cta';
+import { getCartSnapshot } from '@/lib/cart/server';
 import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 
 const HARD_CAP = 10;
@@ -78,6 +80,10 @@ export default async function DispensarioPage() {
     .from(genetics)
     .where(eq(genetics.active, true))
     .orderBy(desc(genetics.createdAt));
+
+  const cartSnap = isActive
+    ? await getCartSnapshot(user.id)
+    : { itemCount: 0, totalCents: 0, totalGrams: 0, items: [] };
 
   // Si el socio tiene cap mensual configurado, calculamos cuánto le queda
   // para mostrar un badge sutil al header. Admins quedan sin badge.
@@ -256,6 +262,8 @@ export default async function DispensarioPage() {
           ))}
         </ul>
       )}
+
+      <CartStickyCta itemCount={cartSnap.itemCount} totalCents={cartSnap.totalCents} />
     </main>
   );
 }
