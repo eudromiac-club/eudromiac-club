@@ -17,6 +17,9 @@ type Item = {
   kind: 'image' | 'art-amber' | 'art-mortar';
   image?: string;
   alt?: string;
+  // 'cover' = llena el frame, válido para fotos (se cropean bordes irrelevantes).
+  // 'contain' = no recorta, válido para ilustraciones de marca (bandas se integran al bg cobre).
+  fit: 'cover' | 'contain';
 };
 
 const ITEMS: Item[] = [
@@ -27,6 +30,7 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/landing/flower-cannabis.jpg',
     alt: 'Macro de flor de cannabis con tricomas',
+    fit: 'cover',
   },
   {
     id: 'extractos',
@@ -35,6 +39,7 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/home/4.png',
     alt: 'Extracto de autor EUDROMIA — composición botánica',
+    fit: 'contain',
   },
   {
     id: 'formulas',
@@ -43,6 +48,7 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/home/3.png',
     alt: 'Fórmula magistral EUDROMIA — aceite medicinal',
+    fit: 'contain',
   },
 ];
 
@@ -477,7 +483,11 @@ export function SectionCollection() {
                       alt={item.alt}
                       fill
                       sizes="(min-width: 1024px) 686px, (min-width: 768px) 33vw, 100vw"
-                      className="object-contain transition-transform duration-700 group-hover:scale-[1.02]"
+                      className={
+                        item.fit === 'cover'
+                          ? 'object-cover transition-transform duration-700 group-hover:scale-[1.02]'
+                          : 'object-contain transition-transform duration-700 group-hover:scale-[1.02]'
+                      }
                     />
                   ) : item.kind === 'art-amber' ? (
                     <ArtAmber />
