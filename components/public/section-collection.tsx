@@ -46,7 +46,7 @@ const ITEMS: Item[] = [
     kind: 'image',
     image: '/home/3.png',
     alt: 'Fórmula magistral EUDROMIA — aceite medicinal',
-    objectPosition: 'center 75%',
+    objectPosition: 'center 62%',
   },
 ];
 
