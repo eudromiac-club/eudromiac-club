@@ -465,7 +465,7 @@ export function SectionCollection() {
             <li key={item.id} className="col-item">
               <OrnateFrame className="group">
                 <div
-                  className="col-photo relative aspect-[3/4] overflow-hidden"
+                  className="col-photo relative aspect-[686/992] overflow-hidden"
                   style={{
                     background:
                       'radial-gradient(ellipse at center, hsl(32 22% 11%) 0%, hsl(28 20% 6%) 75%)',
@@ -476,8 +476,8 @@ export function SectionCollection() {
                       src={item.image}
                       alt={item.alt}
                       fill
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                      className="object-contain p-4 transition-transform duration-700 group-hover:scale-[1.03]"
+                      sizes="(min-width: 1024px) 686px, (min-width: 768px) 33vw, 100vw"
+                      className="object-contain transition-transform duration-700 group-hover:scale-[1.02]"
                     />
                   ) : item.kind === 'art-amber' ? (
                     <ArtAmber />
