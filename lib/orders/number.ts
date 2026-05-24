@@ -1,30 +1,24 @@
 import 'server-only';
-import { eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { db } from '@/lib/db';
-import { orders } from '@/lib/db/schema';
 
-// Caracteres legibles: sin 0/O ni 1/I.
-const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
-function randomCode(len: number): string {
-  let s = '';
-  for (let i = 0; i < len; i++) {
-    s += ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
-  }
-  return s;
-}
-
-// Genera un número de pedido único formato EU-XXXXXX. Reintenta si colisiona
-// (probabilidad mínima con 32^6 = 1B combinaciones).
+// Pulls the next value from the postgres sequence `order_number_seq` and
+// formats it as EUC-00001, EUC-00002, ... The sequence guarantees uniqueness
+// and monotonic increase even under concurrent inserts.
+//
+// Si la sequence no existe (DB nueva sin correr db:setup-order-seq), la
+// creamos sobre la marcha — operación idempotente.
 export async function generateUniqueOrderNumber(): Promise<string> {
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const candidate = `EU-${randomCode(6)}`;
-    const [existing] = await db
-      .select({ id: orders.id })
-      .from(orders)
-      .where(eq(orders.orderNumber, candidate))
-      .limit(1);
-    if (!existing) return candidate;
+  await db.execute(sql`CREATE SEQUENCE IF NOT EXISTS order_number_seq START 1`);
+  const result = await db.execute(
+    sql`SELECT nextval('order_number_seq')::bigint AS next`,
+  );
+  const rows = (result as unknown as { rows?: Array<{ next: string | number | bigint }> }).rows
+    ?? (result as unknown as Array<{ next: string | number | bigint }>);
+  const raw = rows?.[0]?.next;
+  const n = typeof raw === 'bigint' ? Number(raw) : Number(raw ?? 0);
+  if (!Number.isFinite(n) || n <= 0) {
+    throw new Error('No se pudo generar el número de pedido.');
   }
-  throw new Error('No se pudo generar un número de pedido único.');
+  return `EUC-${n.toString().padStart(5, '0')}`;
 }

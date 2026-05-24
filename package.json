@@ -14,7 +14,8 @@
     "db:seed-admin": "node --env-file=.env.local scripts/seed-admin.mjs",
     "db:seed-genetics": "node --env-file=.env.local scripts/seed-genetics.mjs",
     "db:seed-test-user": "node --env-file=.env.local scripts/seed-test-user.mjs",
-    "db:reset-genetics": "node --env-file=.env.local scripts/reset-genetics.mjs"
+    "db:reset-genetics": "node --env-file=.env.local scripts/reset-genetics.mjs",
+    "db:setup-order-seq": "node --env-file=.env.local scripts/setup-order-seq.mjs"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.2",
