@@ -30,15 +30,19 @@ const ITEMS: Item[] = [
   },
   {
     id: 'extractos',
-    label: 'Extractos Puros',
+    label: 'Extractos de Autor',
     body: 'Concentrados botánicos de la más alta pureza, capturando la esencia de la planta en su estado más cristalino.',
-    kind: 'art-amber',
+    kind: 'image',
+    image: '/home/4.png',
+    alt: 'Extracto de autor EUDROMIA — composición botánica',
   },
   {
     id: 'formulas',
     label: 'Fórmulas Magistrales',
     body: 'Mezclas personalizadas y aceites medicinales desarrollados con respeto por la herencia herbolaria.',
-    kind: 'art-mortar',
+    kind: 'image',
+    image: '/home/3.png',
+    alt: 'Fórmula magistral EUDROMIA — aceite medicinal',
   },
 ];
 
