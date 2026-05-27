@@ -13,6 +13,7 @@ import { mpConfigured, mpPreference } from '@/lib/mp/client';
 import { getAppliedCoupon, clearAppliedCoupon, calcDiscount } from '@/lib/coupons';
 import { generateUniqueOrderNumber } from '@/lib/orders/number';
 import { parseShippingForm, type ShippingFieldErrors } from '@/lib/orders/shipping';
+import { notifyOrderConfirmed, notifyTeamNewOrder } from '@/lib/email/notify';
 
 // Estado del form de envío. `message` = error general (cuenta no habilitada,
 // carrito vacío, cap mensual). `errors` = errores por campo de la dirección.
@@ -92,6 +93,24 @@ export async function startCheckoutAction(
       await db.delete(cartItems).where(eq(cartItems.cartId, cartRow.id));
     }
     await clearAppliedCoupon();
+
+    if (user.email) {
+      await notifyOrderConfirmed({
+        to: user.email,
+        name: user.name ?? null,
+        orderNumber,
+        totalCents,
+        items: cart.items.map((i) => ({
+          name: i.name,
+          quantity: i.quantity,
+          unitPriceCents: i.unitPriceCents,
+        })),
+        shipping: shipping.value,
+        isFree: true,
+      });
+    }
+    await notifyTeamNewOrder({ orderNumber, memberName: user.name ?? null, totalCents });
+
     revalidatePath('/carrito');
     revalidatePath('/cuenta/pedidos');
     revalidatePath('/admin', 'layout');

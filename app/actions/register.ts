@@ -8,6 +8,7 @@ import { AuthError } from 'next-auth';
 import { db } from '@/lib/db';
 import { users, patientProfiles } from '@/lib/db/schema';
 import { signIn } from '@/auth';
+import { notifyWelcome, notifyTeamReprocannContact } from '@/lib/email/notify';
 
 const RegisterSchema = z
   .object({
@@ -152,6 +153,17 @@ export async function registerAction(
       ok: false,
       errors: { form: ['No pudimos crear tu cuenta. Probá de nuevo en un rato.'] },
     };
+  }
+
+  // Emails (best-effort: notify atrapa sus errores). El de bienvenida va al
+  // socio; si se registró sin REPROCANN, avisamos al equipo para contactarlo.
+  await notifyWelcome(d.email, fullName);
+  if (d.noReprocann) {
+    await notifyTeamReprocannContact({
+      memberName: fullName,
+      memberEmail: d.email,
+      phone: d.phone,
+    });
   }
 
   try {

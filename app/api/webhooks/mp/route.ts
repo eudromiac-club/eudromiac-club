@@ -3,8 +3,9 @@ import crypto from 'node:crypto';
 import { eq, sql } from 'drizzle-orm';
 
 import { db } from '@/lib/db';
-import { orders, orderItems, genetics, cartItems, carts } from '@/lib/db/schema';
+import { orders, orderItems, genetics, cartItems, carts, users } from '@/lib/db/schema';
 import { mpConfigured, mpPayment } from '@/lib/mp/client';
+import { notifyOrderConfirmed, notifyTeamNewOrder } from '@/lib/email/notify';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -111,6 +112,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (payment.status === 'approved') {
+    let didPay = false;
     try {
       await db.transaction(async (tx) => {
         // Re-leer order con FOR UPDATE para evitar race.
@@ -153,10 +155,50 @@ export async function POST(req: NextRequest) {
         if (userCart) {
           await tx.delete(cartItems).where(eq(cartItems.cartId, userCart.id));
         }
+
+        didPay = true;
       });
     } catch (e) {
       console.error('[mp/webhook] error procesando pago aprobado:', e);
       return NextResponse.json({ ok: false, error: 'db_error' }, { status: 500 });
+    }
+
+    // Emails post-pago (best-effort, fuera de la transacción). Solo si este
+    // webhook fue el que transicionó el pedido a pagado.
+    if (didPay) {
+      try {
+        const [u] = await db
+          .select({ email: users.email, name: users.name })
+          .from(users)
+          .where(eq(users.id, order.userId))
+          .limit(1);
+        const lines = await db
+          .select({
+            name: orderItems.nameSnapshot,
+            quantity: orderItems.quantity,
+            unitPriceCents: orderItems.unitPriceCents,
+          })
+          .from(orderItems)
+          .where(eq(orderItems.orderId, orderId));
+        if (u?.email) {
+          await notifyOrderConfirmed({
+            to: u.email,
+            name: u.name,
+            orderNumber: order.orderNumber,
+            totalCents: order.totalCents,
+            items: lines,
+            shipping: order.shippingAddress,
+            isFree: false,
+          });
+        }
+        await notifyTeamNewOrder({
+          orderNumber: order.orderNumber,
+          memberName: u?.name ?? null,
+          totalCents: order.totalCents,
+        });
+      } catch (e) {
+        console.error('[mp/webhook] email post-pago falló:', e);
+      }
     }
   } else if (
     payment.status === 'rejected' ||

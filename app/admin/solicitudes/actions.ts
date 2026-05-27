@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { users, patientProfiles, patientStatusHistory } from '@/lib/db/schema';
 import { requireAdmin } from '@/lib/auth/dal';
+import { notifyReprocannApproved, notifyReprocannRejected } from '@/lib/email/notify';
 
 const IdSchema = z.object({ userId: z.string().uuid() });
 const RejectSchema = z.object({
@@ -27,9 +28,13 @@ export async function approveReprocannAction(formData: FormData): Promise<void> 
 
   const { userId } = parsed.data;
 
-  await db.transaction(async (tx) => {
-    const [u] = await tx.select({ status: users.status }).from(users).where(eq(users.id, userId)).limit(1);
-    if (!u || u.status !== 'under_review') return;
+  const notify = await db.transaction(async (tx) => {
+    const [u] = await tx
+      .select({ status: users.status, email: users.email, name: users.name })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    if (!u || u.status !== 'under_review') return null;
 
     await tx.update(users).set({ status: 'active', updatedAt: sql`now()` }).where(eq(users.id, userId));
 
@@ -50,7 +55,11 @@ export async function approveReprocannAction(formData: FormData): Promise<void> 
       reason: 'Aprobado por admin.',
       changedBy: admin.id,
     });
+
+    return { email: u.email, name: u.name };
   });
+
+  if (notify) await notifyReprocannApproved(notify.email, notify.name);
 
   revalidatePath('/admin');
   revalidatePath('/admin/solicitudes');
@@ -68,9 +77,13 @@ export async function rejectReprocannAction(formData: FormData): Promise<void> {
 
   const { userId, reason } = parsed.data;
 
-  await db.transaction(async (tx) => {
-    const [u] = await tx.select({ status: users.status }).from(users).where(eq(users.id, userId)).limit(1);
-    if (!u || u.status !== 'under_review') return;
+  const notify = await db.transaction(async (tx) => {
+    const [u] = await tx
+      .select({ status: users.status, email: users.email, name: users.name })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    if (!u || u.status !== 'under_review') return null;
 
     await tx.update(users).set({ status: 'rejected', updatedAt: sql`now()` }).where(eq(users.id, userId));
 
@@ -89,7 +102,11 @@ export async function rejectReprocannAction(formData: FormData): Promise<void> {
       reason: reason ?? 'Rechazado por admin.',
       changedBy: admin.id,
     });
+
+    return { email: u.email, name: u.name };
   });
+
+  if (notify) await notifyReprocannRejected(notify.email, notify.name, reason);
 
   revalidatePath('/admin');
   revalidatePath('/admin/solicitudes');

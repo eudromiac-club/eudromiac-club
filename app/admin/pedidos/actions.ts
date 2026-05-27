@@ -5,9 +5,10 @@ import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { db } from '@/lib/db';
-import { orders } from '@/lib/db/schema';
+import { orders, users } from '@/lib/db/schema';
 import { requireAdmin } from '@/lib/auth/dal';
 import { isCarrierKey } from '@/lib/orders/carriers';
+import { notifyOrderShipped } from '@/lib/email/notify';
 
 const NEXT_STATUS = z.enum(['paid', 'shipped', 'delivered', 'cancelled', 'refunded']);
 
@@ -75,7 +76,22 @@ export async function dispatchOrderAction(
     })
     .where(eq(orders.id, orderId));
 
-  // (el email de "pedido despachado" se conecta en el commit siguiente)
+  // Email de "pedido despachado" con el link de tracking (best-effort).
+  const [info] = await db
+    .select({ orderNumber: orders.orderNumber, email: users.email, name: users.name })
+    .from(orders)
+    .innerJoin(users, eq(users.id, orders.userId))
+    .where(eq(orders.id, orderId))
+    .limit(1);
+  if (info?.email) {
+    await notifyOrderShipped({
+      to: info.email,
+      name: info.name,
+      orderNumber: info.orderNumber,
+      carrier,
+      trackingNumber: trackingNumber || null,
+    });
+  }
 
   revalidatePath('/admin/pedidos');
   revalidatePath('/admin/pedidos/' + orderId);
