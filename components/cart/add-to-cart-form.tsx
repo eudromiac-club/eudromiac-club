@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useActionState, useEffect, useState } from 'react';
 import { addToCartAction, type CartActionState } from '@/app/cart/actions';
 import { Button } from '@/components/ui/button';
@@ -8,16 +9,21 @@ export function AddToCartForm({
   geneticId,
   cap,
   disabled,
+  showGoToCart = true,
 }: {
   geneticId: string;
   cap: number;
   disabled?: boolean;
+  // En el carrito mismo no tiene sentido ofrecer "Ir al carrito" (ya estás ahí
+  // y la lista se refresca sola), así que se puede ocultar.
+  showGoToCart?: boolean;
 }) {
   const [state, action, isPending] = useActionState<CartActionState, FormData>(
     addToCartAction,
     undefined,
   );
   const [qty, setQty] = useState(1);
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     if (state?.ok) {
@@ -27,9 +33,11 @@ export function AddToCartForm({
   }, [state]);
 
   const max = Math.max(1, cap);
+  const showConfirm = state?.ok && !dismissed;
 
   return (
-    <form action={action} className="space-y-2">
+    // Al reenviar, volvemos a mostrar el panel de confirmación.
+    <form action={action} onSubmit={() => setDismissed(false)} className="space-y-2">
       <input type="hidden" name="geneticId" value={geneticId} />
 
       <div className="flex items-stretch gap-2">
@@ -77,10 +85,33 @@ export function AddToCartForm({
         </Button>
       </div>
 
-      <div className="min-h-[1rem] text-[11px]">
-        {state?.ok && state.message && <span className="text-brand">✓ {state.message}</span>}
-        {state && !state.ok && <span className="text-destructive">{state.error}</span>}
-      </div>
+      {showConfirm ? (
+        <div className="border border-brand/40 bg-brand/5 p-3">
+          <p className="text-[11px] text-brand">✓ {state.message}</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {showGoToCart && (
+              <Button
+                asChild
+                size="sm"
+                className="h-auto rounded-none bg-brand px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-brand-foreground hover:bg-brand/90"
+              >
+                <Link href="/carrito">Ir al carrito →</Link>
+              </Button>
+            )}
+            <button
+              type="button"
+              onClick={() => setDismissed(true)}
+              className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+            >
+              Seguir comprando
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="min-h-[1rem] text-[11px]">
+          {state && !state.ok && <span className="text-destructive">{state.error}</span>}
+        </div>
+      )}
     </form>
   );
 }

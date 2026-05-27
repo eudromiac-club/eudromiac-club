@@ -1,12 +1,18 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { and, desc, eq, gt, notInArray } from 'drizzle-orm';
 import { requireUser } from '@/lib/auth/dal';
+import { db } from '@/lib/db';
+import { genetics } from '@/lib/db/schema';
 import { getCartSnapshot } from '@/lib/cart/server';
 import { getAppliedCoupon, calcDiscount } from '@/lib/coupons';
 import { Button } from '@/components/ui/button';
+import { AddToCartForm } from '@/components/cart/add-to-cart-form';
 import { CartItemRow } from './cart-item-row';
 import { CouponForm } from './coupon-form';
+
+const HARD_CAP = 10;
 
 export const metadata: Metadata = {
   title: 'Carrito · EUDROMIA CLUB',
@@ -46,6 +52,25 @@ export default async function CarritoPage() {
   const discountCents = calcDiscount(subtotalCents, coupon);
   const totalCents = subtotalCents - discountCents;
   const isFree = cart.items.length > 0 && totalCents === 0;
+
+  // Cross-sell: otras genéticas activas con stock que todavía no agregó, para
+  // sumar al pedido sin salir del carrito.
+  const cartIds = cart.items.map((i) => i.geneticId);
+  const suggestions =
+    cart.items.length > 0
+      ? await db
+          .select()
+          .from(genetics)
+          .where(
+            and(
+              eq(genetics.active, true),
+              gt(genetics.stock, 0),
+              cartIds.length > 0 ? notInArray(genetics.id, cartIds) : undefined,
+            ),
+          )
+          .orderBy(desc(genetics.createdAt))
+          .limit(3)
+      : [];
 
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-12">
@@ -154,6 +179,69 @@ export default async function CarritoPage() {
               </p>
             </div>
           </section>
+
+          {suggestions.length > 0 && (
+            <section className="mt-14">
+              <div className="flex items-center gap-4">
+                <h2 className="font-display text-lg font-medium uppercase tracking-[0.16em]">
+                  Completá tu <span className="text-brand">pedido</span>
+                </h2>
+                <span className="h-px flex-1 bg-border" />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Otras genéticas de la colección. Sumalas sin salir del carrito.
+              </p>
+
+              <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {suggestions.map((g) => (
+                  <li key={g.id} className="flex flex-col border border-border bg-card">
+                    <Link
+                      href={`/dispensario/${g.slug}`}
+                      className="group relative block aspect-[4/3] overflow-hidden bg-muted"
+                    >
+                      {g.images[0] ? (
+                        <Image
+                          src={g.images[0]}
+                          alt={g.name}
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <span className="flex h-full items-center justify-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                          sin foto
+                        </span>
+                      )}
+                    </Link>
+                    <div className="flex flex-1 flex-col gap-3 p-4">
+                      <div className="flex items-start justify-between gap-2">
+                        <Link href={`/dispensario/${g.slug}`} className="hover:text-brand">
+                          <h3 className="font-display text-sm font-medium uppercase tracking-[0.12em]">
+                            {g.name}
+                          </h3>
+                        </Link>
+                        <p className="shrink-0 font-mono text-sm text-brand">
+                          {formatPriceArs(g.priceCents)}
+                          <span className="text-[10px] text-muted-foreground">/g</span>
+                        </p>
+                      </div>
+                      <div className="mt-auto">
+                        <AddToCartForm
+                          geneticId={g.id}
+                          cap={Math.min(
+                            HARD_CAP,
+                            g.maxPerOrderGrams ? Math.floor(Number(g.maxPerOrderGrams)) : HARD_CAP,
+                            g.stock,
+                          )}
+                          showGoToCart={false}
+                        />
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </>
       )}
     </main>
