@@ -54,6 +54,7 @@ export default async function AdminPedidoDetailPage({
       discountCents: orders.discountCents,
       couponCode: orders.couponCode,
       totalCents: orders.totalCents,
+      shippingAddress: orders.shippingAddress,
       createdAt: orders.createdAt,
       updatedAt: orders.updatedAt,
       mpPreferenceId: orders.mpPreferenceId,
@@ -172,6 +173,59 @@ export default async function AdminPedidoDetailPage({
             )}
           </dl>
         </div>
+      </section>
+
+      <section className="border border-border bg-card p-6">
+        <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+          ◆ Envío
+        </h2>
+        {row.shippingAddress ? (
+          <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Recibe
+              </dt>
+              <dd className="mt-0.5">{row.shippingAddress.recipientName}</dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Teléfono
+              </dt>
+              <dd className="mt-0.5">
+                <a
+                  href={`tel:${row.shippingAddress.phone}`}
+                  className="text-brand hover:underline"
+                >
+                  {row.shippingAddress.phone}
+                </a>
+              </dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Dirección
+              </dt>
+              <dd className="mt-0.5">
+                {row.shippingAddress.street}, {row.shippingAddress.city},{' '}
+                {row.shippingAddress.province}
+                {row.shippingAddress.postalCode ? ` (CP ${row.shippingAddress.postalCode})` : ''}
+              </dd>
+            </div>
+            {row.shippingAddress.notes && (
+              <div className="sm:col-span-2">
+                <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Notas
+                </dt>
+                <dd className="mt-0.5 whitespace-pre-line text-muted-foreground">
+                  {row.shippingAddress.notes}
+                </dd>
+              </div>
+            )}
+          </dl>
+        ) : (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Sin dirección de envío (pedido anterior a esta función).
+          </p>
+        )}
       </section>
 
       <section className="border border-border bg-card">

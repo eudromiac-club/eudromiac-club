@@ -7,7 +7,6 @@ import { getAppliedCoupon, calcDiscount } from '@/lib/coupons';
 import { Button } from '@/components/ui/button';
 import { CartItemRow } from './cart-item-row';
 import { CouponForm } from './coupon-form';
-import { startCheckoutAction } from './checkout-action';
 
 export const metadata: Metadata = {
   title: 'Carrito · EUDROMIA CLUB',
@@ -141,19 +140,17 @@ export default async function CarritoPage() {
                 </div>
               </dl>
 
-              <form action={startCheckoutAction} className="mt-6">
-                <Button
-                  type="submit"
-                  className="w-full rounded-none bg-brand px-8 py-6 text-[11px] uppercase tracking-[0.3em] text-brand-foreground hover:bg-brand/90"
-                >
-                  {isFree ? 'Confirmar pedido' : 'Pagar con MercadoPago'}
-                </Button>
-              </form>
+              <Button
+                asChild
+                className="mt-6 w-full rounded-none bg-brand px-8 py-6 text-[11px] uppercase tracking-[0.3em] text-brand-foreground hover:bg-brand/90"
+              >
+                <Link href="/checkout/envio">Continuar al envío →</Link>
+              </Button>
 
               <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
                 {isFree
-                  ? 'El cupón cubre el 100% del pedido. Al confirmar, queda registrado y el equipo lo prepara.'
-                  : 'Al pagar te redirigimos a MercadoPago. Confirmás el pago ahí y volvés a tu cuenta con el pedido registrado.'}
+                  ? 'En el próximo paso cargás la dirección de envío y confirmás el pedido. El cupón cubre el 100%.'
+                  : 'En el próximo paso cargás la dirección de envío y vas al pago con MercadoPago.'}
               </p>
             </div>
           </section>

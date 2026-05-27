@@ -12,16 +12,26 @@ import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 import { mpConfigured, mpPreference } from '@/lib/mp/client';
 import { getAppliedCoupon, clearAppliedCoupon, calcDiscount } from '@/lib/coupons';
 import { generateUniqueOrderNumber } from '@/lib/orders/number';
+import { parseShippingForm, type ShippingFieldErrors } from '@/lib/orders/shipping';
 
-export async function startCheckoutAction(): Promise<void> {
+// Estado del form de envío. `message` = error general (cuenta no habilitada,
+// carrito vacío, cap mensual). `errors` = errores por campo de la dirección.
+// En el camino feliz la acción redirige (a MP, success o pending), así que
+// nunca devuelve estado.
+export type CheckoutState = { message?: string; errors?: ShippingFieldErrors } | undefined;
+
+export async function startCheckoutAction(
+  _prev: CheckoutState,
+  formData: FormData,
+): Promise<CheckoutState> {
   const user = await requireUser();
   if (user.status !== 'active' && user.role !== 'admin') {
-    throw new Error('Tu cuenta no está habilitada para comprar.');
+    return { message: 'Tu cuenta no está habilitada para comprar.' };
   }
 
   const cart = await getCartSnapshot(user.id);
   if (cart.items.length === 0) {
-    throw new Error('Tu carrito está vacío.');
+    return { message: 'Tu carrito está vacío.' };
   }
 
   if (user.role !== 'admin') {
@@ -29,11 +39,16 @@ export async function startCheckoutAction(): Promise<void> {
     if (monthlyCap != null) {
       const consumed = (await getMonthlyConsumption(user.id)).grams;
       if (consumed + cart.totalGrams > monthlyCap) {
-        throw new Error(
-          `Este pedido supera tu cap mensual de ${monthlyCap}g (consumido ${consumed}g + carrito ${cart.totalGrams}g).`,
-        );
+        return {
+          message: `Este pedido supera tu cap mensual de ${monthlyCap}g (consumido ${consumed}g + carrito ${cart.totalGrams}g).`,
+        };
       }
     }
+  }
+
+  const shipping = parseShippingForm(formData);
+  if (!shipping.ok) {
+    return { errors: shipping.errors };
   }
 
   const coupon = await getAppliedCoupon();
@@ -52,6 +67,7 @@ export async function startCheckoutAction(): Promise<void> {
       discountCents,
       couponCode: coupon?.code ?? null,
       totalCents,
+      shippingAddress: shipping.value,
     })
     .returning({ id: orders.id });
 

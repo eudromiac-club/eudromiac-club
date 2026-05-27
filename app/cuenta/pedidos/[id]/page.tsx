@@ -103,6 +103,32 @@ export default async function MiPedidoDetailPage({
           </div>
         </div>
       </section>
+
+      {row.shippingAddress && (
+        <section className="mt-8 border border-border bg-card p-6">
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+            ◆ Envío
+          </h2>
+          <div className="mt-4 space-y-1 text-sm">
+            <p className="font-display uppercase tracking-[0.1em]">
+              {row.shippingAddress.recipientName}
+            </p>
+            <p className="text-muted-foreground">
+              {row.shippingAddress.street}, {row.shippingAddress.city},{' '}
+              {row.shippingAddress.province}
+              {row.shippingAddress.postalCode ? ` (CP ${row.shippingAddress.postalCode})` : ''}
+            </p>
+            <p className="font-mono text-xs text-muted-foreground">
+              Tel: {row.shippingAddress.phone}
+            </p>
+            {row.shippingAddress.notes && (
+              <p className="mt-2 whitespace-pre-line text-xs text-muted-foreground">
+                {row.shippingAddress.notes}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

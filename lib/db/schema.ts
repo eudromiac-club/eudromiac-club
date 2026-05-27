@@ -15,6 +15,7 @@ import {
   customType,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
+import type { ShippingAddress } from '@/lib/orders/shipping';
 
 // citext: case-insensitive text. Requiere la extensión CITEXT (creada en la migration).
 const citext = customType<{ data: string }>({
@@ -196,7 +197,7 @@ export const orders = pgTable('orders', {
   totalCents: integer('total_cents').notNull(),
   mpPreferenceId: text('mp_preference_id'),
   mpPaymentId: text('mp_payment_id'),
-  shippingAddress: jsonb('shipping_address'),
+  shippingAddress: jsonb('shipping_address').$type<ShippingAddress>(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

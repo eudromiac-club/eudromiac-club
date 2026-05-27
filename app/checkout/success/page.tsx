@@ -20,12 +20,14 @@ export default async function CheckoutSuccessPage({
 
   let orderNumber: string | null = null;
   let isFree = false;
+  let shipTo: string | null = null;
   if (orderId) {
     const [o] = await db
       .select({
         orderNumber: orders.orderNumber,
         totalCents: orders.totalCents,
         userId: orders.userId,
+        shippingAddress: orders.shippingAddress,
       })
       .from(orders)
       .where(eq(orders.id, orderId))
@@ -33,6 +35,9 @@ export default async function CheckoutSuccessPage({
     if (o && (o.userId === user.id || user.role === 'admin')) {
       orderNumber = o.orderNumber;
       isFree = o.totalCents === 0;
+      if (o.shippingAddress) {
+        shipTo = `${o.shippingAddress.street}, ${o.shippingAddress.city}, ${o.shippingAddress.province}`;
+      }
     }
   }
 
@@ -59,6 +64,12 @@ export default async function CheckoutSuccessPage({
           ? 'El equipo del club ya lo recibió y se pone con la preparación. Vas a poder seguir el estado desde tu cuenta.'
           : 'Tu pago se procesó correctamente. El equipo del club lo despacha cuando esté listo y vas a poder seguir el estado desde tu cuenta.'}
       </p>
+
+      {shipTo && (
+        <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+          Lo enviamos a: <span className="text-brand">{shipTo}</span>
+        </p>
+      )}
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Button asChild className="rounded-none px-6 py-5 text-[11px] uppercase tracking-[0.25em]">
           <Link href={orderId ? `/cuenta/pedidos/${orderId}` : '/cuenta/pedidos'}>
