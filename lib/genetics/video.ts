@@ -8,3 +8,17 @@ const SLUGS_WITH_VIDEO = new Set<string>(['pusherman', 'berry-blotto', 'herb-and
 export function geneticVideoSrc(slug: string): string | null {
   return SLUGS_WITH_VIDEO.has(slug) ? `/dispensario/videos/${slug}.mp4` : null;
 }
+
+// Video extra de packaging para la interna (además del loop de la flor). Mismo
+// criterio que arriba: Set hardcodeado, archivo en /public, no se chequea el fs.
+const SLUGS_WITH_PACKAGING = new Set<string>(['pusherman']);
+
+export function geneticPackagingSrc(
+  slug: string,
+): { src: string; poster: string } | null {
+  if (!SLUGS_WITH_PACKAGING.has(slug)) return null;
+  return {
+    src: `/dispensario/videos/${slug}-packaging.mp4`,
+    poster: `/dispensario/videos/${slug}-packaging-poster.jpg`,
+  };
+}

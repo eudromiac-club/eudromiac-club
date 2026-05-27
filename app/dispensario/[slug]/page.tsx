@@ -7,7 +7,7 @@ import { requireUser } from '@/lib/auth/dal';
 import { db } from '@/lib/db';
 import { genetics } from '@/lib/db/schema';
 import { parseGeneticDescription } from '@/lib/genetics/meta';
-import { geneticVideoSrc } from '@/lib/genetics/video';
+import { geneticVideoSrc, geneticPackagingSrc } from '@/lib/genetics/video';
 import { OrnateFrame } from '@/components/brand/ornate-frame';
 import { GeneticVideo } from '@/components/dispensario/genetic-video';
 import { AddToCartForm } from '@/components/cart/add-to-cart-form';
@@ -63,6 +63,7 @@ export default async function GeneticDetailPage({
 
   const meta = parseGeneticDescription(g.description);
   const videoSrc = geneticVideoSrc(g.slug);
+  const packaging = geneticPackagingSrc(g.slug);
 
   const cartSnap = isActive
     ? await getCartSnapshot(user.id)
@@ -165,6 +166,23 @@ export default async function GeneticDetailPage({
               </dd>
             </div>
           </dl>
+
+          {packaging && (
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                El packaging
+              </p>
+              <div className="mt-3 overflow-hidden border border-border">
+                <div className="relative aspect-[3/2]">
+                  <GeneticVideo
+                    src={packaging.src}
+                    poster={packaging.poster}
+                    alt={`Packaging de ${g.name}`}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </article>
 
         <aside className="border border-brand/30 bg-card p-6 lg:sticky lg:top-24">
