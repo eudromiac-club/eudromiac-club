@@ -151,6 +151,21 @@ export default async function AdminSocioDetailPage({
             <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
               ◆ Permiso REPROCANN
             </h2>
+            {p.needsReprocannContact && (
+              <div className="mt-4 flex items-start gap-3 border border-yellow-500/40 bg-yellow-500/5 p-3">
+                <span aria-hidden className="mt-0.5 text-yellow-500">●</span>
+                <p className="text-xs leading-relaxed text-yellow-500/90">
+                  Este socio declaró <span className="font-medium">no tener REPROCANN</span>. El equipo médico
+                  debe contactarlo
+                  {p.phone ? (
+                    <>
+                      {' '}al <span className="font-mono text-yellow-500">{p.phone}</span>
+                    </>
+                  ) : null}{' '}
+                  para gestionar el permiso antes de habilitar la compra.
+                </p>
+              </div>
+            )}
             <dl className="mt-4 space-y-3 text-sm">
               <div>
                 <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Número</dt>

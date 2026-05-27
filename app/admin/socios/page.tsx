@@ -10,15 +10,17 @@ export const metadata = {
   title: 'Socios · Admin · EUDROMIA CLUB',
 };
 
-type SP = { status?: string; q?: string };
+type SP = { status?: string; q?: string; flag?: string };
 
 export default async function AdminSociosPage({ searchParams }: { searchParams: Promise<SP> }) {
-  const { status, q } = await searchParams;
+  const { status, q, flag } = await searchParams;
   const filterStatus = status && USER_STATUS_ORDER.includes(status as never) ? status : null;
   const search = q?.trim();
+  const noReprocann = flag === 'no_reprocann';
 
   const conditions = [ne(users.role, 'admin')];
   if (filterStatus) conditions.push(eq(users.status, filterStatus as 'pending_kyc'));
+  if (noReprocann) conditions.push(eq(patientProfiles.needsReprocannContact, true));
   if (search) {
     conditions.push(or(ilike(users.email, `%${search}%`), ilike(users.name, `%${search}%`))!);
   }
@@ -32,6 +34,7 @@ export default async function AdminSociosPage({ searchParams }: { searchParams: 
       createdAt: users.createdAt,
       fullName: patientProfiles.fullName,
       reprocannNumber: patientProfiles.reprocannNumber,
+      needsReprocannContact: patientProfiles.needsReprocannContact,
       ordersCount: sql<number>`(select coalesce(count(*), 0)::int from ${orders} where ${orders.userId} = ${users.id} and ${orders.status} in ('paid','shipped','delivered'))`,
       totalSpent: sql<number>`(select coalesce(sum(${orders.totalCents}), 0)::int from ${orders} where ${orders.userId} = ${users.id} and ${orders.status} in ('paid','shipped','delivered'))`,
     })
@@ -40,6 +43,27 @@ export default async function AdminSociosPage({ searchParams }: { searchParams: 
     .where(and(...conditions))
     .orderBy(desc(users.createdAt))
     .limit(200);
+
+  // Total de socios que declararon no tener REPROCANN (para el badge del chip).
+  const [noReprocannAgg] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(users)
+    .leftJoin(patientProfiles, eq(patientProfiles.userId, users.id))
+    .where(and(ne(users.role, 'admin'), eq(patientProfiles.needsReprocannContact, true)));
+  const noReprocannCount = noReprocannAgg?.count ?? 0;
+
+  // Construye un href preservando los filtros activos, salvo los que se sobreescriban.
+  const hrefWith = (overrides: { status?: string | null; q?: string | null; flag?: string | null }) => {
+    const sp = new URLSearchParams();
+    const nextStatus = 'status' in overrides ? overrides.status : filterStatus;
+    const nextQ = 'q' in overrides ? overrides.q : search;
+    const nextFlag = 'flag' in overrides ? overrides.flag : noReprocann ? 'no_reprocann' : null;
+    if (nextStatus) sp.set('status', nextStatus);
+    if (nextQ) sp.set('q', nextQ);
+    if (nextFlag) sp.set('flag', nextFlag);
+    const qs = sp.toString();
+    return qs ? `/admin/socios?${qs}` : '/admin/socios';
+  };
 
   return (
     <div className="space-y-10">
@@ -65,12 +89,13 @@ export default async function AdminSociosPage({ searchParams }: { searchParams: 
           className="flex h-10 min-w-[260px] flex-1 max-w-md rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         />
         {filterStatus && <input type="hidden" name="status" value={filterStatus} />}
+        {noReprocann && <input type="hidden" name="flag" value="no_reprocann" />}
         <Button type="submit" variant="outline" className="rounded-none text-[11px] uppercase tracking-[0.2em]">
           Buscar
         </Button>
         {search && (
           <Link
-            href={filterStatus ? `/admin/socios?status=${filterStatus}` : '/admin/socios'}
+            href={hrefWith({ q: null })}
             className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
           >
             Limpiar
@@ -78,9 +103,9 @@ export default async function AdminSociosPage({ searchParams }: { searchParams: 
         )}
       </form>
 
-      <nav className="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.2em]">
+      <nav className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.2em]">
         <Link
-          href={search ? `/admin/socios?q=${encodeURIComponent(search)}` : '/admin/socios'}
+          href={hrefWith({ status: null })}
           className={`border px-3 py-1.5 transition-colors ${
             !filterStatus
               ? 'border-brand bg-brand/10 text-brand'
@@ -89,24 +114,37 @@ export default async function AdminSociosPage({ searchParams }: { searchParams: 
         >
           Todos
         </Link>
-        {USER_STATUS_ORDER.map((s) => {
-          const params = new URLSearchParams();
-          params.set('status', s);
-          if (search) params.set('q', search);
-          return (
-            <Link
-              key={s}
-              href={`/admin/socios?${params.toString()}`}
-              className={`border px-3 py-1.5 transition-colors ${
-                filterStatus === s
-                  ? 'border-brand bg-brand/10 text-brand'
-                  : 'border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground'
-              }`}
-            >
-              {USER_STATUS_LABEL[s]}
-            </Link>
-          );
-        })}
+        {USER_STATUS_ORDER.map((s) => (
+          <Link
+            key={s}
+            href={hrefWith({ status: s })}
+            className={`border px-3 py-1.5 transition-colors ${
+              filterStatus === s
+                ? 'border-brand bg-brand/10 text-brand'
+                : 'border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground'
+            }`}
+          >
+            {USER_STATUS_LABEL[s]}
+          </Link>
+        ))}
+
+        <span aria-hidden className="mx-1 hidden h-5 w-px bg-border sm:inline-block" />
+
+        <Link
+          href={hrefWith({ flag: noReprocann ? null : 'no_reprocann' })}
+          className={`inline-flex items-center gap-2 border px-3 py-1.5 transition-colors ${
+            noReprocann
+              ? 'border-yellow-500/70 bg-yellow-500/10 text-yellow-500'
+              : 'border-border text-muted-foreground hover:border-yellow-500/50 hover:text-yellow-500'
+          }`}
+        >
+          Sin REPROCANN
+          {noReprocannCount > 0 && (
+            <span className="rounded-full bg-yellow-500/20 px-1.5 py-0.5 font-mono text-[10px] leading-none text-yellow-500">
+              {noReprocannCount}
+            </span>
+          )}
+        </Link>
       </nav>
 
       {rows.length === 0 ? (
@@ -134,6 +172,11 @@ export default async function AdminSociosPage({ searchParams }: { searchParams: 
                     {r.fullName ?? r.name ?? r.email.split('@')[0]}
                   </p>
                   <p className="mt-0.5 text-xs text-muted-foreground">{r.email}</p>
+                  {r.needsReprocannContact && (
+                    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-yellow-500/50 bg-yellow-500/10 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] text-yellow-500">
+                      ● Sin REPROCANN · contactar
+                    </span>
+                  )}
                 </div>
 
                 <div className="text-xs">
