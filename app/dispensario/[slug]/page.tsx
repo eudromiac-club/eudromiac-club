@@ -7,7 +7,9 @@ import { requireUser } from '@/lib/auth/dal';
 import { db } from '@/lib/db';
 import { genetics } from '@/lib/db/schema';
 import { parseGeneticDescription } from '@/lib/genetics/meta';
+import { geneticVideoSrc } from '@/lib/genetics/video';
 import { OrnateFrame } from '@/components/brand/ornate-frame';
+import { GeneticVideo } from '@/components/dispensario/genetic-video';
 import { AddToCartForm } from '@/components/cart/add-to-cart-form';
 import { CartStickyCta } from '@/components/cart/cart-sticky-cta';
 import { getCartSnapshot } from '@/lib/cart/server';
@@ -60,6 +62,7 @@ export default async function GeneticDetailPage({
   if (!g || !g.active) notFound();
 
   const meta = parseGeneticDescription(g.description);
+  const videoSrc = geneticVideoSrc(g.slug);
 
   const cartSnap = isActive
     ? await getCartSnapshot(user.id)
@@ -92,8 +95,10 @@ export default async function GeneticDetailPage({
 
       <div className="mt-8 grid gap-12 lg:grid-cols-2 lg:items-start">
         <OrnateFrame>
-          <div className="relative aspect-[4/5] overflow-hidden">
-            {g.images[0] ? (
+          <div className={`relative overflow-hidden ${videoSrc ? 'aspect-video' : 'aspect-[4/5]'}`}>
+            {videoSrc ? (
+              <GeneticVideo src={videoSrc} poster={g.images[0] ?? null} alt={g.name} />
+            ) : g.images[0] ? (
               <Image
                 src={g.images[0]}
                 alt={g.name}
