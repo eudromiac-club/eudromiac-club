@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth/dal';
 import { logoutAction } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
+import { MobileMenu } from '@/components/layout/mobile-menu';
 import { getCartCount } from '@/lib/cart/server';
 
 export async function Topbar() {
@@ -25,15 +26,15 @@ export async function Topbar() {
         >
           {!user ? (
             <>
-              <a href="/#pilares" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/#pilares" className="text-muted-foreground transition-colors hover:text-foreground">
                 Pilares
-              </a>
-              <a href="/#coleccion" className="text-muted-foreground transition-colors hover:text-foreground">
+              </Link>
+              <Link href="/#coleccion" className="text-muted-foreground transition-colors hover:text-foreground">
                 Colección
-              </a>
-              <a href="/#acceso" className="text-muted-foreground transition-colors hover:text-foreground">
+              </Link>
+              <Link href="/#acceso" className="text-muted-foreground transition-colors hover:text-foreground">
                 Acceso
-              </a>
+              </Link>
             </>
           ) : (
             <>
@@ -120,7 +121,7 @@ export async function Topbar() {
                   )}
                 </Link>
               )}
-              <form action={logoutAction}>
+              <form action={logoutAction} className="hidden md:block">
                 <Button
                   type="submit"
                   size="sm"
@@ -132,6 +133,8 @@ export async function Topbar() {
               </form>
             </>
           )}
+
+          <MobileMenu loggedIn={!!user} role={user?.role} status={user?.status} />
         </div>
       </div>
     </header>
