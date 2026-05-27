@@ -140,27 +140,27 @@ export default async function GeneticDetailPage({
           </p>
 
           <dl className="grid grid-cols-3 gap-px overflow-hidden border border-border bg-border">
-            <div className="bg-card p-5">
+            <div className="bg-card p-4 sm:p-5">
               <dt className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
                 THC
               </dt>
-              <dd className="mt-1 font-mono text-2xl text-brand">
+              <dd className="mt-1 font-mono text-xl text-brand sm:text-2xl">
                 {g.thcPercent ? `${g.thcPercent}%` : '—'}
               </dd>
             </div>
-            <div className="bg-card p-5">
+            <div className="bg-card p-4 sm:p-5">
               <dt className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
                 CBD
               </dt>
-              <dd className="mt-1 font-mono text-2xl text-brand">
+              <dd className="mt-1 font-mono text-xl text-brand sm:text-2xl">
                 {g.cbdPercent ? `${g.cbdPercent}%` : '—'}
               </dd>
             </div>
-            <div className="bg-card p-5">
+            <div className="bg-card p-4 sm:p-5">
               <dt className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
                 Terpenos
               </dt>
-              <dd className="mt-1 font-mono text-2xl text-brand">
+              <dd className="mt-1 font-mono text-xl text-brand sm:text-2xl">
                 {meta.terpenes ? `${meta.terpenes}%` : '—'}
               </dd>
             </div>

@@ -15,7 +15,7 @@ export async function Topbar() {
         <Link
           href="/"
           aria-label="EUDROMIA CLUB — inicio"
-          className="font-display text-base font-medium tracking-[0.3em] text-foreground"
+          className="font-display text-sm font-medium tracking-[0.2em] text-foreground sm:text-base sm:tracking-[0.3em]"
         >
           EUDROMIA <span className="text-brand">CLUB</span>
         </Link>
@@ -55,12 +55,12 @@ export async function Topbar() {
 
         <div className="flex items-center gap-3">
           {!user ? (
-            <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 md:flex">
               <Button
                 asChild
                 size="sm"
                 variant="ghost"
-                className="hidden rounded-none px-3 text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground sm:inline-flex"
+                className="rounded-none px-3 text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
               >
                 <Link href="/registro">Asociarse</Link>
               </Button>
