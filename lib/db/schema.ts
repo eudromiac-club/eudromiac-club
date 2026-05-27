@@ -42,6 +42,12 @@ export const orderStatus = pgEnum('order_status', [
   'shipped',
   'delivered',
 ]);
+export const trackingCarrier = pgEnum('tracking_carrier', [
+  'andreani',
+  'correo_argentino',
+  'via_cargo',
+  'propio',
+]);
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
@@ -198,6 +204,8 @@ export const orders = pgTable('orders', {
   mpPreferenceId: text('mp_preference_id'),
   mpPaymentId: text('mp_payment_id'),
   shippingAddress: jsonb('shipping_address').$type<ShippingAddress>(),
+  trackingCarrier: trackingCarrier('tracking_carrier'),
+  trackingNumber: text('tracking_number'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

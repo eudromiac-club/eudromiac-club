@@ -10,6 +10,7 @@ import {
   formatPriceArs,
   formatDate,
 } from '@/lib/orders/labels';
+import { carrierLabel, trackingUrl } from '@/lib/orders/carriers';
 
 export const metadata = {
   title: 'Mi pedido · EUDROMIA CLUB',
@@ -127,6 +128,33 @@ export default async function MiPedidoDetailPage({
               </p>
             )}
           </div>
+        </section>
+      )}
+
+      {(row.trackingNumber || row.trackingCarrier) && (
+        <section className="mt-8 border border-brand/30 bg-card p-6">
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+            ◆ Seguimiento
+          </h2>
+          <div className="mt-4 space-y-1 text-sm">
+            <p>
+              <span className="text-muted-foreground">Transportista: </span>
+              {carrierLabel(row.trackingCarrier) ?? '—'}
+            </p>
+            {row.trackingNumber && (
+              <p className="font-mono text-xs text-muted-foreground">N°: {row.trackingNumber}</p>
+            )}
+          </div>
+          {trackingUrl(row.trackingCarrier, row.trackingNumber) && (
+            <a
+              href={trackingUrl(row.trackingCarrier, row.trackingNumber)!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-block text-[11px] uppercase tracking-[0.2em] text-brand hover:underline"
+            >
+              Seguir mi envío →
+            </a>
+          )}
         </section>
       )}
     </main>

@@ -10,7 +10,9 @@ import {
   formatPriceArs,
   formatDate,
 } from '@/lib/orders/labels';
+import { carrierLabel, trackingUrl } from '@/lib/orders/carriers';
 import { updateOrderStatusAction } from '../actions';
+import { DispatchForm } from './dispatch-form';
 
 export const metadata = {
   title: 'Pedido · Admin · EUDROMIA CLUB',
@@ -23,7 +25,6 @@ const NEXT_ACTIONS: Record<string, Array<{ to: string; label: string; tone: 'bra
     { to: 'cancelled', label: 'Cancelar', tone: 'destructive' },
   ],
   paid: [
-    { to: 'shipped', label: 'Marcar en tránsito', tone: 'brand' },
     { to: 'cancelled', label: 'Cancelar', tone: 'destructive' },
     { to: 'refunded', label: 'Reembolsar', tone: 'neutral' },
   ],
@@ -55,6 +56,8 @@ export default async function AdminPedidoDetailPage({
       couponCode: orders.couponCode,
       totalCents: orders.totalCents,
       shippingAddress: orders.shippingAddress,
+      trackingCarrier: orders.trackingCarrier,
+      trackingNumber: orders.trackingNumber,
       createdAt: orders.createdAt,
       updatedAt: orders.updatedAt,
       mpPreferenceId: orders.mpPreferenceId,
@@ -81,6 +84,8 @@ export default async function AdminPedidoDetailPage({
     .where(eq(orderItems.orderId, row.id));
 
   const nextActions = NEXT_ACTIONS[row.status] ?? [];
+  const trackUrl = trackingUrl(row.trackingCarrier, row.trackingNumber);
+  const carrier = carrierLabel(row.trackingCarrier);
 
   return (
     <div className="space-y-10">
@@ -227,6 +232,53 @@ export default async function AdminPedidoDetailPage({
           </p>
         )}
       </section>
+
+      {row.status === 'paid' && (
+        <section className="border border-brand/30 bg-card p-6">
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+            ◆ Despachar
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Elegí el transportista y cargá el número de seguimiento. El socio recibe un email con
+            el link para seguir el envío.
+          </p>
+          <DispatchForm orderId={row.id} />
+        </section>
+      )}
+
+      {row.trackingNumber || carrier ? (
+        <section className="border border-border bg-card p-6">
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
+            ◆ Seguimiento
+          </h2>
+          <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                Transportista
+              </dt>
+              <dd className="mt-0.5">{carrier ?? '—'}</dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                N° de seguimiento
+              </dt>
+              <dd className="mt-0.5 font-mono">{row.trackingNumber ?? '—'}</dd>
+            </div>
+            {trackUrl && (
+              <div className="sm:col-span-2">
+                <a
+                  href={trackUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] uppercase tracking-[0.2em] text-brand hover:underline"
+                >
+                  Seguir el envío →
+                </a>
+              </div>
+            )}
+          </dl>
+        </section>
+      ) : null}
 
       <section className="border border-border bg-card">
         <h2 className="border-b border-border p-5 font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
