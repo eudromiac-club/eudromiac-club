@@ -102,7 +102,7 @@ export function Hero() {
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 80% 60% at 50% 35%, hsl(32 55% 35% / 0.45), transparent 60%), radial-gradient(circle at 80% 80%, hsl(32 70% 50% / 0.25), transparent 50%), radial-gradient(circle at 15% 20%, hsl(32 70% 50% / 0.18), transparent 50%), hsl(var(--background))',
+              'radial-gradient(ellipse 80% 60% at 50% 35%, hsl(42 55% 35% / 0.45), transparent 60%), radial-gradient(circle at 80% 80%, hsl(42 70% 50% / 0.25), transparent 50%), radial-gradient(circle at 15% 20%, hsl(42 70% 50% / 0.18), transparent 50%), hsl(var(--background))',
           }}
         />
         {/* Aura giratoria sutil */}
@@ -110,7 +110,7 @@ export function Hero() {
           className="hero-aura absolute left-1/2 top-[42%] -z-10 h-[160vmin] w-[160vmin] -translate-x-1/2 -translate-y-1/2 opacity-60"
           style={{
             background:
-              'conic-gradient(from 0deg, transparent, hsl(32 80% 55% / 0.18), transparent 30%, transparent 60%, hsl(32 80% 55% / 0.12), transparent)',
+              'conic-gradient(from 0deg, transparent, hsl(42 80% 55% / 0.18), transparent 30%, transparent 60%, hsl(42 80% 55% / 0.12), transparent)',
             filter: 'blur(60px)',
           }}
           aria-hidden
@@ -131,7 +131,7 @@ export function Hero() {
             </radialGradient>
             <radialGradient id="cryst-warm" cx="0.4" cy="0.35" r="0.7">
               <stop offset="0%" stopColor="hsl(40 85% 65%)" stopOpacity="0.9" />
-              <stop offset="60%" stopColor="hsl(32 70% 40%)" stopOpacity="0.5" />
+              <stop offset="60%" stopColor="hsl(42 70% 40%)" stopOpacity="0.5" />
               <stop offset="100%" stopColor="hsl(28 60% 20%)" stopOpacity="0" />
             </radialGradient>
             <radialGradient id="spark">

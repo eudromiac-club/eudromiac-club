@@ -24,6 +24,14 @@ const TYPE_LABEL: Record<string, string> = {
   cbd: 'CBD',
 };
 
+// Versión corta para la ficha de specs (estilo mockup, columna angosta).
+const TYPE_SHORT: Record<string, string> = {
+  sativa: 'Sativa',
+  indica: 'Indica',
+  hybrid: 'Híbrida',
+  cbd: 'CBD',
+};
+
 function formatPriceArs(cents: number): string {
   return new Intl.NumberFormat('es-AR', {
     style: 'currency',
@@ -125,14 +133,17 @@ export default async function GeneticDetailPage({
       <div className="mt-12 grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:items-start">
         <article className="space-y-8">
           <header>
+            <h1 className="font-display text-[clamp(2.25rem,6vw,4rem)] font-medium uppercase leading-tight tracking-[0.08em] text-foreground">
+              {g.name}
+            </h1>
+            <p className="mt-2 font-display text-sm uppercase tracking-[0.4em] text-brand sm:text-base">
+              {g.type === 'cbd' ? 'Flor CBD' : 'Flor Premium'}
+            </p>
             {meta.cross && (
-              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                 {meta.cross}
               </p>
             )}
-            <h1 className="mt-3 font-display text-[clamp(2.25rem,6vw,4rem)] font-medium uppercase leading-tight tracking-[0.08em] text-foreground">
-              {g.name}
-            </h1>
             <div className="mt-5 h-px w-24 bg-gradient-to-r from-brand to-transparent" />
           </header>
 
@@ -140,28 +151,28 @@ export default async function GeneticDetailPage({
             {meta.description}
           </p>
 
-          <dl className="grid grid-cols-3 gap-px overflow-hidden border border-border bg-border">
-            <div className="bg-card p-4 sm:p-5">
+          <dl className="flex divide-x divide-border border-y border-border">
+            <div className="flex-1 px-4 py-4 sm:px-6 sm:py-5">
               <dt className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
                 THC
               </dt>
-              <dd className="mt-1 font-mono text-xl text-brand sm:text-2xl">
+              <dd className="mt-1.5 font-mono text-xl text-brand sm:text-2xl">
                 {g.thcPercent ? `${g.thcPercent}%` : '—'}
               </dd>
             </div>
-            <div className="bg-card p-4 sm:p-5">
+            <div className="flex-1 px-4 py-4 sm:px-6 sm:py-5">
               <dt className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
-                CBD
+                Tipo
               </dt>
-              <dd className="mt-1 font-mono text-xl text-brand sm:text-2xl">
-                {g.cbdPercent ? `${g.cbdPercent}%` : '—'}
+              <dd className="mt-1.5 font-display text-lg text-foreground sm:text-xl">
+                {TYPE_SHORT[g.type] ?? g.type}
               </dd>
             </div>
-            <div className="bg-card p-4 sm:p-5">
+            <div className="flex-1 px-4 py-4 sm:px-6 sm:py-5">
               <dt className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
                 Terpenos
               </dt>
-              <dd className="mt-1 font-mono text-xl text-brand sm:text-2xl">
+              <dd className="mt-1.5 font-mono text-xl text-brand sm:text-2xl">
                 {meta.terpenes ? `${meta.terpenes}%` : '—'}
               </dd>
             </div>
@@ -185,43 +196,41 @@ export default async function GeneticDetailPage({
           )}
         </article>
 
-        <aside className="border border-brand/30 bg-card p-6 lg:sticky lg:top-24">
-          <div className="flex items-end justify-between">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-                Precio por gramo
-              </p>
-              <p className="mt-2 font-display text-4xl text-brand">
-                {formatPriceArs(g.priceCents)}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Stock · cap
-              </p>
-              <p className="mt-2 font-mono text-sm">
-                {g.stock}g · {g.maxPerOrderGrams ? `${g.maxPerOrderGrams}g/pedido` : '—'}
-              </p>
-            </div>
+        <aside className="border border-brand/30 bg-card p-6 sm:p-7 lg:sticky lg:top-24">
+          <div className="flex items-baseline justify-between gap-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              Precio por gramo
+            </p>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              {g.stock}g en stock
+            </p>
           </div>
+          <p className="mt-2 font-display text-4xl text-brand sm:text-5xl">
+            {formatPriceArs(g.priceCents)}
+          </p>
+          {g.maxPerOrderGrams && (
+            <p className="mt-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/70">
+              Hasta {g.maxPerOrderGrams}g por pedido
+            </p>
+          )}
 
           {isActive && g.stock > 0 && addCap > 0 && (
-            <div className="mt-6">
-              <AddToCartForm geneticId={g.id} cap={addCap} />
+            <div className="mt-7">
+              <AddToCartForm geneticId={g.id} cap={addCap} showcase />
             </div>
           )}
           {isActive && g.stock === 0 && (
-            <p className="mt-6 border border-destructive/40 bg-destructive/10 p-3 text-center text-[11px] uppercase tracking-[0.2em] text-destructive">
+            <p className="mt-6 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-center text-[11px] uppercase tracking-[0.2em] text-destructive">
               Sin stock disponible
             </p>
           )}
           {isActive && g.stock > 0 && addCap === 0 && remaining === 0 && (
-            <p className="mt-6 border border-brand/40 bg-brand/5 p-3 text-center text-[11px] uppercase tracking-[0.2em] text-brand">
+            <p className="mt-6 rounded-md border border-brand/40 bg-brand/5 p-3 text-center text-[11px] uppercase tracking-[0.2em] text-brand">
               Llegaste a tu cap mensual REPROCANN
             </p>
           )}
           {!isActive && (
-            <p className="mt-6 border border-brand/40 bg-brand/5 p-3 text-center text-[11px] uppercase tracking-[0.2em] text-brand">
+            <p className="mt-6 rounded-md border border-brand/40 bg-brand/5 p-3 text-center text-[11px] uppercase tracking-[0.2em] text-brand">
               Validá tu permiso para comprar
             </p>
           )}

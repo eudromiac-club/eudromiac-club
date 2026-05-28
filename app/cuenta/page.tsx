@@ -54,7 +54,7 @@ export default async function CuentaPage() {
           <div
             className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full opacity-50"
             style={{
-              background: 'radial-gradient(circle, hsl(32 70% 50% / 0.45), transparent 70%)',
+              background: 'radial-gradient(circle, hsl(42 70% 50% / 0.45), transparent 70%)',
               filter: 'blur(40px)',
             }}
             aria-hidden
@@ -240,7 +240,7 @@ export default async function CuentaPage() {
             <div
               className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-40 transition-opacity group-hover:opacity-70"
               style={{
-                background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 70%)',
+                background: 'radial-gradient(circle, hsl(42 70% 50% / 0.5), transparent 70%)',
                 filter: 'blur(30px)',
               }}
               aria-hidden

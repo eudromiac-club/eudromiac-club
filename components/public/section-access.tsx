@@ -65,7 +65,7 @@ export function SectionAccess() {
       <div
         className="pointer-events-none absolute right-0 top-0 -z-10 h-[60vmin] w-[60vmin] rounded-full opacity-30"
         style={{
-          background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 60%)',
+          background: 'radial-gradient(circle, hsl(42 70% 50% / 0.5), transparent 60%)',
           filter: 'blur(100px)',
         }}
         aria-hidden

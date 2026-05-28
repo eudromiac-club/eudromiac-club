@@ -62,16 +62,16 @@ function ArtFlower({ image, alt }: { image: string; alt: string }) {
           className="font-display text-[clamp(0.7rem,1.7vw,1rem)] font-medium tracking-[0.4em]"
           style={{ letterSpacing: '0.4em' }}
         >
-          EUDROMIA <span className="text-[#a8743a]">CLUB</span>
+          EUDROMIA <span className="text-[#ad8537]">CLUB</span>
         </p>
-        <div className="mx-auto mt-3 h-px w-10 bg-[#a8743a]/40" />
+        <div className="mx-auto mt-3 h-px w-10 bg-[#ad8537]/40" />
       </div>
 
       {/* Centro: foto en frame circular con tags laterales */}
       <div className="relative my-4 flex w-full flex-1 items-center justify-center">
         {/* Tag izquierdo */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2 text-left">
-          <div className="mb-1 h-px w-6 bg-[#a8743a]/40" />
+          <div className="mb-1 h-px w-6 bg-[#ad8537]/40" />
           <p
             className="font-mono text-[clamp(0.4rem,0.85vw,0.55rem)]"
             style={{ letterSpacing: '0.2em' }}
@@ -88,7 +88,7 @@ function ArtFlower({ image, alt }: { image: string; alt: string }) {
 
         {/* Tag derecho */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 text-right">
-          <div className="mb-1 ml-auto h-px w-6 bg-[#a8743a]/40" />
+          <div className="mb-1 ml-auto h-px w-6 bg-[#ad8537]/40" />
           <p
             className="font-mono text-[clamp(0.4rem,0.85vw,0.55rem)]"
             style={{ letterSpacing: '0.2em' }}
@@ -105,8 +105,8 @@ function ArtFlower({ image, alt }: { image: string; alt: string }) {
 
         {/* Foto circular con borde cobre */}
         <div className="relative aspect-square w-[62%]">
-          <div className="absolute inset-0 rounded-full border border-[#a8743a]/40" />
-          <div className="absolute inset-[6%] overflow-hidden rounded-full border border-[#a8743a]/60">
+          <div className="absolute inset-0 rounded-full border border-[#ad8537]/40" />
+          <div className="absolute inset-[6%] overflow-hidden rounded-full border border-[#ad8537]/60">
             <Image
               src={image}
               alt={alt}
@@ -115,7 +115,7 @@ function ArtFlower({ image, alt }: { image: string; alt: string }) {
               className="object-cover"
             />
             {/* Tinte sutil que integra la foto a la paleta cobre */}
-            <div className="pointer-events-none absolute inset-0 bg-[#a8743a]/10 mix-blend-multiply" />
+            <div className="pointer-events-none absolute inset-0 bg-[#ad8537]/10 mix-blend-multiply" />
           </div>
         </div>
       </div>
@@ -129,12 +129,12 @@ function ArtFlower({ image, alt }: { image: string; alt: string }) {
           FLORES
         </h3>
         <p
-          className="mt-1 font-display text-[clamp(0.55rem,1.1vw,0.75rem)] font-medium text-[#a8743a]"
+          className="mt-1 font-display text-[clamp(0.55rem,1.1vw,0.75rem)] font-medium text-[#ad8537]"
           style={{ letterSpacing: '0.45em' }}
         >
           DE AUTOR
         </p>
-        <div className="mx-auto mt-3 h-px w-8 bg-[#a8743a]/40" />
+        <div className="mx-auto mt-3 h-px w-8 bg-[#ad8537]/40" />
         <p
           className="mt-3 font-mono text-[clamp(0.45rem,0.9vw,0.6rem)] opacity-70"
           style={{ letterSpacing: '0.18em' }}
@@ -174,10 +174,10 @@ function ArtAmber() {
           </linearGradient>
           <radialGradient id="amberGlow" cx="0.5" cy="0.55" r="0.55">
             <stop offset="0%" stopColor="hsl(44 95% 70%)" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="hsl(32 80% 40%)" stopOpacity="0" />
+            <stop offset="100%" stopColor="hsl(42 80% 40%)" stopOpacity="0" />
           </radialGradient>
           <linearGradient id="capGrad" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="hsl(32 35% 25%)" />
+            <stop offset="0%" stopColor="hsl(42 35% 25%)" />
             <stop offset="100%" stopColor="hsl(28 30% 14%)" />
           </linearGradient>
         </defs>
@@ -185,15 +185,15 @@ function ArtAmber() {
         {/* Tapón superior con anillos */}
         <g>
           <rect x="78" y="6" width="64" height="14" rx="2" fill="url(#capGrad)" />
-          <line x1="78" y1="10" x2="142" y2="10" stroke="hsl(32 55% 65%)" strokeOpacity="0.3" />
-          <line x1="78" y1="16" x2="142" y2="16" stroke="hsl(32 55% 65%)" strokeOpacity="0.2" />
+          <line x1="78" y1="10" x2="142" y2="10" stroke="hsl(42 55% 65%)" strokeOpacity="0.3" />
+          <line x1="78" y1="16" x2="142" y2="16" stroke="hsl(42 55% 65%)" strokeOpacity="0.2" />
           <rect x="84" y="20" width="52" height="22" fill="url(#capGrad)" />
-          <line x1="84" y1="28" x2="136" y2="28" stroke="hsl(32 55% 65%)" strokeOpacity="0.25" />
+          <line x1="84" y1="28" x2="136" y2="28" stroke="hsl(42 55% 65%)" strokeOpacity="0.25" />
         </g>
 
         {/* Cuello */}
         <path d="M88 42 L 88 60 L 132 60 L 132 42 Z" fill="url(#amberBody)" />
-        <path d="M88 42 L 88 60 L 132 60 L 132 42" fill="none" stroke="hsl(32 80% 70%)" strokeOpacity="0.25" />
+        <path d="M88 42 L 88 60 L 132 60 L 132 42" fill="none" stroke="hsl(42 80% 70%)" strokeOpacity="0.25" />
 
         {/* Cuerpo */}
         <path
@@ -229,7 +229,7 @@ function ArtAmber() {
             width="72"
             height="90"
             fill="hsl(36 25% 10%)"
-            stroke="hsl(32 55% 65%)"
+            stroke="hsl(42 55% 65%)"
             strokeOpacity="0.7"
             strokeWidth="0.6"
           />
@@ -239,20 +239,20 @@ function ArtAmber() {
             width="64"
             height="82"
             fill="none"
-            stroke="hsl(32 55% 65%)"
+            stroke="hsl(42 55% 65%)"
             strokeOpacity="0.35"
             strokeWidth="0.4"
           />
           {/* Ornamentos esquinas label */}
-          <g stroke="hsl(32 55% 65%)" strokeOpacity="0.7" strokeWidth="0.5" fill="none">
+          <g stroke="hsl(42 55% 65%)" strokeOpacity="0.7" strokeWidth="0.5" fill="none">
             <path d="M76 152 L 80 152 L 80 156" />
             <path d="M144 152 L 140 152 L 140 156" />
             <path d="M76 238 L 80 238 L 80 234" />
             <path d="M144 238 L 140 238 L 140 234" />
           </g>
           {/* Línea decorativa superior label */}
-          <line x1="86" y1="166" x2="134" y2="166" stroke="hsl(32 55% 65%)" strokeOpacity="0.4" strokeWidth="0.4" />
-          <line x1="100" y1="170" x2="120" y2="170" stroke="hsl(32 55% 65%)" strokeOpacity="0.7" strokeWidth="0.4" />
+          <line x1="86" y1="166" x2="134" y2="166" stroke="hsl(42 55% 65%)" strokeOpacity="0.4" strokeWidth="0.4" />
+          <line x1="100" y1="170" x2="120" y2="170" stroke="hsl(42 55% 65%)" strokeOpacity="0.7" strokeWidth="0.4" />
           {/* Nombre EUDROMIA */}
           <text
             x="110"
@@ -260,7 +260,7 @@ function ArtAmber() {
             textAnchor="middle"
             fontFamily="serif"
             fontSize="11"
-            fill="hsl(32 60% 70%)"
+            fill="hsl(42 60% 70%)"
             letterSpacing="2.5"
             fontWeight="500"
           >
@@ -273,13 +273,13 @@ function ArtAmber() {
             textAnchor="middle"
             fontFamily="serif"
             fontSize="6"
-            fill="hsl(32 55% 60%)"
+            fill="hsl(42 55% 60%)"
             letterSpacing="3"
           >
             · CLUB ·
           </text>
           {/* Línea decorativa inferior */}
-          <line x1="100" y1="214" x2="120" y2="214" stroke="hsl(32 55% 65%)" strokeOpacity="0.7" strokeWidth="0.4" />
+          <line x1="100" y1="214" x2="120" y2="214" stroke="hsl(42 55% 65%)" strokeOpacity="0.7" strokeWidth="0.4" />
           {/* Tipo de extracto */}
           <text
             x="110"
@@ -287,7 +287,7 @@ function ArtAmber() {
             textAnchor="middle"
             fontFamily="serif"
             fontSize="4.5"
-            fill="hsl(32 45% 55%)"
+            fill="hsl(42 45% 55%)"
             letterSpacing="2"
           >
             EXTRACTO PURO
@@ -308,7 +308,7 @@ function ArtMortar() {
       <div
         className="absolute left-1/2 top-[58%] h-[55%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          background: 'radial-gradient(circle, hsl(32 70% 45% / 0.45), transparent 65%)',
+          background: 'radial-gradient(circle, hsl(42 70% 45% / 0.45), transparent 65%)',
           filter: 'blur(35px)',
         }}
         aria-hidden
@@ -320,7 +320,7 @@ function ArtMortar() {
       >
         <defs>
           <linearGradient id="mortarBody" x1="0.3" x2="0.7" y1="0" y2="1">
-            <stop offset="0%" stopColor="hsl(32 50% 55%)" />
+            <stop offset="0%" stopColor="hsl(42 50% 55%)" />
             <stop offset="50%" stopColor="hsl(30 45% 35%)" />
             <stop offset="100%" stopColor="hsl(26 40% 20%)" />
           </linearGradient>
@@ -367,7 +367,7 @@ function ArtMortar() {
             rx="105"
             ry="22"
             fill="hsl(28 30% 12%)"
-            stroke="hsl(32 50% 55%)"
+            stroke="hsl(42 50% 55%)"
             strokeWidth="1.4"
             strokeOpacity="0.9"
           />
@@ -383,7 +383,7 @@ function ArtMortar() {
           <path
             d="M30 200 Q 40 295 135 297 Q 230 295 240 200"
             fill="url(#mortarBody)"
-            stroke="hsl(32 55% 60%)"
+            stroke="hsl(42 55% 60%)"
             strokeWidth="1.4"
             strokeOpacity="0.85"
           />
@@ -391,12 +391,12 @@ function ArtMortar() {
           <path
             d="M40 230 Q 60 245 135 248 Q 210 245 230 230"
             fill="none"
-            stroke="hsl(32 55% 65%)"
+            stroke="hsl(42 55% 65%)"
             strokeWidth="0.8"
             strokeOpacity="0.5"
           />
           {/* Decoración tipo etching alrededor */}
-          <g stroke="hsl(32 55% 60%)" strokeOpacity="0.35" strokeWidth="0.5" fill="none">
+          <g stroke="hsl(42 55% 60%)" strokeOpacity="0.35" strokeWidth="0.5" fill="none">
             <path d="M50 250 Q 60 258 70 250" />
             <path d="M75 258 Q 85 266 95 258" />
             <path d="M100 264 Q 110 272 120 264" />
@@ -415,7 +415,7 @@ function ArtMortar() {
         </g>
 
         {/* Polvo/hierbas dentro del bowl (puntos botánicos) */}
-        <g fill="hsl(32 65% 55%)" fillOpacity="0.85">
+        <g fill="hsl(42 65% 55%)" fillOpacity="0.85">
           <circle cx="100" cy="200" r="1.8" />
           <circle cx="118" cy="197" r="1.2" />
           <circle cx="135" cy="199" r="2" />
@@ -428,7 +428,7 @@ function ArtMortar() {
         </g>
 
         {/* Hojas decorativas alrededor (más detalladas) */}
-        <g stroke="hsl(32 55% 60%)" fill="none" strokeOpacity="0.8" strokeWidth="0.9">
+        <g stroke="hsl(42 55% 60%)" fill="none" strokeOpacity="0.8" strokeWidth="0.9">
           {/* Hoja superior izquierda */}
           <g transform="translate(15 80)">
             <path d="M0 0 Q 8 -15 24 -8 Q 22 8 6 12 Q 0 8 0 0 Z" />
@@ -444,13 +444,13 @@ function ArtMortar() {
           {/* Ramas finas con bayas */}
           <g transform="translate(20 130)">
             <path d="M0 0 Q 10 10 22 8" />
-            <circle cx="18" cy="6" r="1.3" fill="hsl(32 65% 55%)" fillOpacity="0.7" stroke="none" />
-            <circle cx="22" cy="9" r="1" fill="hsl(32 65% 55%)" fillOpacity="0.7" stroke="none" />
+            <circle cx="18" cy="6" r="1.3" fill="hsl(42 65% 55%)" fillOpacity="0.7" stroke="none" />
+            <circle cx="22" cy="9" r="1" fill="hsl(42 65% 55%)" fillOpacity="0.7" stroke="none" />
           </g>
           <g transform="translate(240 130) scale(-1 1)">
             <path d="M0 0 Q 10 10 22 8" />
-            <circle cx="18" cy="6" r="1.3" fill="hsl(32 65% 55%)" fillOpacity="0.7" stroke="none" />
-            <circle cx="22" cy="9" r="1" fill="hsl(32 65% 55%)" fillOpacity="0.7" stroke="none" />
+            <circle cx="18" cy="6" r="1.3" fill="hsl(42 65% 55%)" fillOpacity="0.7" stroke="none" />
+            <circle cx="22" cy="9" r="1" fill="hsl(42 65% 55%)" fillOpacity="0.7" stroke="none" />
           </g>
         </g>
 

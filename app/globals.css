@@ -23,13 +23,13 @@
     --destructive-foreground: 36 25% 96%;
     --border: 30 6% 18%;
     --input: 30 6% 18%;
-    --ring: 32 55% 60%;
+    --ring: 42 60% 62%;
     --radius: 0.25rem;
 
-    /* Cobre/dorado: acento de marca. */
-    --brand: 32 55% 60%;
+    /* Dorado: acento de marca (hue 42, más brillante que el cobre original). */
+    --brand: 42 60% 62%;
     --brand-foreground: 30 7% 6%;
-    --brand-muted: 32 25% 18%;
+    --brand-muted: 42 30% 18%;
   }
 
   /* Mantengo .light por si después se suma toggle de tema. */
@@ -52,10 +52,10 @@
     --destructive-foreground: 36 30% 96%;
     --border: 30 10% 84%;
     --input: 30 10% 84%;
-    --ring: 32 55% 40%;
-    --brand: 32 55% 40%;
+    --ring: 42 58% 45%;
+    --brand: 42 58% 45%;
     --brand-foreground: 36 30% 96%;
-    --brand-muted: 32 35% 88%;
+    --brand-muted: 42 38% 88%;
   }
 }
 

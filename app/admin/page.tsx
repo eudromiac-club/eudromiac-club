@@ -97,7 +97,7 @@ export default async function AdminIndexPage() {
               <div
                 className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-50"
                 style={{
-                  background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 70%)',
+                  background: 'radial-gradient(circle, hsl(42 70% 50% / 0.5), transparent 70%)',
                   filter: 'blur(40px)',
                 }}
                 aria-hidden
@@ -126,7 +126,7 @@ export default async function AdminIndexPage() {
               <div
                 className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-50"
                 style={{
-                  background: 'radial-gradient(circle, hsl(32 70% 50% / 0.5), transparent 70%)',
+                  background: 'radial-gradient(circle, hsl(42 70% 50% / 0.5), transparent 70%)',
                   filter: 'blur(40px)',
                 }}
                 aria-hidden

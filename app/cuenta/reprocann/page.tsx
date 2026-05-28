@@ -59,7 +59,7 @@ export default async function ReprocannPage() {
           <div
             className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full opacity-50"
             style={{
-              background: 'radial-gradient(circle, hsl(32 70% 50% / 0.45), transparent 70%)',
+              background: 'radial-gradient(circle, hsl(42 70% 50% / 0.45), transparent 70%)',
               filter: 'blur(40px)',
             }}
             aria-hidden

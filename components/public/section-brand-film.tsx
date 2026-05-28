@@ -51,7 +51,7 @@ export function SectionBrandFilm() {
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30"
         style={{
-          background: 'radial-gradient(circle, hsl(32 70% 50% / 0.4), transparent 60%)',
+          background: 'radial-gradient(circle, hsl(42 70% 50% / 0.4), transparent 60%)',
           filter: 'blur(90px)',
         }}
         aria-hidden
