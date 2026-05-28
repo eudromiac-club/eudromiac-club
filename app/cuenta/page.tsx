@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { requireUser } from '@/lib/auth/dal';
 import { Button } from '@/components/ui/button';
 import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
+import { getLoyalty, getNextShipment } from '@/lib/loyalty/server';
+import { LoyaltyCard, NextShipmentCard } from '@/components/cuenta/member-cards';
 
 export const metadata: Metadata = {
   title: 'Mi cuenta · EUDROMIA CLUB',
@@ -31,6 +33,10 @@ export default async function CuentaPage() {
   const consumption = isActive && !isAdmin ? await getMonthlyConsumption(user.id) : null;
   const monthlyCap = isActive && !isAdmin ? await getMonthlyCap(user.id) : null;
 
+  // Programa de socios (puntos/nivel) + próximo envío, solo para socios activos.
+  const loyalty = isActive && !isAdmin ? await getLoyalty(user.id) : null;
+  const nextShipment = isActive && !isAdmin ? await getNextShipment(user.id) : null;
+
   return (
     <main className="mx-auto w-full max-w-4xl px-6 py-12">
       <header className="mb-10">
@@ -45,6 +51,34 @@ export default async function CuentaPage() {
           {isAdmin && ' · administrador'}
         </p>
       </header>
+
+      {loyalty && (
+        <div className="mb-10 grid gap-6 md:grid-cols-2">
+          <LoyaltyCard loyalty={loyalty} />
+          {nextShipment ? (
+            <NextShipmentCard shipment={nextShipment} />
+          ) : (
+            <Link
+              href="/dispensario"
+              className="group relative flex flex-col justify-center overflow-hidden border border-border bg-card p-6 transition-colors hover:border-brand/60"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                Tu próximo envío
+              </p>
+              <h2 className="mt-2 font-display text-2xl font-medium uppercase tracking-[0.1em]">
+                Sin envíos en curso
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Cuando tengas un pedido en camino lo vas a ver acá. Explorá la
+                colección para sumar puntos.
+              </p>
+              <span className="mt-5 inline-block text-[11px] uppercase tracking-[0.2em] text-brand transition-transform group-hover:translate-x-1">
+                Ir al dispensario →
+              </span>
+            </Link>
+          )}
+        </div>
+      )}
 
       {isPending && (
         <section
