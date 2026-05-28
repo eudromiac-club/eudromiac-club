@@ -10,6 +10,7 @@ import { OrnateFrame } from '@/components/brand/ornate-frame';
 import { AddToCartForm } from '@/components/cart/add-to-cart-form';
 import { CartStickyCta } from '@/components/cart/cart-sticky-cta';
 import { FavoriteButton } from '@/components/favorites/favorite-button';
+import { CategoryNav, isCategoryKey, type CategoryKey } from '@/components/dispensario/category-nav';
 import { getCartSnapshot } from '@/lib/cart/server';
 import { getFavoriteGeneticIds } from '@/lib/favorites/server';
 import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
@@ -36,7 +37,20 @@ function formatPriceArs(cents: number): string {
   }).format(cents / 100);
 }
 
-export default async function DispensarioPage() {
+const CATEGORY_LABEL: Record<CategoryKey, string> = {
+  flores: 'Flores',
+  extractos: 'Extractos',
+  aceites: 'Aceites',
+  accesorios: 'Accesorios',
+};
+
+export default async function DispensarioPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cat?: string }>;
+}) {
+  const { cat } = await searchParams;
+  const activeCat: CategoryKey = isCategoryKey(cat) ? cat : 'flores';
   const user = await requireUser();
   const isActive = user.status === 'active' || user.role === 'admin';
   const isLocked = !isActive;
@@ -122,6 +136,8 @@ export default async function DispensarioPage() {
         )}
       </header>
 
+      <CategoryNav active={activeCat} />
+
       {isLocked && (
         <section
           aria-labelledby="lock-block"
@@ -171,7 +187,27 @@ export default async function DispensarioPage() {
         </section>
       )}
 
-      {rows.length === 0 ? (
+      {activeCat !== 'flores' ? (
+        <section className="mx-auto mt-16 max-w-xl text-center">
+          <span className="inline-block rounded-full border border-brand/50 bg-brand/5 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.3em] text-brand">
+            Próximamente
+          </span>
+          <h2 className="mt-6 font-display text-3xl font-medium uppercase tracking-[0.12em]">
+            {CATEGORY_LABEL[activeCat]}
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+            Estamos sumando {CATEGORY_LABEL[activeCat].toLowerCase()} a la curaduría.
+            Muy pronto vas a poder explorarlos acá.
+          </p>
+          <Button
+            asChild
+            variant="outline"
+            className="mt-8 rounded-none border-brand/60 bg-transparent px-6 py-5 text-[11px] uppercase tracking-[0.25em] text-brand hover:bg-brand/10 hover:text-brand"
+          >
+            <Link href="/dispensario?cat=flores">Ver flores</Link>
+          </Button>
+        </section>
+      ) : rows.length === 0 ? (
         <p className="mt-16 text-center text-sm text-muted-foreground">
           Todavía no hay genéticas disponibles. Volvé pronto.
         </p>
