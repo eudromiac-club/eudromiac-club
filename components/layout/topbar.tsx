@@ -41,6 +41,9 @@ export async function Topbar() {
               <Link href="/dispensario" className="text-muted-foreground transition-colors hover:text-foreground">
                 Dispensario
               </Link>
+              <Link href="/cuenta/favoritos" className="text-muted-foreground transition-colors hover:text-foreground">
+                Favoritos
+              </Link>
               <Link href="/cuenta" className="text-muted-foreground transition-colors hover:text-foreground">
                 Mi cuenta
               </Link>

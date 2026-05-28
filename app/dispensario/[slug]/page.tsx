@@ -12,7 +12,9 @@ import { OrnateFrame } from '@/components/brand/ornate-frame';
 import { GeneticVideo } from '@/components/dispensario/genetic-video';
 import { AddToCartForm } from '@/components/cart/add-to-cart-form';
 import { CartStickyCta } from '@/components/cart/cart-sticky-cta';
+import { FavoriteButton } from '@/components/favorites/favorite-button';
 import { getCartSnapshot } from '@/lib/cart/server';
+import { isFavorite } from '@/lib/favorites/server';
 import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 
 const HARD_CAP = 10;
@@ -72,6 +74,7 @@ export default async function GeneticDetailPage({
   const meta = parseGeneticDescription(g.description);
   const videoSrc = geneticVideoSrc(g.slug);
   const packaging = geneticPackagingSrc(g.slug);
+  const fav = await isFavorite(user.id, g.id);
 
   const cartSnap = isActive
     ? await getCartSnapshot(user.id)
@@ -125,6 +128,12 @@ export default async function GeneticDetailPage({
             <span className="absolute left-4 top-4 rounded-full border border-brand/50 bg-background/70 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-brand backdrop-blur">
               {TYPE_LABEL[g.type] ?? g.type}
             </span>
+            <FavoriteButton
+              geneticId={g.id}
+              initial={fav}
+              size="lg"
+              className="absolute right-4 top-4 z-10"
+            />
           </div>
         </OrnateFrame>
       </div>

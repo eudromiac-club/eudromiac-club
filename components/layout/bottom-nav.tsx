@@ -13,17 +13,27 @@ export async function BottomNav() {
   const isActive = user.status === 'active';
   const cartCount = isActive ? await getCartCount(user.id) : 0;
 
-  const items = [
-    { href: '/cuenta', label: 'Inicio', icon: 'home' as const, match: '/cuenta', exact: true },
-    { href: '/dispensario', label: 'Dispensario', icon: 'shop' as const, match: '/dispensario' },
-    ...(isActive
-      ? [{ href: '/carrito', label: 'Carrito', icon: 'cart' as const, match: '/carrito', badge: cartCount }]
-      : []),
-    { href: '/cuenta/pedidos', label: 'Pedidos', icon: 'orders' as const, match: '/cuenta/pedidos' },
-    ...(user.role === 'admin'
-      ? [{ href: '/admin', label: 'Admin', icon: 'admin' as const, match: '/admin' }]
-      : []),
-  ];
+  // Máximo 5 items para que entren cómodos en mobile. Admins tienen su propio
+  // set (Inicio·Dispensario·Carrito·Admin); los socios ven Favoritos y Pedidos.
+  const inicio = { href: '/cuenta', label: 'Inicio', icon: 'home' as const, match: '/cuenta', exact: true };
+  const dispensario = { href: '/dispensario', label: 'Dispensario', icon: 'shop' as const, match: '/dispensario' };
+  const carrito = { href: '/carrito', label: 'Carrito', icon: 'cart' as const, match: '/carrito', badge: cartCount };
+
+  const items =
+    user.role === 'admin'
+      ? [
+          inicio,
+          dispensario,
+          ...(isActive ? [carrito] : []),
+          { href: '/admin', label: 'Admin', icon: 'admin' as const, match: '/admin' },
+        ]
+      : [
+          inicio,
+          dispensario,
+          { href: '/cuenta/favoritos', label: 'Favoritos', icon: 'fav' as const, match: '/cuenta/favoritos' },
+          ...(isActive ? [carrito] : []),
+          { href: '/cuenta/pedidos', label: 'Pedidos', icon: 'orders' as const, match: '/cuenta/pedidos' },
+        ];
 
   return (
     <>

@@ -43,6 +43,13 @@
       "when": 1779858679212,
       "tag": "0005_wooden_amphibian",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1779927261777,
+      "tag": "0006_abnormal_thanos",
+      "breakpoints": true
     }
   ]
 }

@@ -222,3 +222,19 @@ export const orderItems = pgTable('order_items', {
   quantity: integer('quantity').notNull(),
   unitPriceCents: integer('unit_price_cents').notNull(),
 });
+
+// Favoritos (wishlist) del socio: relación N:N user↔genetic. PK compuesta para
+// que no se pueda favoritear dos veces lo mismo.
+export const favorites = pgTable(
+  'favorites',
+  {
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    geneticId: uuid('genetic_id')
+      .notNull()
+      .references(() => genetics.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.geneticId] })],
+);

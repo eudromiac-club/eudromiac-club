@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/cn';
 
-type IconKey = 'home' | 'shop' | 'cart' | 'orders' | 'admin';
+type IconKey = 'home' | 'shop' | 'cart' | 'orders' | 'admin' | 'fav';
 
 type NavItem = {
   href: string;
@@ -66,6 +66,12 @@ function Icon({ k }: { k: IconKey }) {
       return (
         <svg {...common}>
           <path d="M12 3 5 6v5c0 4 3 7 7 9 4-2 7-5 7-9V6z" />
+        </svg>
+      );
+    case 'fav':
+      return (
+        <svg {...common}>
+          <path d="M12 20s-7-4.35-9.5-8.5C1 8.5 2.5 5.5 5.5 5.5c1.9 0 3.2 1.1 4 2.2.8-1.1 2.1-2.2 4-2.2 3 0 4.5 3 3 6-2.5 4.15-9.5 8.5-9.5 8.5z" />
         </svg>
       );
   }

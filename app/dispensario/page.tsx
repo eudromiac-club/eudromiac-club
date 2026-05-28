@@ -9,7 +9,9 @@ import { Button } from '@/components/ui/button';
 import { OrnateFrame } from '@/components/brand/ornate-frame';
 import { AddToCartForm } from '@/components/cart/add-to-cart-form';
 import { CartStickyCta } from '@/components/cart/cart-sticky-cta';
+import { FavoriteButton } from '@/components/favorites/favorite-button';
 import { getCartSnapshot } from '@/lib/cart/server';
+import { getFavoriteGeneticIds } from '@/lib/favorites/server';
 import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
 
 const HARD_CAP = 10;
@@ -84,6 +86,8 @@ export default async function DispensarioPage() {
   const cartSnap = isActive
     ? await getCartSnapshot(user.id)
     : { itemCount: 0, totalCents: 0, totalGrams: 0, items: [] };
+
+  const favIds = await getFavoriteGeneticIds(user.id);
 
   // Si el socio tiene cap mensual configurado, calculamos cuánto le queda
   // para mostrar un badge sutil al header. Admins quedan sin badge.
@@ -194,6 +198,12 @@ export default async function DispensarioPage() {
                   <span className="absolute left-3 top-3 rounded-full border border-brand/50 bg-background/70 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-brand backdrop-blur">
                     {TYPE_LABEL[g.type] ?? g.type}
                   </span>
+                  <FavoriteButton
+                    geneticId={g.id}
+                    initial={favIds.has(g.id)}
+                    size="sm"
+                    className="absolute right-3 top-3 z-10"
+                  />
                 </div>
 
                 <div className="space-y-4 px-4 pb-5 pt-6">
