@@ -52,7 +52,7 @@ export function CartStickyCta({
   return (
     <div
       ref={ref}
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-6 sm:pb-8"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-24 md:pb-8"
     >
       <Link
         href="/carrito"

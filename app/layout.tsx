@@ -3,6 +3,7 @@ import { Inter, Cinzel } from "next/font/google";
 import { cookies } from "next/headers";
 import { AgeGateModal } from "@/components/public/age-gate-modal";
 import { Topbar } from "@/components/layout/topbar";
+import { BottomNav } from "@/components/layout/bottom-nav";
 import { AGE_GATE_COOKIE } from "@/lib/age-gate";
 import "./globals.css";
 
@@ -39,6 +40,7 @@ export default async function RootLayout({
         {!ageOk && <AgeGateModal />}
         <Topbar />
         {children}
+        <BottomNav />
       </body>
     </html>
   );
