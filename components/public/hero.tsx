@@ -84,6 +84,20 @@ export function Hero() {
         repeat: -1,
         ease: 'none',
       });
+
+      // Salida con scrub: al scrollear, el contenido del hero sube y se
+      // desvanece — deja respirar a la foto de fondo (PageBackground).
+      gsap.to('.hero-content', {
+        yPercent: -16,
+        opacity: 0.1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: root.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      });
     },
     { scope: root },
   );
@@ -127,7 +141,7 @@ export function Hero() {
         />
       </div>
 
-      <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-4xl flex-col items-center justify-center gap-10 px-6 py-24 text-center">
+      <div className="hero-content mx-auto flex min-h-[calc(100dvh-4rem)] max-w-4xl flex-col items-center justify-center gap-10 px-6 py-24 text-center">
         {/* Logo lockup grande */}
         <div className="flex flex-col items-center">
           <Image

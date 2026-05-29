@@ -7,14 +7,17 @@ import { SectionExperiencias } from '@/components/public/section-experiencias';
 import { SectionAccess } from '@/components/public/section-access';
 import { Footer } from '@/components/public/footer';
 import { PageBackground } from '@/components/layout/page-background';
+import { ScrollProgress } from '@/components/layout/scroll-progress';
 
 export default function Home() {
   return (
     <>
+      <ScrollProgress />
       <PageBackground
         mobileSrc="/home/home-fondo-mobile.webp"
         webSrc="/home/home-fondo-web.webp"
         priority
+        parallax
         overlayStyle={{
           background:
             'linear-gradient(to bottom, hsl(var(--background) / 0.45), hsl(var(--background) / 0.58) 45%, hsl(var(--background) / 0.68))',
