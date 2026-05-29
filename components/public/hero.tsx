@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { Button } from '@/components/ui/button';
-import { Emblem } from '@/components/brand/emblem';
 import { prefersReducedMotion } from '@/lib/animations';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -221,8 +221,13 @@ export function Hero() {
       <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-4xl flex-col items-center justify-center gap-10 px-6 py-24 text-center">
         {/* Logo lockup grande */}
         <div className="flex flex-col items-center">
-          <Emblem
-            className="hero-emblem h-20 w-20 sm:h-24 sm:w-24"
+          <Image
+            src="/brand/logo-mark.png"
+            alt="Emblema EUDROMIA"
+            width={736}
+            height={736}
+            priority
+            className="hero-emblem h-24 w-24 object-contain sm:h-28 sm:w-28"
             style={{ filter: 'drop-shadow(0 0 24px hsl(var(--brand) / 0.45))' }}
           />
           <div className="mt-5 overflow-hidden">

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getCurrentUser } from '@/lib/auth/dal';
 import { logoutAction } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
@@ -15,9 +16,19 @@ export async function Topbar() {
         <Link
           href="/"
           aria-label="EUDROMIA CLUB — inicio"
-          className="font-display text-sm font-medium tracking-[0.2em] text-foreground sm:text-base sm:tracking-[0.3em]"
+          className="flex items-center gap-2.5 font-display text-sm font-medium tracking-[0.2em] text-foreground sm:text-base sm:tracking-[0.3em]"
         >
-          EUDROMIA <span className="text-brand">CLUB</span>
+          <Image
+            src="/brand/logo-mark.png"
+            alt=""
+            width={736}
+            height={736}
+            priority
+            className="h-7 w-7 object-contain sm:h-8 sm:w-8"
+          />
+          <span>
+            EUDROMIA <span className="text-brand">CLUB</span>
+          </span>
         </Link>
 
         <nav
