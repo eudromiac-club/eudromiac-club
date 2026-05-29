@@ -241,3 +241,27 @@ export function teamNewOrderEmail(opts: {
     }),
   };
 }
+
+export function teamNewLeadEmail(opts: {
+  name: string | null;
+  email: string;
+  phone: string;
+  source: string;
+}) {
+  return {
+    subject: '[Interno] Nuevo interesado — Experiencias',
+    html: layout({
+      preheader: `${opts.name ?? 'Alguien'} dejó sus datos para recibir más info.`,
+      heading: 'Nuevo <span style="color:' + C.brand + ';">interesado</span>.',
+      body:
+        p('Alguien dejó sus datos pidiendo más información. Contactalo para enviarle lo que necesita.') +
+        `<div style="padding:14px 16px;background:${C.bg};border:1px solid ${C.border};font-size:13px;color:${C.text};line-height:1.8;">
+          <div><strong style="color:${C.brand};">Nombre:</strong> ${opts.name ? esc(opts.name) : '—'}</div>
+          <div><strong style="color:${C.brand};">Email:</strong> ${esc(opts.email)}</div>
+          <div><strong style="color:${C.brand};">Teléfono:</strong> ${esc(opts.phone)}</div>
+          <div><strong style="color:${C.brand};">Origen:</strong> ${esc(opts.source)}</div>
+        </div>` +
+        `<div style="margin:24px 0 0;">${button(appUrl() + '/admin/leads', 'Ver interesados')}</div>`,
+    }),
+  };
+}

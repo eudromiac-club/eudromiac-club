@@ -238,3 +238,16 @@ export const favorites = pgTable(
   },
   (t) => [primaryKey({ columns: [t.userId, t.geneticId] })],
 );
+
+// Interesados que dejan sus datos en el landing (sección Experiencias y futuros
+// formularios de captación). No requieren cuenta; el equipo los contacta.
+export const leads = pgTable('leads', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  name: text('name'),
+  email: citext('email').notNull(),
+  phone: text('phone').notNull(),
+  source: text('source').notNull().default('experiencias'),
+  message: text('message'),
+  contacted: boolean('contacted').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});

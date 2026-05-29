@@ -3,6 +3,7 @@ import { SectionPillars } from '@/components/public/section-pillars';
 import { SectionCollection } from '@/components/public/section-collection';
 import { SectionExtractosTeaser } from '@/components/public/section-extractos-teaser';
 import { SectionBrandFilm } from '@/components/public/section-brand-film';
+import { SectionExperiencias } from '@/components/public/section-experiencias';
 import { SectionAccess } from '@/components/public/section-access';
 import { Footer } from '@/components/public/footer';
 import { PageBackground } from '@/components/layout/page-background';
@@ -25,6 +26,7 @@ export default function Home() {
         <SectionCollection />
         <SectionExtractosTeaser />
         <SectionBrandFilm />
+        <SectionExperiencias />
         <SectionAccess />
       </main>
       <Footer />

@@ -8,6 +8,7 @@ import {
   orderShippedEmail,
   teamReprocannContactEmail,
   teamNewOrderEmail,
+  teamNewLeadEmail,
 } from './templates';
 import { carrierLabel, trackingUrl } from '@/lib/orders/carriers';
 import type { ShippingAddress } from '@/lib/orders/shipping';
@@ -83,5 +84,17 @@ export async function notifyTeamNewOrder(opts: {
   const to = teamEmail();
   if (!to) return;
   const t = teamNewOrderEmail(opts);
+  await sendEmail({ to, subject: t.subject, html: t.html });
+}
+
+export async function notifyTeamNewLead(opts: {
+  name: string | null;
+  email: string;
+  phone: string;
+  source: string;
+}): Promise<void> {
+  const to = teamEmail();
+  if (!to) return;
+  const t = teamNewLeadEmail(opts);
   await sendEmail({ to, subject: t.subject, html: t.html });
 }
