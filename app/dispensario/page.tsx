@@ -11,6 +11,7 @@ import { AddToCartForm } from '@/components/cart/add-to-cart-form';
 import { CartStickyCta } from '@/components/cart/cart-sticky-cta';
 import { FavoriteButton } from '@/components/favorites/favorite-button';
 import { CategoryNav, isCategoryKey, type CategoryKey } from '@/components/dispensario/category-nav';
+import { PageBackground } from '@/components/layout/page-background';
 import { getCartSnapshot } from '@/lib/cart/server';
 import { getFavoriteGeneticIds } from '@/lib/favorites/server';
 import { getMonthlyCap, getMonthlyConsumption } from '@/lib/users/consumption';
@@ -115,7 +116,17 @@ export default async function DispensarioPage({
   }
 
   return (
-    <main className="relative mx-auto w-full max-w-6xl px-6 py-16">
+    <>
+      <PageBackground
+        mobileSrc="/dispensario/dispensario-fondo-mobile.webp"
+        webSrc="/dispensario/dispensario-fondo-web.webp"
+        priority
+        overlayStyle={{
+          background:
+            'linear-gradient(to bottom, hsl(var(--background) / 0.82), hsl(var(--background) / 0.78) 50%, hsl(var(--background) / 0.87))',
+        }}
+      />
+      <main className="relative mx-auto w-full max-w-6xl px-6 py-16">
       <header className="mx-auto max-w-3xl text-center">
         <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
           Colección activa
@@ -310,6 +321,7 @@ export default async function DispensarioPage({
       )}
 
       <CartStickyCta itemCount={cartSnap.itemCount} totalCents={cartSnap.totalCents} />
-    </main>
+      </main>
+    </>
   );
 }
