@@ -1,4 +1,4 @@
-import { Emblem } from './emblem';
+import Image from 'next/image';
 import { cn } from '@/lib/cn';
 
 export function LogoLockup({
@@ -19,7 +19,13 @@ export function LogoLockup({
 
   return (
     <div className={cn('flex flex-col items-center text-center', className)}>
-      <Emblem className={cn(s.emblem, 'mb-3 text-brand drop-shadow-[0_0_20px_hsl(var(--brand)/0.4)]')} />
+      <Image
+        src="/brand/logo-mark.png"
+        alt=""
+        width={736}
+        height={736}
+        className={cn(s.emblem, 'mb-3 object-contain drop-shadow-[0_0_20px_hsl(var(--brand)/0.4)]')}
+      />
       <span
         className={cn(
           'font-display font-medium tracking-[0.18em] text-foreground',
