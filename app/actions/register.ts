@@ -54,11 +54,27 @@ const RegisterSchema = z
     }
   });
 
+// Valores tipeados que devolvemos en el state para repoblar el form si la
+// validación falla. React 19 resetea el form tras cada server action, así que
+// sin esto se borraría todo lo que el socio ya cargó. La contraseña NO se
+// devuelve (no se espeja por seguridad; ese campo sí se vuelve a tipear).
+export type RegisterValues = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  dni: string;
+  phone: string;
+  birthDate: string;
+  reprocannNumber: string;
+  noReprocann: boolean;
+};
+
 export type RegisterState =
   | undefined
   | { ok: true }
   | {
       ok: false;
+      values?: RegisterValues;
       errors?: Partial<Record<
         | 'email'
         | 'password'
@@ -77,20 +93,31 @@ export async function registerAction(
   _prev: RegisterState,
   formData: FormData,
 ): Promise<RegisterState> {
-  const parsed = RegisterSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-    firstName: formData.get('firstName'),
-    lastName: formData.get('lastName'),
-    dni: formData.get('dni'),
-    phone: formData.get('phone'),
-    birthDate: formData.get('birthDate'),
-    reprocannNumber: formData.get('reprocannNumber') ?? '',
+  const values: RegisterValues = {
+    email: String(formData.get('email') ?? ''),
+    firstName: String(formData.get('firstName') ?? ''),
+    lastName: String(formData.get('lastName') ?? ''),
+    dni: String(formData.get('dni') ?? ''),
+    phone: String(formData.get('phone') ?? ''),
+    birthDate: String(formData.get('birthDate') ?? ''),
+    reprocannNumber: String(formData.get('reprocannNumber') ?? ''),
     noReprocann: formData.get('noReprocann') === 'on',
+  };
+
+  const parsed = RegisterSchema.safeParse({
+    email: values.email,
+    password: formData.get('password'),
+    firstName: values.firstName,
+    lastName: values.lastName,
+    dni: values.dni,
+    phone: values.phone,
+    birthDate: values.birthDate,
+    reprocannNumber: values.reprocannNumber,
+    noReprocann: values.noReprocann,
   });
 
   if (!parsed.success) {
-    return { ok: false, errors: z.flattenError(parsed.error).fieldErrors };
+    return { ok: false, values, errors: z.flattenError(parsed.error).fieldErrors };
   }
 
   const d = parsed.data;
@@ -146,11 +173,12 @@ export async function registerAction(
     });
   } catch (e) {
     if (e instanceof RegisterError) {
-      return { ok: false, errors: { [e.field]: [e.message] } };
+      return { ok: false, values, errors: { [e.field]: [e.message] } };
     }
     console.error('[register] error inesperado:', e);
     return {
       ok: false,
+      values,
       errors: { form: ['No pudimos crear tu cuenta. Probá de nuevo en un rato.'] },
     };
   }
@@ -173,6 +201,7 @@ export async function registerAction(
     if (error instanceof AuthError) {
       return {
         ok: false,
+        values,
         errors: {
           form: [
             'Cuenta creada, pero no pudimos iniciar tu sesión. Probá entrar desde /login.',

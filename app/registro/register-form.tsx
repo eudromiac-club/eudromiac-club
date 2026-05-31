@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useId, useState } from 'react';
+import { useActionState, useEffect, useId, useState } from 'react';
 import { registerAction, type RegisterState } from '@/app/actions/register';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,8 +15,17 @@ export function RegisterForm() {
     undefined,
   );
   const errors = state && !state.ok ? state.errors : undefined;
+  // Valores devueltos por el server cuando falla la validación: repueblan el
+  // form para que el socio no pierda lo que ya cargó (React 19 resetea el form
+  // tras cada action; el defaultValue lo restaura).
+  const values = state && !state.ok ? state.values : undefined;
   const [noReprocann, setNoReprocann] = useState(false);
   const noReprocannId = useId();
+
+  // Si el server rebota con "No tengo REPROCANN" tildado, mantenemos el check.
+  useEffect(() => {
+    if (values) setNoReprocann(values.noReprocann);
+  }, [values]);
 
   return (
     <form action={action} className="space-y-8">
@@ -34,6 +43,7 @@ export function RegisterForm() {
               name="email"
               type="email"
               autoComplete="email"
+              defaultValue={values?.email}
               required
               maxLength={120}
             />
@@ -72,6 +82,7 @@ export function RegisterForm() {
               id="firstName"
               name="firstName"
               autoComplete="given-name"
+              defaultValue={values?.firstName}
               required
               maxLength={80}
             />
@@ -87,6 +98,7 @@ export function RegisterForm() {
               id="lastName"
               name="lastName"
               autoComplete="family-name"
+              defaultValue={values?.lastName}
               required
               maxLength={80}
             />
@@ -102,6 +114,7 @@ export function RegisterForm() {
               id="dni"
               name="dni"
               inputMode="numeric"
+              defaultValue={values?.dni}
               required
               maxLength={10}
               placeholder="solo números"
@@ -112,7 +125,13 @@ export function RegisterForm() {
             <label htmlFor="birthDate" className={labelClass()}>
               Fecha de nacimiento
             </label>
-            <Input id="birthDate" name="birthDate" type="date" required />
+            <Input
+              id="birthDate"
+              name="birthDate"
+              type="date"
+              defaultValue={values?.birthDate}
+              required
+            />
             {errors?.birthDate && (
               <p className="mt-1 text-xs text-destructive">{errors.birthDate[0]}</p>
             )}
@@ -127,6 +146,7 @@ export function RegisterForm() {
               type="tel"
               inputMode="tel"
               autoComplete="tel"
+              defaultValue={values?.phone}
               required
               maxLength={40}
               placeholder="+54 9 11 ..."
@@ -147,6 +167,7 @@ export function RegisterForm() {
           <Input
             id="reprocannNumber"
             name="reprocannNumber"
+            defaultValue={values?.reprocannNumber}
             required={!noReprocann}
             disabled={noReprocann}
             maxLength={60}
