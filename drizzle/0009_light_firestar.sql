@@ -1,0 +1,2 @@
+CREATE TYPE "public"."payment_method" AS ENUM('mercadopago', 'cash_on_delivery');--> statement-breakpoint
+ALTER TABLE "orders" ADD COLUMN "payment_method" "payment_method" DEFAULT 'mercadopago' NOT NULL;

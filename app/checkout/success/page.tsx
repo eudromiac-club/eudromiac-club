@@ -20,12 +20,14 @@ export default async function CheckoutSuccessPage({
 
   let orderNumber: string | null = null;
   let isFree = false;
+  let isCash = false;
   let shipTo: string | null = null;
   if (orderId) {
     const [o] = await db
       .select({
         orderNumber: orders.orderNumber,
         totalCents: orders.totalCents,
+        paymentMethod: orders.paymentMethod,
         userId: orders.userId,
         shippingAddress: orders.shippingAddress,
       })
@@ -35,6 +37,7 @@ export default async function CheckoutSuccessPage({
     if (o && (o.userId === user.id || user.role === 'admin')) {
       orderNumber = o.orderNumber;
       isFree = o.totalCents === 0;
+      isCash = o.paymentMethod === 'cash_on_delivery';
       if (o.shippingAddress) {
         shipTo = `${o.shippingAddress.street}, ${o.shippingAddress.city}, ${o.shippingAddress.province}`;
       }
@@ -44,7 +47,7 @@ export default async function CheckoutSuccessPage({
   return (
     <main className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-md flex-col justify-center px-6 py-16 text-center">
       <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
-        ◆ {isFree ? 'Pedido confirmado' : 'Pago aprobado'}
+        ◆ {isCash || isFree ? 'Pedido confirmado' : 'Pago aprobado'}
       </p>
       <h1 className="mt-4 font-display text-4xl font-medium uppercase tracking-[0.1em]">
         Gracias por tu <span className="text-brand">pedido</span>.
@@ -60,9 +63,11 @@ export default async function CheckoutSuccessPage({
       )}
 
       <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-        {isFree
-          ? 'El equipo del club ya lo recibió y se pone con la preparación. Vas a poder seguir el estado desde tu cuenta.'
-          : 'Tu pago se procesó correctamente. El equipo del club lo despacha cuando esté listo y vas a poder seguir el estado desde tu cuenta.'}
+        {isCash
+          ? 'El equipo del club ya recibió tu pedido. El pago lo coordinamos en efectivo al momento de la entrega. Vas a poder seguir el estado desde tu cuenta.'
+          : isFree
+            ? 'El equipo del club ya lo recibió y se pone con la preparación. Vas a poder seguir el estado desde tu cuenta.'
+            : 'Tu pago se procesó correctamente. El equipo del club lo despacha cuando esté listo y vas a poder seguir el estado desde tu cuenta.'}
       </p>
 
       {shipTo && (

@@ -128,6 +128,7 @@ export function orderConfirmedEmail(opts: {
   items: OrderItemLine[];
   shipping: ShippingAddress | null;
   isFree: boolean;
+  cashOnDelivery?: boolean;
 }) {
   const hi = opts.name ? `Hola ${esc(opts.name.split(' ')[0])},` : 'Hola,';
   const rows = opts.items
@@ -153,9 +154,11 @@ export function orderConfirmedEmail(opts: {
       body:
         p(hi) +
         p(
-          opts.isFree
-            ? 'Recibimos tu pedido y el equipo se pone con la preparación.'
-            : 'Tu pago se procesó correctamente y el equipo se pone con la preparación.',
+          opts.cashOnDelivery
+            ? 'Recibimos tu pedido. El pago lo coordinamos en efectivo al momento de la entrega.'
+            : opts.isFree
+              ? 'Recibimos tu pedido y el equipo se pone con la preparación.'
+              : 'Tu pago se procesó correctamente y el equipo se pone con la preparación.',
         ) +
         (opts.orderNumber
           ? `<div style="margin:0 0 20px;padding:14px 16px;background:${C.bg};border:1px solid ${C.border};text-align:center;"><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:${C.muted};">Tu número de pedido</div><div style="margin-top:6px;font-family:monospace;font-size:20px;letter-spacing:3px;color:${C.brand};">${esc(opts.orderNumber)}</div></div>`

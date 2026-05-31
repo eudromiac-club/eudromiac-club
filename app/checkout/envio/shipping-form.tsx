@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { startCheckoutAction, type CheckoutState } from '@/app/carrito/checkout-action';
 import { AR_PROVINCES, DELIVERY_WINDOW_LABEL } from '@/lib/orders/shipping';
@@ -69,6 +69,13 @@ export function ShippingForm({
     undefined,
   );
   const errors = state?.errors ?? {};
+  const [payMethod, setPayMethod] = useState<'mercadopago' | 'cash_on_delivery'>('mercadopago');
+
+  const submitLabel = isFree
+    ? 'Confirmar pedido'
+    : payMethod === 'cash_on_delivery'
+      ? 'Confirmar pedido'
+      : 'Continuar al pago';
 
   return (
     <form action={action} className="space-y-5">
@@ -171,6 +178,57 @@ export function ShippingForm({
         />
       </div>
 
+      {!isFree && (
+        <fieldset className="space-y-3">
+          <legend className={labelCls}>Forma de pago<span className="text-brand"> *</span></legend>
+          <label
+            className={`flex cursor-pointer items-start gap-3 border p-4 transition-colors ${
+              payMethod === 'mercadopago'
+                ? 'border-brand bg-brand/5'
+                : 'border-border hover:border-brand/50'
+            }`}
+          >
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="mercadopago"
+              checked={payMethod === 'mercadopago'}
+              onChange={() => setPayMethod('mercadopago')}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-brand"
+            />
+            <span className="flex flex-col gap-1">
+              <span className="text-sm text-foreground">MercadoPago</span>
+              <span className="text-xs text-muted-foreground">
+                Tarjeta de crédito/débito, transferencia o efectivo en Rapipago/Pago Fácil.
+                Pagás ahora de forma segura.
+              </span>
+            </span>
+          </label>
+          <label
+            className={`flex cursor-pointer items-start gap-3 border p-4 transition-colors ${
+              payMethod === 'cash_on_delivery'
+                ? 'border-brand bg-brand/5'
+                : 'border-border hover:border-brand/50'
+            }`}
+          >
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="cash_on_delivery"
+              checked={payMethod === 'cash_on_delivery'}
+              onChange={() => setPayMethod('cash_on_delivery')}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-brand"
+            />
+            <span className="flex flex-col gap-1">
+              <span className="text-sm text-foreground">Efectivo contra entrega</span>
+              <span className="text-xs text-muted-foreground">
+                Pagás en efectivo al recibir el pedido. El equipo coordina la entrega con vos.
+              </span>
+            </span>
+          </label>
+        </fieldset>
+      )}
+
       {state?.message && (
         <p className="border border-destructive/40 bg-destructive/10 p-3 text-[12px] text-destructive">
           {state.message}
@@ -182,7 +240,7 @@ export function ShippingForm({
         disabled={isPending}
         className="w-full rounded-none bg-brand px-8 py-6 text-[11px] uppercase tracking-[0.3em] text-brand-foreground hover:bg-brand/90"
       >
-        {isPending ? 'Procesando…' : isFree ? 'Confirmar pedido' : 'Continuar al pago'}
+        {isPending ? 'Procesando…' : submitLabel}
       </Button>
     </form>
   );

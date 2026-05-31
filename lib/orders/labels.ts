@@ -18,6 +18,11 @@ export const ORDER_STATUS_COLOR: Record<string, string> = {
 
 export const ORDER_STATUS_ORDER = ['pending', 'paid', 'shipped', 'delivered', 'cancelled', 'refunded'] as const;
 
+export const PAYMENT_METHOD_LABEL: Record<string, string> = {
+  mercadopago: 'MercadoPago',
+  cash_on_delivery: 'Efectivo contra entrega',
+};
+
 export function formatPriceArs(cents: number): string {
   return new Intl.NumberFormat('es-AR', {
     style: 'currency',

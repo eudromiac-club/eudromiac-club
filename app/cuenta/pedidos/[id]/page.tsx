@@ -7,6 +7,7 @@ import { orders, orderItems } from '@/lib/db/schema';
 import {
   ORDER_STATUS_LABEL,
   ORDER_STATUS_COLOR,
+  PAYMENT_METHOD_LABEL,
   formatPriceArs,
   formatDate,
 } from '@/lib/orders/labels';
@@ -103,6 +104,19 @@ export default async function MiPedidoDetailPage({
               {formatPriceArs(row.totalCents)}
             </span>
           </div>
+          <div className="flex items-center justify-between border-t border-border pt-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              Forma de pago
+            </span>
+            <span className="text-sm">
+              {PAYMENT_METHOD_LABEL[row.paymentMethod] ?? row.paymentMethod}
+            </span>
+          </div>
+          {row.paymentMethod === 'cash_on_delivery' && row.status === 'pending' && (
+            <p className="text-xs text-muted-foreground">
+              Pagás en efectivo al recibir el pedido.
+            </p>
+          )}
         </div>
       </section>
 

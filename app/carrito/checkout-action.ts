@@ -52,10 +52,16 @@ export async function startCheckoutAction(
     return { errors: shipping.errors };
   }
 
+  // Forma de pago elegida en el form. Efectivo contra entrega no pasa por MP:
+  // el pedido queda pendiente y el equipo coordina el cobro en la entrega.
+  const payMethod =
+    formData.get('paymentMethod') === 'cash_on_delivery' ? 'cash_on_delivery' : 'mercadopago';
+
   const coupon = await getAppliedCoupon();
   const subtotalCents = cart.totalCents;
   const discountCents = calcDiscount(subtotalCents, coupon);
   const totalCents = subtotalCents - discountCents;
+  const isCash = totalCents > 0 && payMethod === 'cash_on_delivery';
   const orderNumber = await generateUniqueOrderNumber();
 
   const [order] = await db
@@ -68,6 +74,7 @@ export async function startCheckoutAction(
       discountCents,
       couponCode: coupon?.code ?? null,
       totalCents,
+      paymentMethod: isCash ? 'cash_on_delivery' : 'mercadopago',
       shippingAddress: shipping.value,
     })
     .returning({ id: orders.id });
@@ -116,6 +123,44 @@ export async function startCheckoutAction(
     revalidatePath('/admin', 'layout');
     revalidatePath('/', 'layout');
     redirect(`/checkout/success?orderId=${order.id}`);
+  }
+
+  // Efectivo contra entrega: no se cobra ahora. El pedido queda pendiente,
+  // vaciamos el carrito y avisamos; el equipo coordina el cobro en la entrega.
+  if (isCash) {
+    const [cartRow] = await db
+      .select({ id: carts.id })
+      .from(carts)
+      .where(eq(carts.userId, user.id))
+      .limit(1);
+    if (cartRow) {
+      await db.delete(cartItems).where(eq(cartItems.cartId, cartRow.id));
+    }
+    await clearAppliedCoupon();
+
+    if (user.email) {
+      await notifyOrderConfirmed({
+        to: user.email,
+        name: user.name ?? null,
+        orderNumber,
+        totalCents,
+        items: cart.items.map((i) => ({
+          name: i.name,
+          quantity: i.quantity,
+          unitPriceCents: i.unitPriceCents,
+        })),
+        shipping: shipping.value,
+        isFree: false,
+        cashOnDelivery: true,
+      });
+    }
+    await notifyTeamNewOrder({ orderNumber, memberName: user.name ?? null, totalCents });
+
+    revalidatePath('/carrito');
+    revalidatePath('/cuenta/pedidos');
+    revalidatePath('/admin', 'layout');
+    revalidatePath('/', 'layout');
+    redirect(`/checkout/success?orderId=${order.id}&cod=1`);
   }
 
   if (!mpConfigured()) {

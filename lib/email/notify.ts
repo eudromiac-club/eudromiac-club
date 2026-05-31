@@ -43,6 +43,7 @@ export async function notifyOrderConfirmed(opts: {
   items: { name: string; quantity: number; unitPriceCents: number }[];
   shipping: ShippingAddress | null;
   isFree: boolean;
+  cashOnDelivery?: boolean;
 }): Promise<void> {
   const t = orderConfirmedEmail(opts);
   await sendEmail({ to: opts.to, subject: t.subject, html: t.html });

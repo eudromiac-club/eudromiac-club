@@ -48,6 +48,7 @@ export const trackingCarrier = pgEnum('tracking_carrier', [
   'via_cargo',
   'propio',
 ]);
+export const paymentMethod = pgEnum('payment_method', ['mercadopago', 'cash_on_delivery']);
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
@@ -201,6 +202,7 @@ export const orders = pgTable('orders', {
   discountCents: integer('discount_cents').notNull().default(0),
   couponCode: text('coupon_code'),
   totalCents: integer('total_cents').notNull(),
+  paymentMethod: paymentMethod('payment_method').notNull().default('mercadopago'),
   mpPreferenceId: text('mp_preference_id'),
   mpPaymentId: text('mp_payment_id'),
   shippingAddress: jsonb('shipping_address').$type<ShippingAddress>(),

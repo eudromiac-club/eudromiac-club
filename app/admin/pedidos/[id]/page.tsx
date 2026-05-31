@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   ORDER_STATUS_LABEL,
   ORDER_STATUS_COLOR,
+  PAYMENT_METHOD_LABEL,
   formatPriceArs,
   formatDate,
 } from '@/lib/orders/labels';
@@ -56,6 +57,7 @@ export default async function AdminPedidoDetailPage({
       discountCents: orders.discountCents,
       couponCode: orders.couponCode,
       totalCents: orders.totalCents,
+      paymentMethod: orders.paymentMethod,
       shippingAddress: orders.shippingAddress,
       trackingCarrier: orders.trackingCarrier,
       trackingNumber: orders.trackingNumber,
@@ -152,21 +154,38 @@ export default async function AdminPedidoDetailPage({
 
         <div className="border border-border bg-card p-6">
           <h2 className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand">
-            ◆ MercadoPago
+            ◆ Pago
           </h2>
           <dl className="mt-4 space-y-3 text-sm">
             <div>
               <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Preference ID
+                Forma de pago
               </dt>
-              <dd className="mt-0.5 font-mono text-xs">{row.mpPreferenceId ?? '—'}</dd>
+              <dd className="mt-0.5">
+                {PAYMENT_METHOD_LABEL[row.paymentMethod] ?? row.paymentMethod}
+                {row.paymentMethod === 'cash_on_delivery' && row.status === 'pending' && (
+                  <span className="ml-2 font-mono text-[10px] uppercase tracking-widest text-brand">
+                    · cobrar en la entrega
+                  </span>
+                )}
+              </dd>
             </div>
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                Payment ID
-              </dt>
-              <dd className="mt-0.5 font-mono text-xs">{row.mpPaymentId ?? '—'}</dd>
-            </div>
+            {row.paymentMethod === 'mercadopago' && (
+              <>
+                <div>
+                  <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Preference ID
+                  </dt>
+                  <dd className="mt-0.5 font-mono text-xs">{row.mpPreferenceId ?? '—'}</dd>
+                </div>
+                <div>
+                  <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Payment ID
+                  </dt>
+                  <dd className="mt-0.5 font-mono text-xs">{row.mpPaymentId ?? '—'}</dd>
+                </div>
+              </>
+            )}
             {row.mpPaymentId && (
               <a
                 href={`https://www.mercadopago.com.ar/activities/${row.mpPaymentId}`}
