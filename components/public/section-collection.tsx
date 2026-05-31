@@ -26,26 +26,26 @@ const ITEMS: Item[] = [
   {
     id: 'flores',
     label: 'Flores de Autor',
-    body: 'Selección curada de cepas florales, cultivadas con primor para una experiencia sensorial completa.',
+    body: 'La máxima expresión de nuestra tierra y nuestro cuidado. Nuestras Flores de Autor son el resultado de una búsqueda incansable por la excelencia: una selección meticulosa de genéticas exclusivas, acompañadas en cada etapa de su desarrollo para optimizar su máximo potencial. Una cosecha premium, cuidada artesanalmente, que destaca por la complejidad de sus aromas, la riqueza de sus terpenos y una calidad inigualable. No es solo una flor, es la firma de Eudromia.',
     kind: 'art-flower',
     image: '/landing/flower-cannabis.jpg',
     alt: 'Flor de cannabis premium EUDROMIA',
   },
   {
-    id: 'extractos',
-    label: 'Extractos de Autor',
-    body: 'Concentrados botánicos de la más alta pureza, capturando la esencia de la planta en su estado más cristalino.',
+    id: 'equilibrio',
+    label: 'Equilibrio Natural',
+    body: 'Tu bienestar, potenciado por la pureza. Nuestra línea de productos derivados se elabora mediante rigurosos y avanzados métodos de extracción que garantizan la máxima pureza y fidelidad de la planta. Diseñados para integrarse fácilmente a tu rutina, son la herramienta perfecta para encontrar tu centro, aliviar tensiones y elevar tu calidad de vida todos los días.',
     kind: 'image',
     image: '/home/4.png',
-    alt: 'Extracto de autor EUDROMIA — composición botánica',
+    alt: 'Equilibrio Natural EUDROMIA — muestrario de productos derivados',
   },
   {
-    id: 'formulas',
-    label: 'Fórmulas Magistrales',
-    body: 'Mezclas personalizadas y aceites medicinales desarrollados con respeto por la herencia herbolaria.',
+    id: 'experiencia',
+    label: 'La Experiencia Raíz',
+    body: 'Viví la cultura Eudromia desde adentro. Más allá de nuestros productos, te proponemos un espacio de turismo y desconexión donde la naturaleza es la protagonista. Vení a conocer nuestros procesos, conectá con la tierra y disfrutá de nuestras propuestas inmersivas. Volvé al origen, volvé a la raíz.',
     kind: 'image',
     image: '/home/3.png',
-    alt: 'Fórmula magistral EUDROMIA — aceite medicinal',
+    alt: 'La Experiencia Raíz EUDROMIA — Viví Las Martinetas',
   },
 ];
 
@@ -547,16 +547,23 @@ export function SectionCollection() {
       <div className="grain absolute inset-0 -z-10" />
 
       <div className="mx-auto max-w-6xl px-6">
-        <div className="col-title text-center">
+        <div className="col-title mx-auto max-w-2xl text-center">
           <h2
             id="collection-title"
             className="font-display text-[clamp(1.5rem,3.6vw,2.5rem)] font-medium uppercase tracking-[0.18em] text-foreground"
           >
             <span className="col-title-line block">Nuestra colección</span>
-            <span className="col-title-line block text-brand">botánica.</span>
+            <span className="col-title-line block text-brand">Wellness.</span>
           </h2>
-          <p className="col-sub mt-4 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+          <p className="col-sub mt-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
             Exclusivamente para nuestros miembros selectos
+          </p>
+          <p className="col-sub mt-6 text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+            En Eudromia, cultivar es mucho más que un proceso agrícola; es una filosofía de
+            vida. Nuestra Colección Wellness está pensada para acompañarte en la búsqueda de
+            tu propio bienestar, conectando la pureza de la naturaleza con tu equilibrio
+            diario. Una propuesta integral donde el respeto por la planta, la innovación y el
+            disfrute se encuentran.
           </p>
         </div>
 

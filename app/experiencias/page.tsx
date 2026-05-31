@@ -22,7 +22,7 @@ export default function ExperienciasPage() {
         }}
       />
       <main className="relative mx-auto flex min-h-[calc(100dvh-4rem)] max-w-2xl flex-col items-center justify-center px-6 py-20 text-center">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand">◆ Experiencias</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-brand">◆ Experiencia Raíz</p>
         <h1 className="mt-4 text-balance font-display text-[clamp(2rem,6vw,3.5rem)] font-medium uppercase leading-[1.05] tracking-[0.04em]">
           Viajes hacia el equilibrio
         </h1>

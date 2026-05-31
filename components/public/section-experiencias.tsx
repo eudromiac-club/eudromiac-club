@@ -97,7 +97,7 @@ export function SectionExperiencias() {
 
       <div className="mx-auto flex min-h-[72vh] max-w-3xl flex-col items-center justify-center gap-7 px-6 py-28 text-center [text-shadow:0_2px_22px_hsl(var(--background)_/_0.85)]">
         <p className="exp-reveal font-mono text-[10px] uppercase tracking-[0.3em] text-brand">
-          ◆ Experiencias
+          ◆ Experiencia Raíz
         </p>
         <h2
           id="experiencias-title"

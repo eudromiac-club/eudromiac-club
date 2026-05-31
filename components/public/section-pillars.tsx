@@ -20,7 +20,7 @@ const PILLARS = [
     id: 'guia',
     Icon: PillarGuia,
     label: 'Guía Personalizada',
-    body: 'Trazamos un mapa de ruta individual hacia el bienestar con precisión.',
+    body: 'Trazamos una hoja de ruta individual hacia el bienestar con precisión.',
   },
   {
     id: 'santuario',
