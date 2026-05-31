@@ -1,5 +1,5 @@
 export const USER_STATUS_LABEL: Record<string, string> = {
-  pending_kyc: 'Pendiente KYC',
+  pending_kyc: 'REPROCANN pendiente',
   under_review: 'En revisión',
   active: 'Activo',
   rejected: 'Rechazado',

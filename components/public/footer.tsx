@@ -13,7 +13,7 @@ export function Footer() {
         <div className="mt-2 flex flex-col items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground/70">
           <p>© {year} · EUDROMIA CLUB</p>
           <p className="max-w-md text-center leading-relaxed">
-            Asociación civil sin fines de lucro · Marco legal: Ley 27.350
+            Fundación Argentina California 2030 · Marco legal: Ley 27.350
           </p>
         </div>
       </div>

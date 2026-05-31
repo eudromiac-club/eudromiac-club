@@ -91,7 +91,7 @@ export async function Topbar() {
             <>
               {user.status === 'pending_kyc' && (
                 <span className="hidden text-[10px] uppercase tracking-[0.18em] text-brand sm:inline">
-                  KYC pendiente
+                  REPROCANN pendiente
                 </span>
               )}
               {user.status === 'under_review' && (

@@ -142,7 +142,7 @@ export default async function DispensarioPage({
         </p>
         {monthlyHint && (
           <p className="mt-5 inline-block border border-brand/40 bg-card px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-brand">
-            Cap del mes · te quedan {monthlyHint.remaining}g de {monthlyHint.cap}g
+            Tu límite mensual · te quedan {monthlyHint.remaining}g de {monthlyHint.cap}g
           </p>
         )}
       </header>
@@ -283,12 +283,18 @@ export default async function DispensarioPage({
                       </p>
                       <p className="font-mono text-base text-brand">{formatPriceArs(g.priceCents)}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                        Disp. · cap
+                    <div className="space-y-1 text-right">
+                      <p className="font-mono text-xs">
+                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                          Disponible{' '}
+                        </span>
+                        {g.stock}g
                       </p>
                       <p className="font-mono text-xs">
-                        {g.stock}g · {g.maxPerOrderGrams ? `${g.maxPerOrderGrams}g` : '—'}
+                        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
+                          Máx. por pedido{' '}
+                        </span>
+                        {g.maxPerOrderGrams ? `${g.maxPerOrderGrams}g` : '—'}
                       </p>
                     </div>
                   </div>
