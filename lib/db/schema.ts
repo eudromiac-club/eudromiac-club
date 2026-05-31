@@ -251,3 +251,20 @@ export const leads = pgTable('leads', {
   contacted: boolean('contacted').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
+
+// Cupones de descuento gestionables desde /admin/cupones. code citext para que
+// el matching sea case-insensitive (el socio puede tipear en minúscula).
+// discountPct 1–100. active permite desactivar sin borrar; expiresAt opcional.
+export const coupons = pgTable(
+  'coupons',
+  {
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+    code: citext('code').notNull().unique(),
+    discountPct: integer('discount_pct').notNull(),
+    active: boolean('active').notNull().default(true),
+    description: text('description'),
+    expiresAt: timestamp('expires_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [check('coupons_discount_pct_range', sql`${t.discountPct} between 1 and 100`)],
+);

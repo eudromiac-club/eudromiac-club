@@ -11,7 +11,7 @@ export async function applyCouponAction(
 ): Promise<CouponState> {
   const raw = String(formData.get('code') ?? '');
   if (!raw.trim()) return { ok: false, error: 'Ingresá un código.' };
-  const coupon = validateCoupon(raw);
+  const coupon = await validateCoupon(raw);
   if (!coupon) return { ok: false, error: 'Código no válido.' };
   await setAppliedCoupon(coupon.code);
   revalidatePath('/carrito');

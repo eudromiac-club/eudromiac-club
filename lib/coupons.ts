@@ -1,21 +1,44 @@
 import 'server-only';
 import { cookies } from 'next/headers';
+import { and, eq, gt, isNull, or } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { coupons } from '@/lib/db/schema';
 
 const COOKIE_KEY = 'eudromia_coupon';
 
-// Cupones hardcodeados. Si en algún momento son varios, mover a tabla DB.
-const COUPONS: Record<string, { discountPct: number }> = {
+// FULLOFF queda hardcodeado como fallback de testing: aunque la tabla coupons
+// esté vacía (DB nueva), siempre se puede probar el flow end-to-end gratis.
+// El resto de los cupones se gestionan desde /admin/cupones (tabla coupons).
+const FALLBACK_COUPONS: Record<string, { discountPct: number }> = {
   FULLOFF: { discountPct: 100 },
 };
 
 export type ValidCoupon = { code: string; discountPct: number };
 
-export function validateCoupon(rawCode: string): ValidCoupon | null {
+// Valida un código contra la tabla coupons (activo y no vencido). Si no existe
+// en DB, cae al fallback hardcodeado. Es async porque pega a la base.
+export async function validateCoupon(rawCode: string): Promise<ValidCoupon | null> {
   const code = rawCode.trim().toUpperCase();
   if (!code) return null;
-  const entry = COUPONS[code];
-  if (!entry) return null;
-  return { code, discountPct: entry.discountPct };
+
+  const [row] = await db
+    .select({ code: coupons.code, discountPct: coupons.discountPct })
+    .from(coupons)
+    .where(
+      and(
+        eq(coupons.code, code),
+        eq(coupons.active, true),
+        or(isNull(coupons.expiresAt), gt(coupons.expiresAt, new Date())),
+      ),
+    )
+    .limit(1);
+
+  if (row) return { code: row.code.toUpperCase(), discountPct: row.discountPct };
+
+  const fallback = FALLBACK_COUPONS[code];
+  if (fallback) return { code, discountPct: fallback.discountPct };
+
+  return null;
 }
 
 export async function getAppliedCoupon(): Promise<ValidCoupon | null> {

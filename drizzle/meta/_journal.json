@@ -57,6 +57,13 @@
       "when": 1780016301833,
       "tag": "0007_robust_black_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1780241511423,
+      "tag": "0008_mixed_santa_claus",
+      "breakpoints": true
     }
   ]
 }
