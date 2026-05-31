@@ -58,6 +58,7 @@ export default async function EnvioPage() {
     city: lastAddr?.city ?? '',
     province: lastAddr?.province ?? '',
     postalCode: lastAddr?.postalCode ?? '',
+    deliveryWindow: lastAddr?.deliveryWindow ?? '',
     notes: lastAddr?.notes ?? '',
   };
 

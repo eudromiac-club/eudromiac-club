@@ -1,4 +1,8 @@
-import { formatShippingLine, type ShippingAddress } from '@/lib/orders/shipping';
+import {
+  formatShippingLine,
+  DELIVERY_WINDOW_LABEL,
+  type ShippingAddress,
+} from '@/lib/orders/shipping';
 
 // Paleta de marca, en hex porque los clientes de email no entienden variables CSS.
 const C = {
@@ -134,7 +138,11 @@ export function orderConfirmedEmail(opts: {
     .join('');
   const ship = opts.shipping
     ? p(
-        `<strong style="color:${C.text};">Envío a:</strong> ${esc(opts.shipping.recipientName)} — ${esc(formatShippingLine(opts.shipping))}. Tel: ${esc(opts.shipping.phone)}.`,
+        `<strong style="color:${C.text};">Envío a:</strong> ${esc(opts.shipping.recipientName)} — ${esc(formatShippingLine(opts.shipping))}. Tel: ${esc(opts.shipping.phone)}.${
+          opts.shipping.deliveryWindow
+            ? ` Horario: ${esc(DELIVERY_WINDOW_LABEL[opts.shipping.deliveryWindow] ?? opts.shipping.deliveryWindow)}.`
+            : ''
+        }`,
       )
     : '';
   return {

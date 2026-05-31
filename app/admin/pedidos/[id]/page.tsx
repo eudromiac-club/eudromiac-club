@@ -11,6 +11,7 @@ import {
   formatDate,
 } from '@/lib/orders/labels';
 import { carrierLabel, trackingUrl } from '@/lib/orders/carriers';
+import { DELIVERY_WINDOW_LABEL } from '@/lib/orders/shipping';
 import { updateOrderStatusAction } from '../actions';
 import { DispatchForm } from './dispatch-form';
 
@@ -215,6 +216,17 @@ export default async function AdminPedidoDetailPage({
                 {row.shippingAddress.postalCode ? ` (CP ${row.shippingAddress.postalCode})` : ''}
               </dd>
             </div>
+            {row.shippingAddress.deliveryWindow && (
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Horario de entrega
+                </dt>
+                <dd className="mt-0.5">
+                  {DELIVERY_WINDOW_LABEL[row.shippingAddress.deliveryWindow] ??
+                    row.shippingAddress.deliveryWindow}
+                </dd>
+              </div>
+            )}
             {row.shippingAddress.notes && (
               <div className="sm:col-span-2">
                 <dt className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">

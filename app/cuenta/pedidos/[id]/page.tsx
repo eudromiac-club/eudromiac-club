@@ -11,6 +11,7 @@ import {
   formatDate,
 } from '@/lib/orders/labels';
 import { carrierLabel, trackingUrl } from '@/lib/orders/carriers';
+import { DELIVERY_WINDOW_LABEL } from '@/lib/orders/shipping';
 
 export const metadata = {
   title: 'Mi pedido · EUDROMIA CLUB',
@@ -122,6 +123,12 @@ export default async function MiPedidoDetailPage({
             <p className="font-mono text-xs text-muted-foreground">
               Tel: {row.shippingAddress.phone}
             </p>
+            {row.shippingAddress.deliveryWindow && (
+              <p className="font-mono text-xs text-muted-foreground">
+                Horario: {DELIVERY_WINDOW_LABEL[row.shippingAddress.deliveryWindow] ??
+                  row.shippingAddress.deliveryWindow}
+              </p>
+            )}
             {row.shippingAddress.notes && (
               <p className="mt-2 whitespace-pre-line text-xs text-muted-foreground">
                 {row.shippingAddress.notes}

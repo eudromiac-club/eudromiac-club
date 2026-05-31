@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { startCheckoutAction, type CheckoutState } from '@/app/carrito/checkout-action';
+import { AR_PROVINCES, DELIVERY_WINDOW_LABEL } from '@/lib/orders/shipping';
 
 export type ShippingDefaults = {
   recipientName: string;
@@ -11,6 +12,7 @@ export type ShippingDefaults = {
   city: string;
   province: string;
   postalCode: string;
+  deliveryWindow: string;
   notes: string;
 };
 
@@ -104,14 +106,28 @@ export function ShippingForm({
           required
           autoComplete="address-level2"
         />
-        <Field
-          name="province"
-          label="Provincia"
-          defaultValue={defaults.province}
-          error={errors.province}
-          required
-          autoComplete="address-level1"
-        />
+        <div>
+          <label htmlFor="ship-province" className={labelCls}>
+            Provincia<span className="text-brand"> *</span>
+          </label>
+          <select
+            id="ship-province"
+            name="province"
+            defaultValue={defaults.province}
+            aria-invalid={errors.province ? true : undefined}
+            className={`${inputCls} ${errors.province ? 'border-destructive' : ''}`}
+          >
+            <option value="">Elegí una provincia…</option>
+            {AR_PROVINCES.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+          {errors.province && (
+            <p className="mt-1 text-[11px] text-destructive">{errors.province}</p>
+          )}
+        </div>
       </div>
       <Field
         name="postalCode"
@@ -119,6 +135,28 @@ export function ShippingForm({
         defaultValue={defaults.postalCode}
         autoComplete="postal-code"
       />
+      <div>
+        <label htmlFor="ship-deliveryWindow" className={labelCls}>
+          Horario de entrega preferido<span className="text-brand"> *</span>
+        </label>
+        <select
+          id="ship-deliveryWindow"
+          name="deliveryWindow"
+          defaultValue={defaults.deliveryWindow}
+          aria-invalid={errors.deliveryWindow ? true : undefined}
+          className={`${inputCls} ${errors.deliveryWindow ? 'border-destructive' : ''}`}
+        >
+          <option value="">Elegí un rango horario…</option>
+          {Object.entries(DELIVERY_WINDOW_LABEL).map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+        {errors.deliveryWindow && (
+          <p className="mt-1 text-[11px] text-destructive">{errors.deliveryWindow}</p>
+        )}
+      </div>
       <div>
         <label htmlFor="ship-notes" className={labelCls}>
           Notas para la entrega (opcional)
