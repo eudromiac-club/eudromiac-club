@@ -20,11 +20,16 @@ export function RegisterForm() {
   // tras cada action; el defaultValue lo restaura).
   const values = state && !state.ok ? state.values : undefined;
   const [noReprocann, setNoReprocann] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const noReprocannId = useId();
+  const acceptTermsId = useId();
 
-  // Si el server rebota con "No tengo REPROCANN" tildado, mantenemos el check.
+  // Si el server rebota, mantenemos el estado de los checkboxes.
   useEffect(() => {
-    if (values) setNoReprocann(values.noReprocann);
+    if (values) {
+      setNoReprocann(values.noReprocann);
+      setAcceptTerms(values.acceptTerms);
+    }
   }, [values]);
 
   return (
@@ -206,6 +211,46 @@ export function RegisterForm() {
             </span>
           </label>
         </div>
+      </section>
+
+      <section className="space-y-3">
+        <label
+          htmlFor={acceptTermsId}
+          className="flex cursor-pointer items-start gap-3 rounded-sm border border-border/60 bg-card/40 p-4 transition hover:border-brand/60"
+        >
+          <input
+            id={acceptTermsId}
+            name="acceptTerms"
+            type="checkbox"
+            checked={acceptTerms}
+            onChange={(e) => setAcceptTerms(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-brand"
+          />
+          <span className="text-sm leading-relaxed text-muted-foreground">
+            Declaro ser mayor de 18 años y acepto los{' '}
+            <a
+              href="/terminos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand underline underline-offset-2 hover:text-brand/80"
+            >
+              Términos y Condiciones
+            </a>{' '}
+            y la{' '}
+            <a
+              href="/privacidad"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand underline underline-offset-2 hover:text-brand/80"
+            >
+              Política de Privacidad
+            </a>
+            , incluido el tratamiento de mis datos de salud para validar mi REPROCANN.
+          </span>
+        </label>
+        {errors?.acceptTerms && (
+          <p className="text-xs text-destructive">{errors.acceptTerms[0]}</p>
+        )}
       </section>
 
       {errors?.form && (

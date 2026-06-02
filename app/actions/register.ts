@@ -43,6 +43,7 @@ const RegisterSchema = z
       ),
     reprocannNumber: z.string().trim().max(60).optional().default(''),
     noReprocann: z.boolean().default(false),
+    acceptTerms: z.boolean().default(false),
   })
   .superRefine((data, ctx) => {
     if (!data.noReprocann && data.reprocannNumber.trim().length < 3) {
@@ -50,6 +51,13 @@ const RegisterSchema = z
         code: 'custom',
         path: ['reprocannNumber'],
         message: 'Ingresá el número de trámite REPROCANN.',
+      });
+    }
+    if (!data.acceptTerms) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['acceptTerms'],
+        message: 'Tenés que aceptar los Términos y la Política de Privacidad.',
       });
     }
   });
@@ -67,6 +75,7 @@ export type RegisterValues = {
   birthDate: string;
   reprocannNumber: string;
   noReprocann: boolean;
+  acceptTerms: boolean;
 };
 
 export type RegisterState =
@@ -84,6 +93,7 @@ export type RegisterState =
         | 'phone'
         | 'birthDate'
         | 'reprocannNumber'
+        | 'acceptTerms'
         | 'form',
         string[]
       >>;
@@ -102,6 +112,7 @@ export async function registerAction(
     birthDate: String(formData.get('birthDate') ?? ''),
     reprocannNumber: String(formData.get('reprocannNumber') ?? ''),
     noReprocann: formData.get('noReprocann') === 'on',
+    acceptTerms: formData.get('acceptTerms') === 'on',
   };
 
   const parsed = RegisterSchema.safeParse({
@@ -114,6 +125,7 @@ export async function registerAction(
     birthDate: values.birthDate,
     reprocannNumber: values.reprocannNumber,
     noReprocann: values.noReprocann,
+    acceptTerms: values.acceptTerms,
   });
 
   if (!parsed.success) {
