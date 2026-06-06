@@ -2,6 +2,7 @@ import 'server-only';
 import { sendEmail, teamEmail } from './client';
 import {
   welcomeEmail,
+  passwordResetEmail,
   reprocannApprovedEmail,
   reprocannRejectedEmail,
   orderConfirmedEmail,
@@ -18,6 +19,15 @@ import type { ShippingAddress } from '@/lib/orders/shipping';
 
 export async function notifyWelcome(to: string, name: string | null): Promise<void> {
   const t = welcomeEmail(name);
+  await sendEmail({ to, subject: t.subject, html: t.html });
+}
+
+export async function notifyPasswordReset(
+  to: string,
+  name: string | null,
+  resetUrl: string,
+): Promise<void> {
+  const t = passwordResetEmail(name, resetUrl);
   await sendEmail({ to, subject: t.subject, html: t.html });
 }
 

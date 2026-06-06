@@ -72,6 +72,21 @@ export const verificationTokens = pgTable(
   (t) => [primaryKey({ columns: [t.identifier, t.token] })],
 );
 
+// Tokens para "recuperar contraseña". Se guarda SOLO el hash SHA-256 del token
+// (el token en claro viaja en el link del email y nunca toca la DB), así una
+// fuga de la tabla no permite usar los links. Un solo uso (usedAt) y vencen a la
+// hora. onDelete cascade: si se borra el usuario, se van sus tokens.
+export const passwordResetTokens = pgTable('password_reset_tokens', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  tokenHash: text('token_hash').notNull().unique(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  usedAt: timestamp('used_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const invitations = pgTable('invitations', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
   code: text('code').notNull().unique(),

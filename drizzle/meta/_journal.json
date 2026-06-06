@@ -71,6 +71,13 @@
       "when": 1780241729350,
       "tag": "0009_light_firestar",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1780773157428,
+      "tag": "0010_fat_piledriver",
+      "breakpoints": true
     }
   ]
 }

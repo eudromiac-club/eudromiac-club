@@ -119,6 +119,22 @@ export function reprocannRejectedEmail(name: string | null, reason?: string | nu
   };
 }
 
+export function passwordResetEmail(name: string | null, resetUrl: string) {
+  const hi = name ? `Hola ${esc(name.split(' ')[0])},` : 'Hola,';
+  return {
+    subject: 'Restablecé tu contraseña · EUDROMIA CLUB',
+    html: layout({
+      preheader: 'Pediste restablecer tu contraseña. El link vence en 1 hora.',
+      heading: 'Restablecé tu <span style="color:' + C.brand + ';">contraseña</span>.',
+      body:
+        p(hi) +
+        p('Recibimos un pedido para restablecer la contraseña de tu cuenta. Si fuiste vos, tocá el botón. El link vence en <strong style="color:' + C.text + ';">1 hora</strong> y se puede usar una sola vez.') +
+        `<div style="margin:26px 0;">${button(resetUrl, 'Cambiar mi contraseña')}</div>` +
+        p('Si no pediste esto, ignorá este email: tu contraseña no cambia.'),
+    }),
+  };
+}
+
 type OrderItemLine = { name: string; quantity: number; unitPriceCents: number };
 
 export function orderConfirmedEmail(opts: {

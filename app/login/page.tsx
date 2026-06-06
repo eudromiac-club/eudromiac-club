@@ -23,6 +23,11 @@ export default function LoginPage() {
       </div>
       <div className="mt-8 space-y-2 text-center text-xs text-muted-foreground">
         <p>
+          <Link href="/recuperar" className="text-brand underline hover:text-foreground">
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </p>
+        <p>
           ¿No tenés cuenta?{' '}
           <Link href="/registro" className="text-brand underline hover:text-foreground">
             Asociarse
