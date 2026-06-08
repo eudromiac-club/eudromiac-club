@@ -140,6 +140,9 @@ export async function POST(req: NextRequest) {
           .where(eq(orderItems.orderId, orderId));
 
         for (const it of items) {
+          // Una genética borrada del catálogo deja el line item con geneticId
+          // null (historial preservado por snapshot); no hay stock que reponer.
+          if (!it.geneticId) continue;
           await tx
             .update(genetics)
             .set({ stock: sql`greatest(${genetics.stock} - ${it.qty}, 0)`, updatedAt: sql`now()` })

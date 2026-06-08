@@ -78,6 +78,13 @@
       "when": 1780773157428,
       "tag": "0010_fat_piledriver",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1780879079779,
+      "tag": "0011_woozy_arclight",
+      "breakpoints": true
     }
   ]
 }

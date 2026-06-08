@@ -195,7 +195,7 @@ export const cartItems = pgTable(
       .references(() => carts.id, { onDelete: 'cascade' }),
     geneticId: uuid('genetic_id')
       .notNull()
-      .references(() => genetics.id, { onDelete: 'restrict' }),
+      .references(() => genetics.id, { onDelete: 'cascade' }),
     quantity: integer('quantity').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
@@ -232,9 +232,9 @@ export const orderItems = pgTable('order_items', {
   orderId: uuid('order_id')
     .notNull()
     .references(() => orders.id, { onDelete: 'cascade' }),
-  geneticId: uuid('genetic_id')
-    .notNull()
-    .references(() => genetics.id, { onDelete: 'restrict' }),
+  // Nullable + ON DELETE SET NULL: si se borra una genética, el ítem histórico
+  // del pedido se conserva (nombre y precio quedan en el snapshot de abajo).
+  geneticId: uuid('genetic_id').references(() => genetics.id, { onDelete: 'set null' }),
   nameSnapshot: text('name_snapshot').notNull(),
   quantity: integer('quantity').notNull(),
   unitPriceCents: integer('unit_price_cents').notNull(),

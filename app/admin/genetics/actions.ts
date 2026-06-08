@@ -137,7 +137,15 @@ export async function deleteGeneticAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const id = formData.get('id');
   if (typeof id !== 'string') return;
-  await db.delete(genetics).where(eq(genetics.id, id));
+  try {
+    await db.delete(genetics).where(eq(genetics.id, id));
+  } catch (e) {
+    // Fallback defensivo: si por algún motivo el borrado físico falla (p. ej.
+    // una FK no relajada en una base sin migrar), al menos sacamos la genética
+    // del dispensario desactivándola, en vez de romper con la pantalla de error.
+    console.error('[admin/genetics] delete error, falling back to deactivate:', e);
+    await db.update(genetics).set({ active: false, updatedAt: new Date() }).where(eq(genetics.id, id));
+  }
   revalidatePath('/admin/genetics');
   revalidatePath('/dispensario');
   redirect('/admin/genetics');
